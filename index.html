@@ -1,4 +1,4 @@
-    <!doctype html>
+<!doctype html>
 <html lang="pt">
 <head>
 <meta charset="utf-8">
@@ -6,936 +6,380 @@
 <title>SGD — Sistema de Gestão do Clube</title>
 
 <style>
-:root{
---blue:#1769e0;
---bg:#f4f7fb;
---text:#172033;
---muted:#6d788a;
---line:#e4e9f1;
---green:#16794a;
---red:#b42318
-}
-
+:root{--blue:#1769e0;--bg:#f4f7fb;--text:#172033;--muted:#6d788a;--line:#e4e9f1;--green:#16794a;--red:#b42318}
 *{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:var(--bg);
-color:var(--text)
-}
-
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
 button,input,select,textarea{font:inherit}
-
 .hidden{display:none!important}
-
-.btn{
-border:0;
-border-radius:9px;
-padding:10px 15px;
-font-weight:700;
-cursor:pointer
-}
-
+.btn{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer}
 .primary{background:var(--blue);color:#fff}
 .light{background:#eef4ff;color:var(--blue)}
 .danger{background:#fff0f0;color:var(--red)}
 .full{width:100%}
-
-.login{
-min-height:100vh;
-display:grid;
-place-items:center;
-padding:20px;
-background:linear-gradient(135deg,#1769e0,#0d4da8)
-}
-
-.login-card{
-width:min(430px,100%);
-background:#fff;
-border-radius:20px;
-padding:32px;
-box-shadow:0 18px 50px #001b4433;
-text-align:center
-}
-
-.club-logo,.mini-logo{
-background:var(--blue);
-color:#fff;
-display:grid;
-place-items:center;
-font-weight:900
-}
-
-.club-logo{
-width:92px;
-height:92px;
-border-radius:20px;
-margin:0 auto 18px
-}
-
-.mini-logo{
-width:42px;
-height:42px;
-border-radius:10px;
-font-size:11px
-}
-
+.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#1769e0,#0d4da8)}
+.login-card{width:min(430px,100%);background:#fff;border-radius:20px;padding:32px;box-shadow:0 18px 50px #001b4433;text-align:center}
+.club-logo,.mini-logo{background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:900}
+.club-logo{width:92px;height:92px;border-radius:20px;margin:0 auto 18px}
+.mini-logo{width:42px;height:42px;border-radius:10px;font-size:11px}
 .login-card h1{margin:0 0 5px}
 .login-card p,.muted{color:var(--muted)}
-
-.field{
-display:flex;
-flex-direction:column;
-gap:7px;
-text-align:left;
-margin-bottom:14px
-}
-
-.field label{
-font-size:13px;
-font-weight:700
-}
-
-.field input,
-.field select,
-.field textarea{
-padding:11px;
-border:1px solid #d5ddea;
-border-radius:9px;
-background:#fff
-}
-
+.field{display:flex;flex-direction:column;gap:7px;text-align:left;margin-bottom:14px}
+.field label{font-size:13px;font-weight:700}
+.field input,.field select,.field textarea{padding:11px;border:1px solid #d5ddea;border-radius:9px;background:#fff}
 .field textarea{min-height:90px}
-
-.notice{
-padding:11px;
-border-radius:9px;
-margin-bottom:14px;
-background:#eaf8ef;
-color:var(--green)
-}
-
-.error{
-background:#fff0f0;
-color:var(--red)
-}
-
-header{
-height:68px;
-background:#fff;
-border-bottom:1px solid var(--line);
-display:flex;
-align-items:center;
-padding:0 22px;
-gap:12px
-}
-
-.brand b{
-display:block;
-font-size:18px
-}
-
+.notice{padding:11px;border-radius:9px;margin-bottom:14px;background:#eaf8ef;color:var(--green)}
+.error{background:#fff0f0;color:var(--red)}
+header{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 22px;gap:12px}
+.brand b{display:block;font-size:18px}
 .brand small{color:var(--muted)}
-
-.layout{
-display:flex;
-min-height:calc(100vh - 68px)
-}
-
-aside{
-width:240px;
-background:var(--blue);
-color:#fff;
-padding:18px 12px;
-flex-shrink:0
-}
-
-.section{
-font-size:11px;
-opacity:.7;
-margin:10px 12px 7px;
-font-weight:700
-}
-
-nav button{
-width:100%;
-border:0;
-background:transparent;
-color:#fff;
-text-align:left;
-padding:11px 12px;
-border-radius:8px;
-margin:2px 0;
-cursor:pointer
-}
-
-nav button:hover,
-nav button.active{
-background:#ffffff24
-}
-
-main{
-flex:1;
-padding:28px;
-max-width:1450px
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:15px;
-margin-bottom:20px
-}
-
-.top h1{
-margin:0;
-font-size:26px
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:14px
-}
-
-.card{
-background:#fff;
-border:1px solid var(--line);
-border-radius:14px;
-padding:19px;
-margin-bottom:16px;
-box-shadow:0 5px 18px #17203308
-}
-
-.stat strong{
-display:block;
-font-size:27px;
-margin-top:8px
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:15px
-}
-
-.grid3{
-display:grid;
-grid-template-columns:repeat(3,minmax(0,1fr));
-gap:15px
-}
-
-.actions{
-display:flex;
-gap:9px;
-justify-content:flex-end;
-flex-wrap:wrap;
-margin-top:14px
-}
-
-table{
-width:100%;
-border-collapse:collapse
-}
-
-th,td{
-padding:10px;
-border-bottom:1px solid #edf0f4;
-text-align:left;
-font-size:13px;
-vertical-align:top
-}
-
-th{
-font-size:12px;
-color:var(--muted)
-}
-
-.badge{
-display:inline-block;
-padding:5px 8px;
-border-radius:99px;
-background:#eaf8ef;
-color:#176b36;
-font-size:11px;
-font-weight:700
-}
-
-.toolbar{
-display:flex;
-gap:9px;
-flex-wrap:wrap;
-margin-bottom:14px
-}
-
-.toolbar input{
-padding:10px;
-border:1px solid #d5ddea;
-border-radius:9px;
-min-width:240px
-}
-
+.layout{display:flex;min-height:calc(100vh - 68px)}
+aside{width:240px;background:var(--blue);color:#fff;padding:18px 12px;flex-shrink:0}
+.section{font-size:11px;opacity:.7;margin:10px 12px 7px;font-weight:700}
+nav button{width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:11px 12px;border-radius:8px;margin:2px 0;cursor:pointer}
+nav button:hover,nav button.active{background:#ffffff24}
+main{flex:1;padding:28px;max-width:1450px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+.top h1{margin:0;font-size:26px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:19px;margin-bottom:16px;box-shadow:0 5px 18px #17203308}
+.stat strong{display:block;font-size:27px;margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px;vertical-align:top}
+th{font-size:12px;color:var(--muted)}
+.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eaf8ef;color:#176b36;font-size:11px;font-weight:700}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.toolbar input{padding:10px;border:1px solid #d5ddea;border-radius:9px;min-width:240px}
 @media(max-width:850px){
-
-aside{width:72px}
-
-.section{display:none}
-
-nav button{
-font-size:0;
-text-align:center
+aside{width:72px}.section{display:none}nav button{font-size:0;text-align:center}
+nav button::first-letter{font-size:20px}.cards{grid-template-columns:1fr 1fr}
+.grid{grid-template-columns:1fr}main{padding:16px}.top{align-items:flex-start;flex-direction:column}
 }
-
-nav button::first-letter{
-font-size:20px
-}
-
-.cards{
-grid-template-columns:1fr 1fr
-}
-
-.grid,
-.grid3{
-grid-template-columns:1fr
-}
-
-main{padding:16px}
-
-.top{
-align-items:flex-start;
-flex-direction:column
-}
-}
-
 @media print{
-
-aside,
-header,
-.actions,
-.no-print{
-display:none!important
-}
-
-main{
-padding:0
-}
-
-.card{
-box-shadow:none;
-border:0
-}
+aside,header,.actions,.no-print{display:none!important}
+main{padding:0}.card{box-shadow:none;border:0}
 }
 </style>
 
 <script>
-window.SGD_SUPABASE_URL =
-"https://edttbjysaqdounpghsdn.supabase.co";
-
-window.SGD_SUPABASE_ANON_KEY =
-"sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
+window.SGD_SUPABASE_URL="https://edttbjysaqdounpghsdn.supabase.co";
+window.SGD_SUPABASE_ANON_KEY="sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-window.SGD_CENTRAL = {
-
-client:null,
-
-async init(){
-
-if(!window.supabase)
-throw new Error(
-"Não foi possível carregar o serviço de autenticação."
-);
-
-if(!this.client){
-
-this.client =
-window.supabase.createClient(
-window.SGD_SUPABASE_URL,
-window.SGD_SUPABASE_ANON_KEY
-);
-
-}
-
-return this.client;
-},
-
-async login(email,password){
-
-const c=await this.init();
-
-const {data,error} =
-await c.auth.signInWithPassword({
-email,
-password
-});
-
-if(error) throw error;
-
-return data;
-},
-
-async session(){
-
-const c=await this.init();
-
-return (
-await c.auth.getSession()
-).data.session;
-
-},
-
-async logout(){
-
-if(this.client)
-await this.client.auth.signOut();
-
-}
-
-};
-</script>
-
 </head>
 
 <body>
 
-<!-- LOGIN -->
-
 <div id="login" class="login">
-
 <div class="login-card">
-
 <div class="club-logo">SGD</div>
-
 <h1>SGD</h1>
-
 <p>Sistema de Gestão do Clube</p>
 
-<div id="loginError"
-class="notice error hidden">
-Credenciais inválidas.
+<div id="loginError" class="notice error hidden">
+E-mail ou palavra-passe incorretos.
 </div>
 
 <form id="loginForm">
-
 <div class="field">
-
 <label>E-mail</label>
-
-<input
-name="user"
-type="email"
-autocomplete="email"
-required
->
-
+<input name="user" type="email" required>
 </div>
 
 <div class="field">
-
 <label>Palavra-passe</label>
-
-<input
-name="pass"
-type="password"
-autocomplete="current-password"
-required
->
-
+<input name="pass" type="password" required>
 </div>
 
-<label
-style="display:flex;gap:8px;align-items:center;text-align:left;font-size:13px;margin-bottom:14px">
-
-<input
-name="remember"
-type="checkbox"
->
-
-Lembrar sessão
-
+<label style="display:flex;gap:8px;align-items:center;text-align:left;font-size:13px;margin-bottom:14px">
+<input name="remember" type="checkbox"> Lembrar sessão
 </label>
 
-<button class="btn primary full">
-Entrar
-</button>
-
+<button class="btn primary full">Entrar</button>
 </form>
 
-<p
-style="font-size:12px"
-class="muted">
-
+<p style="font-size:12px" class="muted">
 Use o e-mail e a palavra-passe da sua conta do SGD.
-
 </p>
-
+</div>
 </div>
 
-</div>
-
-
-<!-- APLICAÇÃO -->
 
 <div id="app" class="hidden">
 
 <header>
-
-<div class="mini-logo">
-SGD
-</div>
-
+<div class="mini-logo">SGD</div>
 <div class="brand">
-
-<b>
-Sistema de Gestão do Clube
-</b>
-
-<small>
-Secretaria / Direção
-</small>
-
+<b>Sistema de Gestão do Clube</b>
+<small>Secretaria / Direção</small>
 </div>
 
-<div style="margin-left:auto">
-
-<button
-class="btn light"
-onclick="logout()">
-
-Sair
-
-</button>
-
+<div style="margin-left:auto;display:flex;gap:8px">
+<button class="btn light" onclick="page('conta')">👤 Minha conta</button>
+<button class="btn light" onclick="logout()">Sair</button>
 </div>
-
 </header>
-
 
 <div class="layout">
 
 <aside>
 
-<div class="section">
-PRINCIPAL
-</div>
-
+<div class="section">PRINCIPAL</div>
 <nav>
-
-<button data-page="dashboard">
-🏠 Dashboard
-</button>
-
-<button data-page="membros">
-👥 Membros
-</button>
-
-<button data-page="unidades">
-🏕️ Unidades
-</button>
-
+<button data-page="dashboard">🏠 Dashboard</button>
+<button data-page="membros">👥 Membros</button>
+<button data-page="unidades">🏕️ Unidades</button>
 </nav>
 
-
-<div class="section">
-GESTÃO
-</div>
-
+<div class="section">GESTÃO</div>
 <nav>
-
-<button data-page="atividades">
-📅 Atividades
-</button>
-
-<button data-page="financas">
-💰 Finanças
-</button>
-
+<button data-page="atividades">📅 Atividades</button>
+<button data-page="financas">💰 Finanças</button>
 </nav>
 
-
-<div class="section">
-ADMINISTRAÇÃO
-</div>
-
+<div class="section">ADMINISTRAÇÃO</div>
 <nav>
-
-<button data-page="relatorios">
-📄 Relatórios
-</button>
-
-<button data-page="definicoes">
-⚙️ Definições
-</button>
-
-<button data-page="conta">
-👤 Minha conta
-</button>
-
+<button data-page="relatorios">📄 Relatórios</button>
+<button data-page="definicoes">⚙️ Definições</button>
 </nav>
 
 </aside>
 
-
 <main id="content"></main>
 
 </div>
-
 </div>
 
 
 <script>
 
-const STORAGE="SGD_FINAL_DADOS_V2";
-
-let db =
-JSON.parse(
-localStorage.getItem(STORAGE)||"null"
-) ||
-{
-
-nextMember:1,
-
+let client=null;
+let db={
 membros:[],
-
-unidades:[
-
-{
-id:"u1",
-nome:"Águias",
-responsavel:"",
-estado:"Ativa"
-},
-
-{
-id:"u2",
-nome:"Falcões",
-responsavel:"",
-estado:"Ativa"
-}
-
-],
-
+unidades:[],
 atividades:[],
-
 financas:[],
-
-config:{
-nomeClube:"Clube de Desbravadores",
-diretor:"",
-telefone:"",
-email:"",
-papel:"58 mm"
-}
-
+config:{}
 };
 
-
 const $=s=>document.querySelector(s);
-
 const content=$("#content");
 
-
-function save(){
-
-localStorage.setItem(
-STORAGE,
-JSON.stringify(db)
+async function initSupabase(){
+if(!window.supabase) throw new Error("Supabase não carregou.");
+if(!client){
+client=window.supabase.createClient(
+window.SGD_SUPABASE_URL,
+window.SGD_SUPABASE_ANON_KEY
 );
-
+}
+return client;
 }
 
 
-function esc(x){
+/* =========================
+   SUPABASE
+========================= */
 
-return String(x??"")
-.replace(
-/[&<>"']/g,
-m=>({
+async function loadDB(){
+
+const c=await initSupabase();
+
+const [m,u,a,f,conf]=await Promise.all([
+c.from("membros").select("*").order("created_at",{ascending:true}),
+c.from("unidades").select("*").order("nome"),
+c.from("atividades").select("*").order("data",{ascending:false}),
+c.from("financas").select("*").order("data",{ascending:false}),
+c.from("configuracoes").select("*").limit(1)
+]);
+
+if(m.error) throw m.error;
+if(u.error) throw u.error;
+if(a.error) throw a.error;
+if(f.error) throw f.error;
+if(conf.error) throw conf.error;
+
+db.membros=m.data||[];
+db.unidades=u.data||[];
+db.atividades=a.data||[];
+db.financas=f.data||[];
+db.config=conf.data?.[0]||{
+nome_clube:"Clube de Desbravadores",
+papel:"58 mm",
+ficha:"A4"
+};
+
+return db;
+}
+
+
+async function refresh(){
+try{
+await loadDB();
+}catch(e){
+console.error(e);
+alert("Não foi possível carregar os dados do Supabase.");
+}
+}
+
+
+/* =========================
+   UTILITÁRIOS
+========================= */
+
+function esc(x){
+return String(x??"").replace(/[&<>"']/g,m=>({
 "&":"&amp;",
 "<":"&lt;",
 ">":"&gt;",
 '"':"&quot;",
 "'":"&#39;"
-}[m])
-);
-
+}[m]));
 }
-
 
 function money(v){
-
-return Number(v||0)
-.toLocaleString(
-"pt-AO",
-{
+return Number(v||0).toLocaleString("pt-AO",{
 minimumFractionDigits:2,
 maximumFractionDigits:2
+});
 }
-);
-
-}
-
 
 function nextNumber(){
-
-return "DBV-"+
-new Date().getFullYear()+
-"-"+
-String(db.nextMember)
-.padStart(4,"0");
-
+let year=new Date().getFullYear();
+let n=db.membros.length+1;
+return "DBV-"+year+"-"+String(n).padStart(4,"0");
 }
-
 
 function B(t,c="primary",fn=""){
-
 return `<button class="btn ${c}" onclick="${fn}">${t}</button>`;
-
 }
-
 
 function T(h,s,b=""){
-
 return `<div class="top">
-
 <div>
-
 <h1>${h}</h1>
-
 <p class=muted>${s}</p>
-
 </div>
-
 ${b}
-
 </div>`;
-
 }
-
 
 function field(n,l,t="text",req=false){
-
 return `<div class=field>
-
 <label>${l}</label>
-
-<input
-name="${n}"
-type="${t}"
-${req?"required":""}
->
-
+<input name="${n}" type="${t}" ${req?"required":""}>
 </div>`;
-
 }
-
 
 function select(n,l,arr,req=false){
-
 return `<div class=field>
-
 <label>${l}</label>
-
-<select
-name="${n}"
-${req?"required":""}
->
-
-<option value="">
-Selecionar
-</option>
-
-${arr.map(x=>
-`<option>${esc(x)}</option>`
-).join("")}
-
+<select name="${n}" ${req?"required":""}>
+<option value="">Selecionar</option>
+${arr.map(x=>`<option>${esc(x)}</option>`).join("")}
 </select>
-
 </div>`;
-
 }
 
+
+/* =========================
+   NAVEGAÇÃO
+========================= */
 
 function page(p){
-
-document
-.querySelectorAll("nav button")
-.forEach(
-b=>b.classList.toggle(
-"active",
-b.dataset.page===p
-)
-);
-
-pages[p]();
-
+document.querySelectorAll("nav button").forEach(b=>{
+b.classList.toggle("active",b.dataset.page===p);
+});
+if(pages[p]) pages[p]();
 }
 
 
-/* DASHBOARD */
+/* =========================
+   DASHBOARD
+========================= */
 
-function dashboard(){
+async function dashboard(){
 
-let rec =
-db.financas
+await refresh();
+
+let rec=db.financas
 .filter(x=>x.tipo==="Receita")
-.reduce(
-(a,x)=>a+Number(x.valor),
-0
-);
+.reduce((a,x)=>a+Number(x.valor||0),0);
 
-let desp =
-db.financas
+let desp=db.financas
 .filter(x=>x.tipo==="Despesa")
-.reduce(
-(a,x)=>a+Number(x.valor),
-0
-);
-
+.reduce((a,x)=>a+Number(x.valor||0),0);
 
 content.innerHTML=
-
 T(
 "Dashboard",
 "Visão geral do clube",
-B(
-"+ Cadastrar membro",
-"primary",
-"page('membroForm')"
-)
+B("+ Cadastrar membro","primary","page('membroForm')")
 )+
-
 `
-
 <div class=cards>
 
 <div class="card stat">
 👥 Membros
-<strong>
-${db.membros.length}
-</strong>
+<strong>${db.membros.length}</strong>
 </div>
 
 <div class="card stat">
 🏕️ Unidades
-<strong>
-${db.unidades.filter(x=>x.estado==="Ativa").length}
-</strong>
+<strong>${db.unidades.filter(x=>x.estado==="Ativa").length}</strong>
 </div>
 
 <div class="card stat">
 📅 Atividades
-<strong>
-${db.atividades.length}
-</strong>
+<strong>${db.atividades.length}</strong>
 </div>
 
 <div class="card stat">
 💰 Saldo
-<strong>
-${money(rec-desp)} Kz
-</strong>
+<strong>${money(rec-desp)} Kz</strong>
 </div>
 
 </div>
 
 <div class=card>
-
-<h3>
-Acesso rápido
-</h3>
-
-<div
-class=actions
-style="justify-content:flex-start">
-
-${B(
-"Lista geral",
-"light",
-"page('membros')"
-)}
-
-${B(
-"Unidades",
-"light",
-"page('unidades')"
-)}
-
-${B(
-"Atividades",
-"light",
-"page('atividades')"
-)}
-
-${B(
-"Finanças",
-"light",
-"page('financas')"
-)}
-
-${B(
-"Relatórios",
-"light",
-"page('relatorios')"
-)}
-
-${B(
-"Minha conta",
-"light",
-"page('conta')"
-)}
-
+<h3>Acesso rápido</h3>
+<div class=actions style="justify-content:flex-start">
+${B("Lista geral","light","page('membros')")}
+${B("Unidades","light","page('unidades')")}
+${B("Atividades","light","page('atividades')")}
+${B("Finanças","light","page('financas')")}
+${B("Relatórios","light","page('relatorios')")}
 </div>
-
-</div>
-`;
-
+</div>`;
 }
 
 
-/* MEMBROS */
+/* =========================
+   MEMBROS
+========================= */
 
-function membros(){
+async function membros(){
+
+await refresh();
 
 content.innerHTML=
-
 T(
 "Lista geral dos membros",
 "Todos os membros e os seus dados",
-B(
-"+ Cadastrar membro",
-"primary",
-"page('membroForm')"
-)
+B("+ Cadastrar membro","primary","page('membroForm')")
 )+
-
 `
-
 <div class=card>
-
 <div class=toolbar>
-
-<input
-id=search
-placeholder="Pesquisar por nome ou Nº de membro..."
-oninput="renderMemberTable()"
->
-
+<input id=search placeholder="Pesquisar por nome ou Nº de membro..." oninput="renderMemberTable()">
 </div>
 
 <div style="overflow:auto">
-
 <table>
-
 <thead>
-
 <tr>
-
 <th>Nº</th>
 <th>Nome completo</th>
 <th>Unidade</th>
@@ -944,1929 +388,1030 @@ oninput="renderMemberTable()"
 <th>Telefone</th>
 <th>Estado</th>
 <th>Ação</th>
-
 </tr>
-
 </thead>
 
-<tbody id=memberRows>
-</tbody>
-
+<tbody id=memberRows></tbody>
 </table>
-
 </div>
-
-</div>
-`;
+</div>`;
 
 renderMemberTable();
-
 }
-
 
 function renderMemberTable(){
 
-let q=
-($("#search")?.value||"")
-.toLowerCase();
+let q=($("#search")?.value||"").toLowerCase();
 
-let arr=
-db.membros.filter(
-m=>
-(m.nome+" "+m.numero)
-.toLowerCase()
-.includes(q)
+let arr=db.membros.filter(m=>
+(`${m.nome||""} ${m.numero||""}`).toLowerCase().includes(q)
 );
 
-
 $("#memberRows").innerHTML=
+arr.map(m=>{
 
-arr.map(
-m=>{
+let i=db.membros.findIndex(x=>x.id===m.id);
 
-let i=db.membros.indexOf(m);
-
-return `<tr>
-
-<td>
-<b>${esc(m.numero)}</b>
-</td>
-
-<td>
-${esc(m.nome)}
-</td>
-
-<td>
-${esc(m.unidade||"—")}
-</td>
-
-<td>
-${esc(m.funcao||"—")}
-</td>
-
-<td>
-${esc(m.classe||"—")}
-</td>
-
-<td>
-${esc(m.telefone||"—")}
-</td>
-
-<td>
-<span class=badge>
-${esc(m.estado)}
-</span>
-</td>
-
-<td>
-${B(
-"Abrir",
-"light",
-`profile(${i})`
-)}
-</td>
-
+return `
+<tr>
+<td><b>${esc(m.numero)}</b></td>
+<td>${esc(m.nome)}</td>
+<td>${esc(m.unidade||"—")}</td>
+<td>${esc(m.funcao||"—")}</td>
+<td>${esc(m.classe||"—")}</td>
+<td>${esc(m.telefone||"—")}</td>
+<td><span class=badge>${esc(m.estado||"Ativo")}</span></td>
+<td>${B("Abrir","light",`profile('${m.id}')`)}</td>
 </tr>`;
 
-}
-).join("") ||
-
-`<tr>
-<td colspan=8 class=muted>
-Nenhum membro encontrado.
-</td>
-</tr>`;
-
+}).join("")||
+`<tr><td colspan=8 class=muted>Nenhum membro encontrado.</td></tr>`;
 }
 
 
-/* FORMULÁRIO MEMBRO */
+/* =========================
+   CADASTRO MEMBRO
+========================= */
 
-function membroForm(){
+async function membroForm(){
+
+await refresh();
 
 content.innerHTML=
-
 T(
 "Cadastrar membro",
-"Preencha os dados; o número será criado automaticamente ao guardar",
-B(
-"← Lista geral",
-"light",
-"page('membros')"
-)
+"Preencha os dados do membro",
+B("← Lista geral","light","page('membros')")
 )+
-
 `
-
 <form id=mf>
 
 <div class=card>
-
-<h3>
-Dados pessoais
-</h3>
-
+<h3>Dados pessoais</h3>
 <div class=grid>
-
-${field(
-"nome",
-"Nome completo *",
-"text",
-true
-)}
-
-${field(
-"nascimento",
-"Data de nascimento",
-"date"
-)}
-
-${select(
-"sexo",
-"Sexo",
-[
-"Masculino",
-"Feminino",
-"Outro"
-]
-)}
-
-${field(
-"documento",
-"Nº do documento"
-)}
-
-${field(
-"telefone",
-"Telefone"
-)}
-
-${field(
-"endereco",
-"Endereço"
-)}
-
-${field(
-"dataCadastro",
-"Data de cadastro *",
-"date",
-true
-)}
-
+${field("nome","Nome completo *","text",true)}
+${field("nascimento","Data de nascimento","date")}
+${select("sexo","Sexo",["Masculino","Feminino","Outro"])}
+${field("documento","Nº do documento")}
+${field("telefone","Telefone")}
+${field("endereco","Endereço")}
+${field("data_cadastro","Data de cadastro","date",true)}
 </div>
-
 </div>
-
 
 <div class=card>
-
-<h3>
-Dados do clube
-</h3>
-
+<h3>Dados do clube</h3>
 <div class=grid>
-
-${select(
-"unidade",
-"Unidade",
-db.unidades
-.filter(
-u=>u.estado==="Ativa"
-)
-.map(
-u=>u.nome
-)
-)}
-
-${select(
-"funcao",
-"Função/Cargo",
-[
-"Desbravador",
-"Conselheiro",
-"Vice-conselheiro",
-"Diretor",
-"Secretário",
-"Tesoureiro",
-"Capelão"
-]
-)}
-
-${select(
-"classe",
-"Classe",
-[
-"Amigo",
-"Companheiro",
-"Pesquisador",
-"Pioneiro",
-"Excursionista",
-"Guia"
-]
-)}
-
-${select(
-"estado",
-"Estado",
-[
-"Ativo",
-"Inativo",
-"Suspenso"
-]
-)}
-
+${select("unidade","Unidade",db.unidades.filter(u=>u.estado==="Ativa").map(u=>u.nome))}
+${select("funcao","Função/Cargo",["Desbravador","Conselheiro","Vice-conselheiro","Diretor","Secretário","Tesoureiro","Capelão"])}
+${select("classe","Classe",["Amigo","Companheiro","Pesquisador","Pioneiro","Excursionista","Guia"])}
+${select("estado","Estado",["Ativo","Inativo","Suspenso"])}
 </div>
-
 </div>
-
 
 <div class=card>
-
-<h3>
-Família e escola
-</h3>
-
+<h3>Família e escola</h3>
 <div class=grid>
-
-${field(
-"encarregado",
-"Nome do encarregado"
-)}
-
-${field(
-"contactoEncarregado",
-"Contacto do encarregado"
-)}
-
-${field(
-"pai",
-"Nome do pai"
-)}
-
-${field(
-"mae",
-"Nome da mãe"
-)}
-
-${field(
-"escola",
-"Escola"
-)}
-
-${field(
-"classeEscolar",
-"Classe escolar"
-)}
-
+${field("encarregado","Nome do encarregado")}
+${field("contacto_encarregado","Contacto do encarregado")}
+${field("pai","Nome do pai")}
+${field("mae","Nome da mãe")}
+${field("escola","Escola")}
+${field("classe_escolar","Classe escolar")}
 </div>
-
 </div>
-
 
 <div class=card>
-
-<h3>
-Fotografia
-</h3>
-
-${field(
-"foto",
-"Fotografia",
-"file"
-)}
-
+<h3>Fotografia</h3>
+${field("foto","Fotografia","file")}
 </div>
-
 
 <div class=actions>
-
-<button class="btn primary">
-Cadastrar membro
-</button>
-
+<button class="btn primary">Cadastrar membro</button>
 </div>
 
-</form>
-`;
+</form>`;
 
-$('[name=dataCadastro]').value =
-new Date()
-.toISOString()
-.slice(0,10);
+$('[name=data_cadastro]').value=new Date().toISOString().slice(0,10);
 
-
-$("#mf").onsubmit =
-async e=>{
+$("#mf").onsubmit=async e=>{
 
 e.preventDefault();
 
-let d=
-Object.fromEntries(
-new FormData(e.target)
-);
+let d=Object.fromEntries(new FormData(e.target));
 
-d.id=crypto.randomUUID();
+delete d.foto;
 
 d.numero=nextNumber();
+d.utilizador="m"+String(db.membros.length+1).padStart(4,"0");
 
-d.utilizador=
-"m"+
-String(db.nextMember)
-.padStart(4,"0");
+try{
 
-d.credencialInicial=
-"SGD"+
-Math.random()
-.toString(36)
-.slice(2,8)
-.toUpperCase();
+const c=await initSupabase();
 
-d.foto="";
+const {data,error}=await c
+.from("membros")
+.insert([d])
+.select()
+.single();
 
-db.nextMember++;
+if(error) throw error;
 
-db.membros.push(d);
+db.membros.push(data);
 
-save();
+profile(data.id,true);
 
-profile(
-db.membros.length-1,
-true
-);
+}catch(err){
+
+console.error(err);
+alert("Erro ao cadastrar membro: "+err.message);
+
+}
 
 };
 
 }
 
 
-/* PERFIL MEMBRO */
+/* =========================
+   PERFIL
+========================= */
 
-function profile(i,created=false){
+async function profile(id,created=false){
 
-let m=db.membros[i];
+await refresh();
+
+let m=db.membros.find(x=>x.id===id);
+
+if(!m){
+alert("Membro não encontrado.");
+return;
+}
 
 content.innerHTML=
-
 T(
 "Perfil do membro",
-created
-?"Membro cadastrado com sucesso."
-:"Ficha individual",
-B(
-"← Lista geral",
-"light",
-"page('membros')"
-)
+created?"Membro cadastrado com sucesso.":"Ficha individual",
+B("← Lista geral","light","page('membros')")
 )+
-
 `
-
 <div class=card>
 
-<h2>
-${esc(m.nome)}
-</h2>
+<h2>${esc(m.nome)}</h2>
 
 <p>
-<b>Nº de membro:</b>
-${esc(m.numero)}
+<b>Nº de membro:</b> ${esc(m.numero)}
 &nbsp;
-<b>Estado:</b>
-${esc(m.estado)}
+<b>Estado:</b> ${esc(m.estado||"—")}
 </p>
 
 <p>
-<b>Unidade:</b>
-${esc(m.unidade||"—")}
+<b>Unidade:</b> ${esc(m.unidade||"—")}
 &nbsp;
-
-<b>Função:</b>
-${esc(m.funcao||"—")}
+<b>Função:</b> ${esc(m.funcao||"—")}
 &nbsp;
-
-<b>Classe:</b>
-${esc(m.classe||"—")}
+<b>Classe:</b> ${esc(m.classe||"—")}
 </p>
 
 <p>
-<b>Nascimento:</b>
-${esc(m.nascimento||"—")}
+<b>Nascimento:</b> ${esc(m.nascimento||"—")}
 &nbsp;
-
-<b>Telefone:</b>
-${esc(m.telefone||"—")}
+<b>Telefone:</b> ${esc(m.telefone||"—")}
 </p>
 
 <p>
 <b>Encarregado:</b>
 ${esc(m.encarregado||"—")}
 —
-${esc(m.contactoEncarregado||"—")}
+${esc(m.contacto_encarregado||"—")}
 </p>
 
 <p>
-<b>Acesso inicial ao SGD:</b>
-Utilizador
-<b>${esc(m.utilizador||"—")}</b>
-·
-
-Palavra-passe
-<b>${esc(m.credencialInicial||"—")}</b>
-</p>
-
-<p>
-<b>Pai:</b>
-${esc(m.pai||"—")}
+<b>Pai:</b> ${esc(m.pai||"—")}
 &nbsp;
-
-<b>Mãe:</b>
-${esc(m.mae||"—")}
+<b>Mãe:</b> ${esc(m.mae||"—")}
 </p>
 
 <p>
-<b>Escola:</b>
-${esc(m.escola||"—")}
+<b>Escola:</b> ${esc(m.escola||"—")}
 &nbsp;
-
-<b>Classe:</b>
-${esc(m.classeEscolar||"—")}
+<b>Classe:</b> ${esc(m.classe_escolar||"—")}
 </p>
 
 </div>
 
 <div class=actions>
-
-${B(
-"✏️ Editar",
-"light",
-`editMember(${i})`
-)}
-
-${B(
-"📄 Ficha A4",
-"light",
-`printA4(${i})`
-)}
-
-${B(
-"🖨️ Cartão térmico",
-"light",
-`printThermal(${i})`
-)}
-
-</div>
-`;
-
+${B("✏️ Editar","light",`editMember('${m.id}')`)}
+${B("📄 Ficha A4","light",`printA4('${m.id}')`)}
+${B("🖨️ Cartão térmico","light",`printThermal('${m.id}')`)}
+</div>`;
 }
 
 
-/* EDITAR MEMBRO */
+/* =========================
+   EDITAR MEMBRO
+========================= */
 
-function editMember(i){
+async function editMember(id){
 
-let m=db.membros[i];
+await refresh();
+
+let m=db.membros.find(x=>x.id===id);
 
 content.innerHTML=
-
 T(
 "Editar membro",
 "Alterar os dados do cadastro",
-B(
-"← Voltar",
-"light",
-`profile(${i})`
-)
+B("← Voltar","light",`profile('${id}')`)
 )+
-
 `
-
 <form id=ef>
 
 <div class=card>
-
 <div class=grid>
 
-${field(
-"numero",
-"Nº de membro",
-"text",
-true
-)}
-
-${field(
-"nome",
-"Nome completo",
-"text",
-true
-)}
-
-${field(
-"nascimento",
-"Nascimento",
-"date"
-)}
-
-${field(
-"telefone",
-"Telefone"
-)}
-
-${select(
-"unidade",
-"Unidade",
-db.unidades.map(
-u=>u.nome
-)
-)}
-
-${select(
-"funcao",
-"Função",
-[
-"Desbravador",
-"Conselheiro",
-"Vice-conselheiro",
-"Diretor",
-"Secretário",
-"Tesoureiro",
-"Capelão"
-]
-)}
-
-${select(
-"classe",
-"Classe",
-[
-"Amigo",
-"Companheiro",
-"Pesquisador",
-"Pioneiro",
-"Excursionista",
-"Guia"
-]
-)}
-
-${select(
-"estado",
-"Estado",
-[
-"Ativo",
-"Inativo",
-"Suspenso"
-]
-)}
+${field("numero","Nº de membro","text",true)}
+${field("nome","Nome completo","text",true)}
+${field("nascimento","Nascimento","date")}
+${field("telefone","Telefone")}
+${select("unidade","Unidade",db.unidades.map(u=>u.nome))}
+${select("funcao","Função",["Desbravador","Conselheiro","Vice-conselheiro","Diretor","Secretário","Tesoureiro","Capelão"])}
+${select("classe","Classe",["Amigo","Companheiro","Pesquisador","Pioneiro","Excursionista","Guia"])}
+${select("estado","Estado",["Ativo","Inativo","Suspenso"])}
 
 </div>
-
 </div>
 
 <div class=actions>
-
-<button class="btn primary">
-Guardar
-</button>
-
+<button class="btn primary">Guardar</button>
 </div>
 
-</form>
-`;
+</form>`;
 
-[
-"numero",
-"nome",
-"nascimento",
-"telefone",
-"unidade",
-"funcao",
-"classe",
-"estado"
-]
-.forEach(
-k=>{
+["numero","nome","nascimento","telefone","unidade","funcao","classe","estado"]
+.forEach(k=>{
 let el=$(`[name=${k}]`);
-if(el)el.value=m[k]||"";
-}
-);
+if(el) el.value=m[k]||"";
+});
 
-
-$("#ef").onsubmit=e=>{
+$("#ef").onsubmit=async e=>{
 
 e.preventDefault();
 
-Object.assign(
-db.membros[i],
-Object.fromEntries(
-new FormData(e.target)
-)
-);
+let d=Object.fromEntries(new FormData(e.target));
 
-save();
+try{
 
-profile(i);
+const c=await initSupabase();
+
+const {error}=await c
+.from("membros")
+.update(d)
+.eq("id",id);
+
+if(error) throw error;
+
+await profile(id);
+
+}catch(err){
+
+alert("Erro ao guardar: "+err.message);
+
+}
 
 };
 
 }
 
 
-/* UNIDADES */
+/* =========================
+   UNIDADES
+========================= */
 
-function unidades(){
+async function unidades(){
+
+await refresh();
 
 content.innerHTML=
-
 T(
 "Unidades",
 "Criar, editar e administrar unidades",
-B(
-"+ Nova unidade",
-"primary",
-"unitForm()"
-)
+B("+ Nova unidade","primary","unitForm()")
 )+
-
 `
-
 <div class=card>
 
 <table>
-
 <thead>
-
 <tr>
-
 <th>Unidade</th>
 <th>Responsável</th>
 <th>Membros</th>
 <th>Estado</th>
 <th>Ação</th>
-
 </tr>
-
 </thead>
 
 <tbody>
 
-${db.unidades.map(
-(u,i)=>
+${db.unidades.map(u=>`
 
-`<tr>
+<tr>
+<td><b>${esc(u.nome)}</b></td>
+<td>${esc(u.responsavel||"—")}</td>
+<td>${db.membros.filter(m=>m.unidade===u.nome).length}</td>
+<td>${esc(u.estado)}</td>
+<td>${B("Editar","light",`unitForm('${u.id}')`)}</td>
+</tr>
 
-<td>
-<b>${esc(u.nome)}</b>
-</td>
-
-<td>
-${esc(u.responsavel||"—")}
-</td>
-
-<td>
-${db.membros.filter(
-m=>m.unidade===u.nome
-).length}
-</td>
-
-<td>
-${esc(u.estado)}
-</td>
-
-<td>
-${B(
-"Editar",
-"light",
-`unitForm(${i})`
-)}
-</td>
-
-</tr>`
-).join("")}
+`).join("")}
 
 </tbody>
-
 </table>
 
-</div>
-`;
-
+</div>`;
 }
 
 
-function unitForm(i=null){
+async function unitForm(id=null){
 
-let u=
-i===null
-?
-{
+await refresh();
+
+let u=id?db.unidades.find(x=>x.id===id):{
 nome:"",
 responsavel:"",
 estado:"Ativa"
-}
-:
-db.unidades[i];
-
+};
 
 content.innerHTML=
-
 T(
-i===null
-?"Nova unidade"
-:"Editar unidade",
+id?"Editar unidade":"Nova unidade",
 "Formulário de unidade",
-B(
-"← Voltar",
-"light",
-"page('unidades')"
-)
+B("← Voltar","light","page('unidades')")
 )+
-
 `
-
 <form id=uf>
 
 <div class=card>
-
 <div class=grid>
 
-${field(
-"nome",
-"Nome *",
-"text",
-true
-)}
-
-${field(
-"responsavel",
-"Responsável"
-)}
-
-${select(
-"estado",
-"Estado",
-[
-"Ativa",
-"Inativa"
-]
-)}
+${field("nome","Nome *","text",true)}
+${field("responsavel","Responsável")}
+${select("estado","Estado",["Ativa","Inativa"])}
 
 </div>
-
 </div>
 
 <div class=actions>
-
-<button class="btn primary">
-Guardar
-</button>
-
+<button class="btn primary">Guardar</button>
 </div>
 
-</form>
-`;
+</form>`;
 
-[
-"nome",
-"responsavel",
-"estado"
-]
-.forEach(
-k=>{
+["nome","responsavel","estado"].forEach(k=>{
 let el=$(`[name=${k}]`);
 if(el)el.value=u[k]||"";
-}
-);
+});
 
-
-$("#uf").onsubmit=e=>{
+$("#uf").onsubmit=async e=>{
 
 e.preventDefault();
 
-let d=
-Object.fromEntries(
-new FormData(e.target)
-);
+let d=Object.fromEntries(new FormData(e.target));
 
-if(i===null)
-db.unidades.push({
-id:crypto.randomUUID(),
-...d
-});
+try{
 
-else
-db.unidades[i]=d;
+const c=await initSupabase();
 
-save();
+let result;
+
+if(id){
+
+result=await c
+.from("unidades")
+.update(d)
+.eq("id",id);
+
+}else{
+
+result=await c
+.from("unidades")
+.insert([d]);
+
+}
+
+if(result.error)throw result.error;
 
 page("unidades");
+
+}catch(err){
+
+alert("Erro: "+err.message);
+
+}
 
 };
 
 }
 
 
-/* ATIVIDADES */
+/* =========================
+   ATIVIDADES
+========================= */
 
-function atividades(){
+async function atividades(){
+
+await refresh();
 
 content.innerHTML=
-
 T(
 "Atividades",
 "Registo e gestão das atividades",
-B(
-"+ Nova atividade",
-"primary",
-"activityForm()"
-)
+B("+ Nova atividade","primary","activityForm()")
 )+
-
 `
-
 <div class=card>
 
 <table>
-
 <thead>
-
 <tr>
-
 <th>Atividade</th>
 <th>Data</th>
 <th>Hora</th>
 <th>Local</th>
 <th>Responsável</th>
 <th>Custo</th>
-
 </tr>
-
 </thead>
 
 <tbody>
 
-${db.atividades.map(
-a=>
+${db.atividades.map(a=>`
 
-`<tr>
-
+<tr>
 <td>${esc(a.nome)}</td>
-<td>${esc(a.data)}</td>
-<td>${esc(a.hora)}</td>
-<td>${esc(a.local)}</td>
-<td>${esc(a.responsavel)}</td>
+<td>${esc(a.data||"")}</td>
+<td>${esc(a.hora||"")}</td>
+<td>${esc(a.local||"")}</td>
+<td>${esc(a.responsavel||"")}</td>
 <td>${money(a.custo)} Kz</td>
+</tr>
 
-</tr>`
-).join("")||
-
-`<tr>
-
-<td colspan=6 class=muted>
-Nenhuma atividade registada.
-</td>
-
-</tr>`
-}
+`).join("")||
+`<tr><td colspan=6 class=muted>Nenhuma atividade registada.</td></tr>`}
 
 </tbody>
-
 </table>
 
-</div>
-`;
-
+</div>`;
 }
 
 
-function activityForm(){
+async function activityForm(){
 
 content.innerHTML=
-
 T(
 "Registar atividade",
 "Formulário completo",
-B(
-"← Voltar",
-"light",
-"page('atividades')"
-)
+B("← Voltar","light","page('atividades')")
 )+
-
 `
-
 <form id=af>
 
 <div class=card>
 
 <div class=grid>
 
-${field(
-"nome",
-"Nome da atividade *",
-"text",
-true
-)}
-
-${field(
-"data",
-"Data *",
-"date",
-true
-)}
-
-${field(
-"hora",
-"Hora",
-"time"
-)}
-
-${field(
-"local",
-"Local"
-)}
-
-${field(
-"responsavel",
-"Responsável"
-)}
-
-${field(
-"custo",
-"Custo (Kz)",
-"number"
-)}
+${field("nome","Nome da atividade *","text",true)}
+${field("data","Data *","date",true)}
+${field("hora","Hora","time")}
+${field("local","Local")}
+${field("responsavel","Responsável")}
+${field("custo","Custo (Kz)","number")}
 
 </div>
 
-${field(
-"descricao",
-"Descrição"
-)}
+${field("descricao","Descrição")}
 
 </div>
 
 <div class=actions>
-
-<button class="btn primary">
-Guardar atividade
-</button>
-
+<button class="btn primary">Guardar atividade</button>
 </div>
 
-</form>
-`;
+</form>`;
 
-$("#af").onsubmit=e=>{
+$("#af").onsubmit=async e=>{
 
 e.preventDefault();
 
-db.atividades.push(
-Object.fromEntries(
-new FormData(e.target)
-)
-);
+let d=Object.fromEntries(new FormData(e.target));
 
-save();
+try{
+
+const c=await initSupabase();
+
+const {error}=await c
+.from("atividades")
+.insert([d]);
+
+if(error)throw error;
 
 page("atividades");
+
+}catch(err){
+
+alert("Erro ao guardar atividade: "+err.message);
+
+}
 
 };
 
 }
 
 
-/* FINANÇAS */
+/* =========================
+   FINANÇAS
+========================= */
 
-function financas(){
+async function financas(){
 
-let rec=
-db.financas
-.filter(
-x=>x.tipo==="Receita"
-)
-.reduce(
-(a,x)=>a+Number(x.valor),
-0
-);
+await refresh();
 
-let desp=
-db.financas
-.filter(
-x=>x.tipo==="Despesa"
-)
-.reduce(
-(a,x)=>a+Number(x.valor),
-0
-);
+let rec=db.financas
+.filter(x=>x.tipo==="Receita")
+.reduce((a,x)=>a+Number(x.valor||0),0);
 
+let desp=db.financas
+.filter(x=>x.tipo==="Despesa")
+.reduce((a,x)=>a+Number(x.valor||0),0);
 
 content.innerHTML=
-
 T(
 "Finanças",
 "Registar pagamentos, receitas e despesas",
-B(
-"+ Novo movimento",
-"primary",
-"financeForm()"
-)
+B("+ Novo movimento","primary","financeForm()")
 )+
-
 `
-
 <div class=cards>
 
 <div class=card>
 Receitas
-<strong>
-${money(rec)} Kz
-</strong>
+<strong>${money(rec)} Kz</strong>
 </div>
 
 <div class=card>
 Despesas
-<strong>
-${money(desp)} Kz
-</strong>
+<strong>${money(desp)} Kz</strong>
 </div>
 
 <div class=card>
 Saldo
-<strong>
-${money(rec-desp)} Kz
-</strong>
+<strong>${money(rec-desp)} Kz</strong>
 </div>
 
 <div class=card>
 Movimentos
-<strong>
-${db.financas.length}
-</strong>
+<strong>${db.financas.length}</strong>
 </div>
 
 </div>
-
 
 <div class=card>
 
-<h3>
-Histórico financeiro
-</h3>
+<h3>Histórico financeiro</h3>
 
 <div style="overflow:auto">
 
 <table>
 
 <thead>
-
 <tr>
-
 <th>Data</th>
 <th>Tipo</th>
-<th>Membro que fez o pagamento</th>
+<th>Membro</th>
 <th>Nº membro</th>
 <th>Categoria</th>
 <th>Descrição</th>
 <th>Valor</th>
-
 </tr>
-
 </thead>
 
 <tbody>
 
-${db.financas.map(
-x=>
+${db.financas.map(x=>`
 
-`<tr>
+<tr>
+<td>${esc(x.data||"")}</td>
+<td>${esc(x.tipo||"")}</td>
+<td><b>${esc(x.membro_nome||"—")}</b></td>
+<td>${esc(x.membro_numero||"—")}</td>
+<td>${esc(x.categoria||"")}</td>
+<td>${esc(x.descricao||"")}</td>
+<td>${money(x.valor)} Kz</td>
+</tr>
 
-<td>${esc(x.data)}</td>
-<td>${esc(x.tipo)}</td>
-
-<td>
-<b>${esc(x.membroNome||"—")}</b>
-</td>
-
-<td>
-${esc(x.membroNumero||"—")}
-</td>
-
-<td>
-${esc(x.categoria)}
-</td>
-
-<td>
-${esc(x.descricao)}
-</td>
-
-<td>
-${money(x.valor)} Kz
-</td>
-
-</tr>`
-).join("")||
-
-`<tr>
-
-<td colspan=7 class=muted>
-Nenhum movimento registado.
-</td>
-
-</tr>`
-}
+`).join("")||
+`<tr><td colspan=7 class=muted>Nenhum movimento registado.</td></tr>`}
 
 </tbody>
-
 </table>
 
 </div>
-
-</div>
-`;
-
+</div>`;
 }
 
 
-function financeForm(){
+async function financeForm(){
+
+await refresh();
 
 content.innerHTML=
-
 T(
 "Novo movimento financeiro",
 "O pagamento pode ser ligado diretamente a um membro",
-B(
-"← Voltar",
-"light",
-"page('financas')"
-)
+B("← Voltar","light","page('financas')")
 )+
-
 `
-
 <form id=ff>
 
 <div class=card>
 
 <div class=grid>
 
-${select(
-"tipo",
-"Tipo",
-[
-"Receita",
-"Despesa"
-],
-true
-)}
+${select("tipo","Tipo",["Receita","Despesa"],true)}
 
 <div class=field>
-
-<label>
-Membro que fez o pagamento
-</label>
-
-<select name=membroId>
-
-<option value="">
-Nenhum / não aplicável
+<label>Membro que fez o pagamento</label>
+<select name=membro_id>
+<option value="">Nenhum / não aplicável</option>
+${db.membros.map(m=>`
+<option value="${esc(m.id)}">
+${esc(m.nome)} — ${esc(m.numero)}
 </option>
-
-${db.membros.map(
-m=>
-
-`<option value="${esc(m.id)}">
-
-${esc(m.nome)}
-—
-${esc(m.numero)}
-
-</option>`
-).join("")}
-
+`).join("")}
 </select>
-
 </div>
 
-${field(
-"categoria",
-"Categoria *",
-"text",
-true
-)}
-
-${field(
-"valor",
-"Valor (Kz) *",
-"number",
-true
-)}
-
-${field(
-"data",
-"Data *",
-"date",
-true
-)}
-
-${field(
-"descricao",
-"Descrição"
-)}
-
-${select(
-"forma",
-"Forma de pagamento",
-[
-"Dinheiro",
-"Transferência",
-"Depósito",
-"Multicaixa Express",
-"Outro"
-]
-)}
+${field("categoria","Categoria *","text",true)}
+${field("valor","Valor (Kz) *","number",true)}
+${field("data","Data *","date",true)}
+${field("descricao","Descrição")}
+${select("forma","Forma de pagamento",["Dinheiro","Transferência","Depósito","Multicaixa Express","Outro"])}
 
 </div>
-
 </div>
 
 <div class=actions>
-
-<button class="btn primary">
-Guardar movimento
-</button>
-
+<button class="btn primary">Guardar movimento</button>
 </div>
 
-</form>
-`;
+</form>`;
 
-$('[name=data]').value=
-new Date()
-.toISOString()
-.slice(0,10);
+$('[name=data]').value=new Date().toISOString().slice(0,10);
 
-
-$("#ff").onsubmit=e=>{
+$("#ff").onsubmit=async e=>{
 
 e.preventDefault();
 
-let d=
-Object.fromEntries(
-new FormData(e.target)
-);
+let d=Object.fromEntries(new FormData(e.target));
 
-let m=
-db.membros.find(
-x=>x.id===d.membroId
-);
+let m=db.membros.find(x=>x.id===d.membro_id);
 
-d.membroNome=
-m?.nome||"";
+d.membro_nome=m?.nome||"";
+d.membro_numero=m?.numero||"";
 
-d.membroNumero=
-m?.numero||"";
+try{
 
-d.id=crypto.randomUUID();
+const c=await initSupabase();
 
-db.financas.push(d);
+const {error}=await c
+.from("financas")
+.insert([d]);
 
-save();
+if(error)throw error;
 
 page("financas");
+
+}catch(err){
+
+alert("Erro ao guardar movimento: "+err.message);
+
+}
 
 };
 
 }
 
 
-/* RELATÓRIOS */
+/* =========================
+   RELATÓRIOS
+========================= */
 
 function relatorios(){
 
 content.innerHTML=
-
 T(
 "Relatórios",
 "Acesso aos principais relatórios do clube"
 )+
-
 `
-
 <div class=cards>
 
 <div class=card>
-
-<h3>
-Lista geral dos membros
-</h3>
-
-<p class=muted>
-Todos os dados dos membros.
-</p>
-
-${B(
-"Abrir",
-"light",
-"page('membros')"
-)}
-
+<h3>Lista geral dos membros</h3>
+<p class=muted>Todos os membros cadastrados.</p>
+${B("Abrir","light","page('membros')")}
 </div>
-
 
 <div class=card>
-
-<h3>
-Membros por unidade
-</h3>
-
-<p class=muted>
-Quantidade e composição por unidade.
-</p>
-
-${B(
-"Abrir",
-"light",
-"unitReport()"
-)}
-
+<h3>Membros por unidade</h3>
+<p class=muted>Quantidade por unidade.</p>
+${B("Abrir","light","unitReport()")}
 </div>
-
 
 <div class=card>
-
-<h3>
-Atividades
-</h3>
-
-<p class=muted>
-Histórico das atividades.
-</p>
-
-${B(
-"Abrir",
-"light",
-"page('atividades')"
-)}
-
+<h3>Atividades</h3>
+<p class=muted>Histórico das atividades.</p>
+${B("Abrir","light","page('atividades')")}
 </div>
-
 
 <div class=card>
-
-<h3>
-Financeiro
-</h3>
-
-<p class=muted>
-Pagamentos, receitas, despesas e saldo.
-</p>
-
-${B(
-"Abrir",
-"light",
-"page('financas')"
-)}
-
+<h3>Financeiro</h3>
+<p class=muted>Receitas, despesas e saldo.</p>
+${B("Abrir","light","page('financas')")}
 </div>
 
-</div>
-`;
-
+</div>`;
 }
 
 
-function unitReport(){
+async function unitReport(){
+
+await refresh();
 
 content.innerHTML=
-
 T(
 "Membros por unidade",
 "Relatório geral",
-B(
-"← Voltar",
-"light",
-"page('relatorios')"
-)
+B("← Voltar","light","page('relatorios')")
 )+
-
 `
-
 <div class=card>
 
 <table>
 
 <thead>
-
 <tr>
-
 <th>Unidade</th>
 <th>Membros</th>
-
 </tr>
-
 </thead>
 
 <tbody>
 
-${db.unidades.map(
-u=>
+${db.unidades.map(u=>`
 
-`<tr>
+<tr>
+<td>${esc(u.nome)}</td>
+<td>${db.membros.filter(m=>m.unidade===u.nome).length}</td>
+</tr>
 
-<td>
-${esc(u.nome)}
-</td>
-
-<td>
-${db.membros.filter(
-m=>m.unidade===u.nome
-).length}
-</td>
-
-</tr>`
-).join("")}
+`).join("")}
 
 </tbody>
 
 </table>
 
-</div>
-`;
-
+</div>`;
 }
 
 
-/* DEFINIÇÕES */
+/* =========================
+   DEFINIÇÕES
+========================= */
 
-function definicoes(){
+async function definicoes(){
+
+await refresh();
 
 content.innerHTML=
-
 T(
 "Definições gerais",
 "Configurações do clube e impressão"
 )+
-
 `
-
 <form id=cf>
 
 <div class=card>
 
-<h3>
-Dados do clube
-</h3>
+<h3>Dados do clube</h3>
 
 <div class=grid>
 
-${field(
-"nomeClube",
-"Nome do clube"
-)}
-
-${field(
-"diretor",
-"Diretor"
-)}
-
-${field(
-"telefone",
-"Telefone"
-)}
-
-${field(
-"email",
-"E-mail"
-)}
+${field("nome_clube","Nome do clube")}
+${field("diretor","Diretor")}
+${field("telefone","Telefone")}
+${field("email","E-mail")}
 
 </div>
-
 </div>
-
 
 <div class=card>
 
-<h3>
-Impressão
-</h3>
+<h3>Impressão</h3>
 
 <div class=grid>
 
-${select(
-"papel",
-"Papel térmico",
-[
-"58 mm",
-"80 mm"
-]
-)}
-
-${select(
-"ficha",
-"Ficha principal",
-[
-"A4"
-]
-)}
+${select("papel","Papel térmico",["58 mm","80 mm"])}
+${select("ficha","Ficha principal",["A4"])}
 
 </div>
-
 </div>
-
 
 <div class=actions>
-
-<button class="btn primary">
-Guardar definições
-</button>
-
+<button class="btn primary">Guardar definições</button>
 </div>
 
-</form>
-`;
+</form>`;
 
-Object.keys(db.config)
-.forEach(
-k=>{
+["nome_clube","diretor","telefone","email","papel","ficha"]
+.forEach(k=>{
 let el=$(`[name=${k}]`);
-if(el)
-el.value=db.config[k]||"";
-}
-);
+if(el)el.value=db.config[k]||"";
+});
 
-
-$("#cf").onsubmit=e=>{
+$("#cf").onsubmit=async e=>{
 
 e.preventDefault();
 
-Object.assign(
-db.config,
-Object.fromEntries(
-new FormData(e.target)
-)
-);
+let d=Object.fromEntries(new FormData(e.target));
 
-save();
+try{
 
-alert(
-"Definições guardadas."
-);
+const c=await initSupabase();
+
+if(db.config.id){
+
+const {error}=await c
+.from("configuracoes")
+.update(d)
+.eq("id",db.config.id);
+
+if(error)throw error;
+
+}else{
+
+const {error}=await c
+.from("configuracoes")
+.insert([d]);
+
+if(error)throw error;
+
+}
+
+alert("Definições guardadas.");
+
+}catch(err){
+
+alert("Erro: "+err.message);
+
+}
 
 };
 
 }
 
 
-/* MINHA CONTA */
+/* =========================
+   MINHA CONTA
+========================= */
 
 async function conta(){
 
-let session=
-await SGD_CENTRAL.session();
+const c=await initSupabase();
 
+const {data,error}=await c.auth.getUser();
 
-if(!session){
+if(error)throw error;
 
-alert(
-"Sessão expirada. Entre novamente."
-);
-
-return;
-
-}
-
-
-let emailAtual=
-session.user.email||"";
-
+let email=data.user.email||"";
 
 content.innerHTML=
-
 T(
 "Minha conta",
-"Gerencie as suas credenciais de acesso ao SGD"
+"Gerencie as suas credenciais de acesso"
 )+
-
-
 `
-
 <div class=card>
 
-<h3>
-Conta atual
-</h3>
+<h3>Conta atual</h3>
 
 <p>
-<b>E-mail:</b>
-${esc(emailAtual)}
+<b>E-mail:</b> ${esc(email)}
 </p>
 
 </div>
 
-
 <div class=card>
 
-<h3>
-🔑 Alterar palavra-passe
-</h3>
-
-<p class=muted>
-
-Por segurança, confirme a sua palavra-passe atual antes de definir uma nova.
-
-</p>
-
+<h3>Alterar palavra-passe</h3>
 
 <form id=passwordForm>
 
-${field(
-"currentPassword",
-"Palavra-passe atual",
-"password",
-true
-)}
-
-${field(
-"newPassword",
-"Nova palavra-passe",
-"password",
-true
-)}
-
-${field(
-"confirmPassword",
-"Confirmar nova palavra-passe",
-"password",
-true
-)}
-
-
-<div
-id=passwordMessage
-class="notice hidden">
-</div>
-
+${field("novaSenha","Nova palavra-passe","password",true)}
+${field("confirmarSenha","Confirmar palavra-passe","password",true)}
 
 <div class=actions>
-
-<button class="btn primary">
-
-Alterar palavra-passe
-
-</button>
-
+<button class="btn primary">Alterar palavra-passe</button>
 </div>
 
 </form>
 
 </div>
-
 
 <div class=card>
 
-<h3>
-📧 Alterar e-mail
-</h3>
+<h3>Alterar e-mail</h3>
 
 <p class=muted>
-
-Depois da alteração, poderá ser necessário confirmar o novo e-mail através da mensagem enviada pelo Supabase.
-
+O Supabase poderá pedir confirmação do novo e-mail.
 </p>
-
 
 <form id=emailForm>
 
-${field(
-"newEmail",
-"Novo e-mail",
-"email",
-true
-)}
-
-
-<div
-id=emailMessage
-class="notice hidden">
-</div>
-
+${field("novoEmail","Novo e-mail","email",true)}
 
 <div class=actions>
-
-<button class="btn primary">
-
-Alterar e-mail
-
-</button>
-
+<button class="btn primary">Alterar e-mail</button>
 </div>
 
 </form>
 
-</div>
-`;
+</div>`;
 
-
-/* ALTERAR SENHA */
-
-$("#passwordForm").onsubmit =
-async e=>{
+$("#passwordForm").onsubmit=async e=>{
 
 e.preventDefault();
 
-const d=
-Object.fromEntries(
-new FormData(e.target)
-);
+let d=Object.fromEntries(new FormData(e.target));
 
-const msg=
-$("#passwordMessage");
+if(d.novaSenha!==d.confirmarSenha){
 
-msg.className=
-"notice hidden";
-
-msg.textContent="";
-
-
-if(
-d.newPassword.length<6
-){
-
-msg.textContent=
-"A nova palavra-passe deve ter pelo menos 6 caracteres.";
-
-msg.className=
-"notice error";
-
+alert("As palavras-passe não coincidem.");
 return;
 
 }
 
+if(d.novaSenha.length<6){
 
-if(
-d.newPassword !==
-d.confirmPassword
-){
-
-msg.textContent=
-"As novas palavras-passe não coincidem.";
-
-msg.className=
-"notice error";
-
+alert("A palavra-passe deve ter pelo menos 6 caracteres.");
 return;
 
 }
-
 
 try{
 
-const c=
-await SGD_CENTRAL.init();
-
-
-/*
-Confirma a palavra-passe atual
-*/
-
-const {
-error:loginError
-}=
-await c.auth.signInWithPassword({
-
-email:emailAtual,
-
-password:d.currentPassword
-
+const {error}=await c.auth.updateUser({
+password:d.novaSenha
 });
 
+if(error)throw error;
 
-if(loginError){
-
-throw new Error(
-"A palavra-passe atual está incorreta."
-);
-
-}
-
-
-/*
-Atualiza a palavra-passe
-*/
-
-const {
-error
-}=
-await c.auth.updateUser({
-
-password:d.newPassword
-
-});
-
-
-if(error)
-throw error;
-
-
-msg.textContent=
-"Palavra-passe alterada com sucesso.";
-
-msg.className=
-"notice";
-
+alert("Palavra-passe alterada com sucesso.");
 
 e.target.reset();
 
-
 }catch(err){
 
-msg.textContent=
-err.message||
-"Não foi possível alterar a palavra-passe.";
-
-msg.className=
-"notice error";
+alert("Erro ao alterar palavra-passe: "+err.message);
 
 }
 
 };
 
 
-/* ALTERAR EMAIL */
-
-$("#emailForm").onsubmit =
-async e=>{
+$("#emailForm").onsubmit=async e=>{
 
 e.preventDefault();
 
-const d=
-Object.fromEntries(
-new FormData(e.target)
-);
-
-const msg=
-$("#emailMessage");
-
-msg.className=
-"notice hidden";
-
-msg.textContent="";
-
-
-if(
-d.newEmail.trim().toLowerCase()
-===
-emailAtual.toLowerCase()
-){
-
-msg.textContent=
-"Este já é o seu e-mail atual.";
-
-msg.className=
-"notice error";
-
-return;
-
-}
-
+let d=Object.fromEntries(new FormData(e.target));
 
 try{
 
-const c=
-await SGD_CENTRAL.init();
-
-
-const {
-error
-}=
-await c.auth.updateUser({
-
-email:
-d.newEmail.trim()
-
+const {error}=await c.auth.updateUser({
+email:d.novoEmail
 });
 
+if(error)throw error;
 
-if(error)
-throw error;
-
-
-msg.textContent=
-"Pedido enviado. Verifique o novo e-mail para confirmar a alteração.";
-
-msg.className=
-"notice";
-
+alert("Pedido de alteração de e-mail enviado. Verifique o novo endereço.");
 
 e.target.reset();
 
-
 }catch(err){
 
-msg.textContent=
-err.message||
-"Não foi possível alterar o e-mail.";
-
-msg.className=
-"notice error";
+alert("Erro ao alterar e-mail: "+err.message);
 
 }
 
@@ -2875,113 +1420,82 @@ msg.className=
 }
 
 
-/* IMPRESSÃO A4 */
+/* =========================
+   IMPRESSÃO A4
+========================= */
 
-function printA4(i){
+async function printA4(id){
 
-let m=db.membros[i];
+await refresh();
 
-let w=
-open(
-"",
-"_blank"
-);
+let m=db.membros.find(x=>x.id===id);
 
-w.document.write(
+let w=open("","_blank");
 
-`<html>
-
+w.document.write(`
+<html>
 <head>
-
-<title>
-Ficha A4 — ${esc(m.nome)}
-</title>
+<title>Ficha A4 — ${esc(m.nome)}</title>
 
 <style>
-
-body{
-font-family:Arial;
-margin:35mm 20mm
-}
-
-h1{
-text-align:center
-}
-
-.row{
-padding:9px 0;
-border-bottom:1px solid #ddd
-}
-
+body{font-family:Arial;margin:35mm 20mm}
+h1{text-align:center}
+.row{padding:9px 0;border-bottom:1px solid #ddd}
 </style>
 
 </head>
 
 <body>
 
-<h1>
-FICHA DE CADASTRO
-</h1>
+<h1>FICHA DE CADASTRO</h1>
 
-<h2>
-${esc(db.config.nomeClube)}
-</h2>
+<h2>${esc(db.config.nome_clube||"Clube de Desbravadores")}</h2>
 
 ${[
-"numero",
-"nome",
-"nascimento",
-"unidade",
-"funcao",
-"classe",
-"estado",
-"telefone",
-"endereco",
-"encarregado",
-"contactoEncarregado",
-"escola",
-"dataCadastro",
-"utilizador",
-"credencialInicial"
-]
-.map(
-k=>
-`<div class=row>
-<b>${esc(k)}:</b>
-${esc(m[k]||"—")}
-</div>`
-).join("")}
+["Número",m.numero],
+["Nome completo",m.nome],
+["Nascimento",m.nascimento],
+["Unidade",m.unidade],
+["Função",m.funcao],
+["Classe",m.classe],
+["Estado",m.estado],
+["Telefone",m.telefone],
+["Endereço",m.endereco],
+["Encarregado",m.encarregado],
+["Contacto do encarregado",m.contacto_encarregado],
+["Escola",m.escola],
+["Data de cadastro",m.data_cadastro]
+].map(x=>`
+<div class=row>
+<b>${esc(x[0])}:</b> ${esc(x[1]||"—")}
+</div>
+`).join("")}
 
 <script>
 setTimeout(()=>print(),300)
 <\/script>
 
 </body>
-
-</html>`
-);
+</html>`);
 
 w.document.close();
-
 }
 
 
-/* IMPRESSÃO TÉRMICA */
+/* =========================
+   IMPRESSÃO TÉRMICA
+========================= */
 
-function printThermal(i){
+async function printThermal(id){
 
-let m=db.membros[i];
+await refresh();
 
-let w=
-open(
-"",
-"_blank",
-"width=420,height=650"
-);
+let m=db.membros.find(x=>x.id===id);
 
-w.document.write(
+let w=open("","_blank","width=420,height=650");
 
-`<html>
+w.document.write(`
+<html>
 
 <head>
 
@@ -3014,52 +1528,18 @@ margin:6px 0
 <body>
 
 <h2>
-SGD
-<br>
+SGD<br>
 FICHA DO MEMBRO
 </h2>
 
 <hr>
 
-<p>
-<b>Nome:</b>
-${esc(m.nome)}
-</p>
-
-<p>
-<b>Nº:</b>
-${esc(m.numero)}
-</p>
-
-<p>
-<b>Unidade:</b>
-${esc(m.unidade||"—")}
-</p>
-
-<p>
-<b>Função:</b>
-${esc(m.funcao||"—")}
-</p>
-
-<p>
-<b>Estado:</b>
-${esc(m.estado||"—")}
-</p>
-
-<p>
-<b>Cadastro:</b>
-${esc(m.dataCadastro||"—")}
-</p>
-
-<p>
-<b>Utilizador:</b>
-${esc(m.utilizador||"—")}
-</p>
-
-<p>
-<b>Senha inicial:</b>
-${esc(m.credencialInicial||"—")}
-</p>
+<p><b>Nome:</b> ${esc(m.nome)}</p>
+<p><b>Nº:</b> ${esc(m.numero)}</p>
+<p><b>Unidade:</b> ${esc(m.unidade||"—")}</p>
+<p><b>Função:</b> ${esc(m.funcao||"—")}</p>
+<p><b>Estado:</b> ${esc(m.estado||"—")}</p>
+<p><b>Cadastro:</b> ${esc(m.data_cadastro||"—")}</p>
 
 <hr>
 
@@ -3069,184 +1549,146 @@ setTimeout(()=>print(),300)
 
 </body>
 
-</html>`
-);
+</html>`);
 
 w.document.close();
-
 }
 
 
-/* LOGOUT */
+/* =========================
+   LOGOUT
+========================= */
 
 async function logout(){
 
-await SGD_CENTRAL.logout();
+try{
 
-sessionStorage.removeItem(
-"sgd_auth"
-);
+const c=await initSupabase();
 
-localStorage.removeItem(
-"sgd_remember"
-);
+await c.auth.signOut();
 
+}catch(e){
+
+console.error(e);
+
+}
+
+sessionStorage.clear();
 location.reload();
 
 }
 
 
-/* PÁGINAS */
+/* =========================
+   PÁGINAS
+========================= */
 
 const pages={
-
 dashboard,
-
 membros,
-
 membroForm,
-
 profile,
-
 editMember,
-
 unidades,
-
 unitForm,
-
 atividades,
-
 activityForm,
-
 financas,
-
 financeForm,
-
 relatorios,
-
 unitReport,
-
 definicoes,
-
 conta
-
 };
 
 
-/* MENU */
+/* =========================
+   NAVEGAÇÃO
+========================= */
 
-document
-.querySelectorAll("nav button")
-.forEach(
-b=>
-b.onclick=
-()=>page(b.dataset.page)
-);
+document.querySelectorAll("nav button").forEach(b=>{
+b.onclick=()=>page(b.dataset.page);
+});
 
 
-/* LOGIN */
+/* =========================
+   LOGIN
+========================= */
 
-$("#loginForm").onsubmit =
-async e=>{
+$("#loginForm").onsubmit=async e=>{
 
 e.preventDefault();
 
-const d=
-Object.fromEntries(
-new FormData(e.target)
-);
+const d=Object.fromEntries(new FormData(e.target));
 
-$("#loginError")
-.classList.add("hidden");
-
+$("#loginError").classList.add("hidden");
 
 try{
 
-const auth=
-await SGD_CENTRAL.login(
-d.user.trim(),
-d.pass
-);
+const c=await initSupabase();
 
-sessionStorage.setItem(
-"sgd_auth",
-"1"
-);
+const {data,error}=await c.auth.signInWithPassword({
+email:d.user.trim(),
+password:d.pass
+});
+
+if(error)throw error;
 
 if(d.remember){
-
-localStorage.setItem(
-"sgd_remember",
-"1"
-);
-
+localStorage.setItem("sgd_remember","1");
+}else{
+localStorage.removeItem("sgd_remember");
 }
 
+$("#login").classList.add("hidden");
+$("#app").classList.remove("hidden");
 
-$("#login")
-.classList.add(
-"hidden"
-);
-
-$("#app")
-.classList.remove(
-"hidden"
-);
-
-page("dashboard");
-
+await page("dashboard");
 
 }catch(err){
 
-$("#loginError")
-.textContent=
+console.error(err);
+
+$("#loginError").textContent=
 "E-mail ou palavra-passe incorretos.";
 
-$("#loginError")
-.classList.remove(
-"hidden"
-);
+$("#loginError").classList.remove("hidden");
 
 }
 
 };
 
 
-/* RECUPERAR SESSÃO */
+/* =========================
+   SESSÃO AUTOMÁTICA
+========================= */
 
 (async()=>{
 
 try{
 
-const session=
-await SGD_CENTRAL.session();
+const c=await initSupabase();
 
-if(session){
+const {data}=await c.auth.getSession();
 
-sessionStorage.setItem(
-"sgd_auth",
-"1"
-);
+if(data.session){
 
-$("#login")
-.classList.add(
-"hidden"
-);
+$("#login").classList.add("hidden");
+$("#app").classList.remove("hidden");
 
-$("#app")
-.classList.remove(
-"hidden"
-);
-
-page("dashboard");
+await page("dashboard");
 
 }
 
-}catch(e){}
+}catch(e){
+
+console.error(e);
+
+}
 
 })();
 
 </script>
 
 </body>
-  </html>
+    </html>
