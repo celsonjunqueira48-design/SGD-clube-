@@ -1,221 +1,3252 @@
-<!doctype html>
+    <!doctype html>
 <html lang="pt">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SGD — Sistema de Gestão do Clube</title>
+
 <style>
-:root{--blue:#1769e0;--bg:#f4f7fb;--text:#172033;--muted:#6d788a;--line:#e4e9f1;--green:#16794a;--red:#b42318}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
-button,input,select,textarea{font:inherit}.hidden{display:none!important}.btn{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer}.primary{background:var(--blue);color:#fff}.light{background:#eef4ff;color:var(--blue)}.danger{background:#fff0f0;color:var(--red)}.full{width:100%}
-.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#1769e0,#0d4da8)}
-.login-card{width:min(430px,100%);background:#fff;border-radius:20px;padding:32px;box-shadow:0 18px 50px #001b4433;text-align:center}
-.club-logo,.mini-logo{background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:900}.club-logo{width:92px;height:92px;border-radius:20px;margin:0 auto 18px}.mini-logo{width:42px;height:42px;border-radius:10px;font-size:11px}
-.login-card h1{margin:0 0 5px}.login-card p,.muted{color:var(--muted)}
-.field{display:flex;flex-direction:column;gap:7px;text-align:left;margin-bottom:14px}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{padding:11px;border:1px solid #d5ddea;border-radius:9px;background:#fff}.field textarea{min-height:90px}
-.notice{padding:11px;border-radius:9px;margin-bottom:14px;background:#eaf8ef;color:var(--green)}.error{background:#fff0f0;color:var(--red)}
-header{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 22px;gap:12px}.brand b{display:block;font-size:18px}.brand small{color:var(--muted)}
-.layout{display:flex;min-height:calc(100vh - 68px)}aside{width:240px;background:var(--blue);color:#fff;padding:18px 12px;flex-shrink:0}.section{font-size:11px;opacity:.7;margin:10px 12px 7px;font-weight:700}
-nav button{width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:11px 12px;border-radius:8px;margin:2px 0;cursor:pointer}nav button:hover,nav button.active{background:#ffffff24}
-main{flex:1;padding:28px;max-width:1450px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.top h1{margin:0;font-size:26px}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:19px;margin-bottom:16px;box-shadow:0 5px 18px #17203308}.stat strong{display:block;font-size:27px;margin-top:8px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
-table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px;vertical-align:top}th{font-size:12px;color:var(--muted)}.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eaf8ef;color:#176b36;font-size:11px;font-weight:700}
-.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.toolbar input{padding:10px;border:1px solid #d5ddea;border-radius:9px;min-width:240px}
-@media(max-width:850px){aside{width:72px}.section{display:none}nav button{font-size:0;text-align:center}nav button::first-letter{font-size:20px}.cards{grid-template-columns:1fr 1fr}.grid,.grid3{grid-template-columns:1fr}main{padding:16px}.top{align-items:flex-start;flex-direction:column}}
-@media print{aside,header,.actions,.no-print{display:none!important}main{padding:0}.card{box-shadow:none;border:0}}
+:root{
+--blue:#1769e0;
+--bg:#f4f7fb;
+--text:#172033;
+--muted:#6d788a;
+--line:#e4e9f1;
+--green:#16794a;
+--red:#b42318
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text)
+}
+
+button,input,select,textarea{font:inherit}
+
+.hidden{display:none!important}
+
+.btn{
+border:0;
+border-radius:9px;
+padding:10px 15px;
+font-weight:700;
+cursor:pointer
+}
+
+.primary{background:var(--blue);color:#fff}
+.light{background:#eef4ff;color:var(--blue)}
+.danger{background:#fff0f0;color:var(--red)}
+.full{width:100%}
+
+.login{
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:20px;
+background:linear-gradient(135deg,#1769e0,#0d4da8)
+}
+
+.login-card{
+width:min(430px,100%);
+background:#fff;
+border-radius:20px;
+padding:32px;
+box-shadow:0 18px 50px #001b4433;
+text-align:center
+}
+
+.club-logo,.mini-logo{
+background:var(--blue);
+color:#fff;
+display:grid;
+place-items:center;
+font-weight:900
+}
+
+.club-logo{
+width:92px;
+height:92px;
+border-radius:20px;
+margin:0 auto 18px
+}
+
+.mini-logo{
+width:42px;
+height:42px;
+border-radius:10px;
+font-size:11px
+}
+
+.login-card h1{margin:0 0 5px}
+.login-card p,.muted{color:var(--muted)}
+
+.field{
+display:flex;
+flex-direction:column;
+gap:7px;
+text-align:left;
+margin-bottom:14px
+}
+
+.field label{
+font-size:13px;
+font-weight:700
+}
+
+.field input,
+.field select,
+.field textarea{
+padding:11px;
+border:1px solid #d5ddea;
+border-radius:9px;
+background:#fff
+}
+
+.field textarea{min-height:90px}
+
+.notice{
+padding:11px;
+border-radius:9px;
+margin-bottom:14px;
+background:#eaf8ef;
+color:var(--green)
+}
+
+.error{
+background:#fff0f0;
+color:var(--red)
+}
+
+header{
+height:68px;
+background:#fff;
+border-bottom:1px solid var(--line);
+display:flex;
+align-items:center;
+padding:0 22px;
+gap:12px
+}
+
+.brand b{
+display:block;
+font-size:18px
+}
+
+.brand small{color:var(--muted)}
+
+.layout{
+display:flex;
+min-height:calc(100vh - 68px)
+}
+
+aside{
+width:240px;
+background:var(--blue);
+color:#fff;
+padding:18px 12px;
+flex-shrink:0
+}
+
+.section{
+font-size:11px;
+opacity:.7;
+margin:10px 12px 7px;
+font-weight:700
+}
+
+nav button{
+width:100%;
+border:0;
+background:transparent;
+color:#fff;
+text-align:left;
+padding:11px 12px;
+border-radius:8px;
+margin:2px 0;
+cursor:pointer
+}
+
+nav button:hover,
+nav button.active{
+background:#ffffff24
+}
+
+main{
+flex:1;
+padding:28px;
+max-width:1450px
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+margin-bottom:20px
+}
+
+.top h1{
+margin:0;
+font-size:26px
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:14px
+}
+
+.card{
+background:#fff;
+border:1px solid var(--line);
+border-radius:14px;
+padding:19px;
+margin-bottom:16px;
+box-shadow:0 5px 18px #17203308
+}
+
+.stat strong{
+display:block;
+font-size:27px;
+margin-top:8px
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:15px
+}
+
+.grid3{
+display:grid;
+grid-template-columns:repeat(3,minmax(0,1fr));
+gap:15px
+}
+
+.actions{
+display:flex;
+gap:9px;
+justify-content:flex-end;
+flex-wrap:wrap;
+margin-top:14px
+}
+
+table{
+width:100%;
+border-collapse:collapse
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #edf0f4;
+text-align:left;
+font-size:13px;
+vertical-align:top
+}
+
+th{
+font-size:12px;
+color:var(--muted)
+}
+
+.badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:99px;
+background:#eaf8ef;
+color:#176b36;
+font-size:11px;
+font-weight:700
+}
+
+.toolbar{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-bottom:14px
+}
+
+.toolbar input{
+padding:10px;
+border:1px solid #d5ddea;
+border-radius:9px;
+min-width:240px
+}
+
+@media(max-width:850px){
+
+aside{width:72px}
+
+.section{display:none}
+
+nav button{
+font-size:0;
+text-align:center
+}
+
+nav button::first-letter{
+font-size:20px
+}
+
+.cards{
+grid-template-columns:1fr 1fr
+}
+
+.grid,
+.grid3{
+grid-template-columns:1fr
+}
+
+main{padding:16px}
+
+.top{
+align-items:flex-start;
+flex-direction:column
+}
+}
+
+@media print{
+
+aside,
+header,
+.actions,
+.no-print{
+display:none!important
+}
+
+main{
+padding:0
+}
+
+.card{
+box-shadow:none;
+border:0
+}
+}
 </style>
+
 <script>
-window.SGD_SUPABASE_URL = "https://edttbjysaqdounpghsdn.supabase.co";
-window.SGD_SUPABASE_ANON_KEY = "sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
+window.SGD_SUPABASE_URL =
+"https://edttbjysaqdounpghsdn.supabase.co";
+
+window.SGD_SUPABASE_ANON_KEY =
+"sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 window.SGD_CENTRAL = {
-  client: null,
-  async init(){
-    if(!window.supabase) throw new Error("Não foi possível carregar o serviço de autenticação.");
-    if(!this.client) this.client = window.supabase.createClient(window.SGD_SUPABASE_URL, window.SGD_SUPABASE_ANON_KEY);
-    return this.client;
-  },
-  async login(email,password){
-    const c=await this.init();
-    const {data,error}=await c.auth.signInWithPassword({email,password});
-    if(error) throw error;
-    return data;
-  },
-  async session(){
-    const c=await this.init();
-    return (await c.auth.getSession()).data.session;
-  },
-  async logout(){
-    if(this.client) await this.client.auth.signOut();
-  }
+
+client:null,
+
+async init(){
+
+if(!window.supabase)
+throw new Error(
+"Não foi possível carregar o serviço de autenticação."
+);
+
+if(!this.client){
+
+this.client =
+window.supabase.createClient(
+window.SGD_SUPABASE_URL,
+window.SGD_SUPABASE_ANON_KEY
+);
+
+}
+
+return this.client;
+},
+
+async login(email,password){
+
+const c=await this.init();
+
+const {data,error} =
+await c.auth.signInWithPassword({
+email,
+password
+});
+
+if(error) throw error;
+
+return data;
+},
+
+async session(){
+
+const c=await this.init();
+
+return (
+await c.auth.getSession()
+).data.session;
+
+},
+
+async logout(){
+
+if(this.client)
+await this.client.auth.signOut();
+
+}
+
 };
 </script>
 
 </head>
+
 <body>
+
+<!-- LOGIN -->
+
 <div id="login" class="login">
+
 <div class="login-card">
-<div class="club-logo">SGD</div><h1>SGD</h1><p>Sistema de Gestão do Clube</p>
-<div id="loginError" class="notice error hidden">Credenciais inválidas.</div>
-<form id="loginForm"><div class="field"><label>Utilizador</label><input name="user" required></div>
-<div class="field"><label>Palavra-passe</label><input name="pass" type="password" required></div>
-<label style="display:flex;gap:8px;align-items:center;text-align:left;font-size:13px;margin-bottom:14px"><input name="remember" type="checkbox"> Lembrar sessão</label>
-<button class="btn primary full">Entrar</button></form>
-<p style="font-size:12px" class="muted">Use o e-mail e a palavra-passe da sua conta do SGD.</p>
-</div></div>
+
+<div class="club-logo">SGD</div>
+
+<h1>SGD</h1>
+
+<p>Sistema de Gestão do Clube</p>
+
+<div id="loginError"
+class="notice error hidden">
+Credenciais inválidas.
+</div>
+
+<form id="loginForm">
+
+<div class="field">
+
+<label>E-mail</label>
+
+<input
+name="user"
+type="email"
+autocomplete="email"
+required
+>
+
+</div>
+
+<div class="field">
+
+<label>Palavra-passe</label>
+
+<input
+name="pass"
+type="password"
+autocomplete="current-password"
+required
+>
+
+</div>
+
+<label
+style="display:flex;gap:8px;align-items:center;text-align:left;font-size:13px;margin-bottom:14px">
+
+<input
+name="remember"
+type="checkbox"
+>
+
+Lembrar sessão
+
+</label>
+
+<button class="btn primary full">
+Entrar
+</button>
+
+</form>
+
+<p
+style="font-size:12px"
+class="muted">
+
+Use o e-mail e a palavra-passe da sua conta do SGD.
+
+</p>
+
+</div>
+
+</div>
+
+
+<!-- APLICAÇÃO -->
 
 <div id="app" class="hidden">
-<header><div class="mini-logo">SGD</div><div class="brand"><b>Sistema de Gestão do Clube</b><small>Secretaria / Direção</small></div><div style="margin-left:auto"><button class="btn light" onclick="logout()">Sair</button></div></header>
-<div class="layout"><aside>
-<div class="section">PRINCIPAL</div><nav><button data-page="dashboard">🏠 Dashboard</button><button data-page="membros">👥 Membros</button><button data-page="unidades">🏕️ Unidades</button></nav>
-<div class="section">GESTÃO</div><nav><button data-page="atividades">📅 Atividades</button><button data-page="financas">💰 Finanças</button></nav>
-<div class="section">ADMINISTRAÇÃO</div><nav><button data-page="relatorios">📄 Relatórios</button><button data-page="definicoes">⚙️ Definições</button></nav>
-</aside><main id="content"></main></div></div>
+
+<header>
+
+<div class="mini-logo">
+SGD
+</div>
+
+<div class="brand">
+
+<b>
+Sistema de Gestão do Clube
+</b>
+
+<small>
+Secretaria / Direção
+</small>
+
+</div>
+
+<div style="margin-left:auto">
+
+<button
+class="btn light"
+onclick="logout()">
+
+Sair
+
+</button>
+
+</div>
+
+</header>
+
+
+<div class="layout">
+
+<aside>
+
+<div class="section">
+PRINCIPAL
+</div>
+
+<nav>
+
+<button data-page="dashboard">
+🏠 Dashboard
+</button>
+
+<button data-page="membros">
+👥 Membros
+</button>
+
+<button data-page="unidades">
+🏕️ Unidades
+</button>
+
+</nav>
+
+
+<div class="section">
+GESTÃO
+</div>
+
+<nav>
+
+<button data-page="atividades">
+📅 Atividades
+</button>
+
+<button data-page="financas">
+💰 Finanças
+</button>
+
+</nav>
+
+
+<div class="section">
+ADMINISTRAÇÃO
+</div>
+
+<nav>
+
+<button data-page="relatorios">
+📄 Relatórios
+</button>
+
+<button data-page="definicoes">
+⚙️ Definições
+</button>
+
+<button data-page="conta">
+👤 Minha conta
+</button>
+
+</nav>
+
+</aside>
+
+
+<main id="content"></main>
+
+</div>
+
+</div>
+
 
 <script>
+
 const STORAGE="SGD_FINAL_DADOS_V2";
-let db=JSON.parse(localStorage.getItem(STORAGE)||"null")||{
+
+let db =
+JSON.parse(
+localStorage.getItem(STORAGE)||"null"
+) ||
+{
+
 nextMember:1,
-membros:[],unidades:[{id:"u1",nome:"Águias",responsavel:"",estado:"Ativa"},{id:"u2",nome:"Falcões",responsavel:"",estado:"Ativa"}],
-atividades:[],financas:[],config:{nomeClube:"Clube de Desbravadores",diretor:"",telefone:"",email:"",papel:"58 mm"}
+
+membros:[],
+
+unidades:[
+
+{
+id:"u1",
+nome:"Águias",
+responsavel:"",
+estado:"Ativa"
+},
+
+{
+id:"u2",
+nome:"Falcões",
+responsavel:"",
+estado:"Ativa"
+}
+
+],
+
+atividades:[],
+
+financas:[],
+
+config:{
+nomeClube:"Clube de Desbravadores",
+diretor:"",
+telefone:"",
+email:"",
+papel:"58 mm"
+}
+
 };
-const $=s=>document.querySelector(s), content=$("#content");
-function save(){localStorage.setItem(STORAGE,JSON.stringify(db))}
-function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-function money(v){return Number(v||0).toLocaleString("pt-AO",{minimumFractionDigits:2,maximumFractionDigits:2})}
-function nextNumber(){return "DBV-"+new Date().getFullYear()+"-"+String(db.nextMember).padStart(4,"0")}
-function B(t,c="primary",fn=""){return `<button class="btn ${c}" onclick="${fn}">${t}</button>`}
-function T(h,s,b=""){return `<div class="top"><div><h1>${h}</h1><p class=muted>${s}</p></div>${b}</div>`}
-function field(n,l,t="text",req=false){return `<div class=field><label>${l}</label><input name="${n}" type="${t}" ${req?"required":""}></div>`}
-function select(n,l,arr,req=false){return `<div class=field><label>${l}</label><select name="${n}" ${req?"required":""}><option value="">Selecionar</option>${arr.map(x=>`<option>${esc(x)}</option>`).join("")}</select></div>`}
-function page(p){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));pages[p]()}
+
+
+const $=s=>document.querySelector(s);
+
+const content=$("#content");
+
+
+function save(){
+
+localStorage.setItem(
+STORAGE,
+JSON.stringify(db)
+);
+
+}
+
+
+function esc(x){
+
+return String(x??"")
+.replace(
+/[&<>"']/g,
+m=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+}[m])
+);
+
+}
+
+
+function money(v){
+
+return Number(v||0)
+.toLocaleString(
+"pt-AO",
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
+
+}
+
+
+function nextNumber(){
+
+return "DBV-"+
+new Date().getFullYear()+
+"-"+
+String(db.nextMember)
+.padStart(4,"0");
+
+}
+
+
+function B(t,c="primary",fn=""){
+
+return `<button class="btn ${c}" onclick="${fn}">${t}</button>`;
+
+}
+
+
+function T(h,s,b=""){
+
+return `<div class="top">
+
+<div>
+
+<h1>${h}</h1>
+
+<p class=muted>${s}</p>
+
+</div>
+
+${b}
+
+</div>`;
+
+}
+
+
+function field(n,l,t="text",req=false){
+
+return `<div class=field>
+
+<label>${l}</label>
+
+<input
+name="${n}"
+type="${t}"
+${req?"required":""}
+>
+
+</div>`;
+
+}
+
+
+function select(n,l,arr,req=false){
+
+return `<div class=field>
+
+<label>${l}</label>
+
+<select
+name="${n}"
+${req?"required":""}
+>
+
+<option value="">
+Selecionar
+</option>
+
+${arr.map(x=>
+`<option>${esc(x)}</option>`
+).join("")}
+
+</select>
+
+</div>`;
+
+}
+
+
+function page(p){
+
+document
+.querySelectorAll("nav button")
+.forEach(
+b=>b.classList.toggle(
+"active",
+b.dataset.page===p
+)
+);
+
+pages[p]();
+
+}
+
+
+/* DASHBOARD */
+
 function dashboard(){
-let rec=db.financas.filter(x=>x.tipo==="Receita").reduce((a,x)=>a+Number(x.valor),0),desp=db.financas.filter(x=>x.tipo==="Despesa").reduce((a,x)=>a+Number(x.valor),0);
-content.innerHTML=T("Dashboard","Visão geral do clube",B("+ Cadastrar membro","primary","page('membroForm')"))+
-`<div class=cards><div class="card stat">👥 Membros<strong>${db.membros.length}</strong></div><div class="card stat">🏕️ Unidades<strong>${db.unidades.filter(x=>x.estado==="Ativa").length}</strong></div><div class="card stat">📅 Atividades<strong>${db.atividades.length}</strong></div><div class="card stat">💰 Saldo<strong>${money(rec-desp)} Kz</strong></div></div>
-<div class=card><h3>Acesso rápido</h3><div class=actions style="justify-content:flex-start">${B("Lista geral","light","page('membros')")}${B("Unidades","light","page('unidades')")}${B("Atividades","light","page('atividades')")}${B("Finanças","light","page('financas')")}${B("Relatórios","light","page('relatorios')")}</div></div>`
+
+let rec =
+db.financas
+.filter(x=>x.tipo==="Receita")
+.reduce(
+(a,x)=>a+Number(x.valor),
+0
+);
+
+let desp =
+db.financas
+.filter(x=>x.tipo==="Despesa")
+.reduce(
+(a,x)=>a+Number(x.valor),
+0
+);
+
+
+content.innerHTML=
+
+T(
+"Dashboard",
+"Visão geral do clube",
+B(
+"+ Cadastrar membro",
+"primary",
+"page('membroForm')"
+)
+)+
+
+`
+
+<div class=cards>
+
+<div class="card stat">
+👥 Membros
+<strong>
+${db.membros.length}
+</strong>
+</div>
+
+<div class="card stat">
+🏕️ Unidades
+<strong>
+${db.unidades.filter(x=>x.estado==="Ativa").length}
+</strong>
+</div>
+
+<div class="card stat">
+📅 Atividades
+<strong>
+${db.atividades.length}
+</strong>
+</div>
+
+<div class="card stat">
+💰 Saldo
+<strong>
+${money(rec-desp)} Kz
+</strong>
+</div>
+
+</div>
+
+<div class=card>
+
+<h3>
+Acesso rápido
+</h3>
+
+<div
+class=actions
+style="justify-content:flex-start">
+
+${B(
+"Lista geral",
+"light",
+"page('membros')"
+)}
+
+${B(
+"Unidades",
+"light",
+"page('unidades')"
+)}
+
+${B(
+"Atividades",
+"light",
+"page('atividades')"
+)}
+
+${B(
+"Finanças",
+"light",
+"page('financas')"
+)}
+
+${B(
+"Relatórios",
+"light",
+"page('relatorios')"
+)}
+
+${B(
+"Minha conta",
+"light",
+"page('conta')"
+)}
+
+</div>
+
+</div>
+`;
+
 }
+
+
+/* MEMBROS */
+
 function membros(){
-content.innerHTML=T("Lista geral dos membros","Todos os membros e os seus dados",B("+ Cadastrar membro","primary","page('membroForm')"))+
-`<div class=card><div class=toolbar><input id=search placeholder="Pesquisar por nome ou Nº de membro..." oninput="renderMemberTable()"></div><div style="overflow:auto"><table><thead><tr><th>Nº</th><th>Nome completo</th><th>Unidade</th><th>Função</th><th>Classe</th><th>Telefone</th><th>Estado</th><th>Ação</th></tr></thead><tbody id=memberRows></tbody></table></div></div>`;
-renderMemberTable()
+
+content.innerHTML=
+
+T(
+"Lista geral dos membros",
+"Todos os membros e os seus dados",
+B(
+"+ Cadastrar membro",
+"primary",
+"page('membroForm')"
+)
+)+
+
+`
+
+<div class=card>
+
+<div class=toolbar>
+
+<input
+id=search
+placeholder="Pesquisar por nome ou Nº de membro..."
+oninput="renderMemberTable()"
+>
+
+</div>
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Nº</th>
+<th>Nome completo</th>
+<th>Unidade</th>
+<th>Função</th>
+<th>Classe</th>
+<th>Telefone</th>
+<th>Estado</th>
+<th>Ação</th>
+
+</tr>
+
+</thead>
+
+<tbody id=memberRows>
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+`;
+
+renderMemberTable();
+
 }
+
+
 function renderMemberTable(){
-let q=($("#search")?.value||"").toLowerCase(), arr=db.membros.filter(m=>(m.nome+" "+m.numero).toLowerCase().includes(q));
-$("#memberRows").innerHTML=arr.map(m=>{let i=db.membros.indexOf(m);return `<tr><td><b>${esc(m.numero)}</b></td><td>${esc(m.nome)}</td><td>${esc(m.unidade||"—")}</td><td>${esc(m.funcao||"—")}</td><td>${esc(m.classe||"—")}</td><td>${esc(m.telefone||"—")}</td><td><span class=badge>${esc(m.estado)}</span></td><td>${B("Abrir","light",`profile(${i})`)}</td></tr>`}).join("")||`<tr><td colspan=8 class=muted>Nenhum membro encontrado.</td></tr>`
+
+let q=
+($("#search")?.value||"")
+.toLowerCase();
+
+let arr=
+db.membros.filter(
+m=>
+(m.nome+" "+m.numero)
+.toLowerCase()
+.includes(q)
+);
+
+
+$("#memberRows").innerHTML=
+
+arr.map(
+m=>{
+
+let i=db.membros.indexOf(m);
+
+return `<tr>
+
+<td>
+<b>${esc(m.numero)}</b>
+</td>
+
+<td>
+${esc(m.nome)}
+</td>
+
+<td>
+${esc(m.unidade||"—")}
+</td>
+
+<td>
+${esc(m.funcao||"—")}
+</td>
+
+<td>
+${esc(m.classe||"—")}
+</td>
+
+<td>
+${esc(m.telefone||"—")}
+</td>
+
+<td>
+<span class=badge>
+${esc(m.estado)}
+</span>
+</td>
+
+<td>
+${B(
+"Abrir",
+"light",
+`profile(${i})`
+)}
+</td>
+
+</tr>`;
+
 }
+).join("") ||
+
+`<tr>
+<td colspan=8 class=muted>
+Nenhum membro encontrado.
+</td>
+</tr>`;
+
+}
+
+
+/* FORMULÁRIO MEMBRO */
+
 function membroForm(){
-content.innerHTML=T("Cadastrar membro","Preencha os dados; o número será criado automaticamente ao guardar",B("← Lista geral","light","page('membros')"))+
-`<form id=mf><div class=card><h3>Dados pessoais</h3><div class=grid>${field("nome","Nome completo *","text",true)}${field("nascimento","Data de nascimento","date")}${select("sexo","Sexo",["Masculino","Feminino","Outro"])}${field("documento","Nº do documento")}${field("telefone","Telefone")}${field("endereco","Endereço")}${field("dataCadastro","Data de cadastro *","date",true)}</div></div>
-<div class=card><h3>Dados do clube</h3><div class=grid>${select("unidade","Unidade",db.unidades.filter(u=>u.estado==="Ativa").map(u=>u.nome))}${select("funcao","Função/Cargo",["Desbravador","Conselheiro","Vice-conselheiro","Diretor","Secretário","Tesoureiro","Capelão"])}${select("classe","Classe",["Amigo","Companheiro","Pesquisador","Pioneiro","Excursionista","Guia"])}${select("estado","Estado",["Ativo","Inativo","Suspenso"])}</div></div>
-<div class=card><h3>Família e escola</h3><div class=grid>${field("encarregado","Nome do encarregado")}${field("contactoEncarregado","Contacto do encarregado")}${field("pai","Nome do pai")}${field("mae","Nome da mãe")}${field("escola","Escola")}${field("classeEscolar","Classe escolar")}</div></div>
-<div class=card><h3>Fotografia</h3>${field("foto","Fotografia","file")}</div><div class=actions><button class="btn primary">Cadastrar membro</button></div></form>`;
-$('[name=dataCadastro]').value=new Date().toISOString().slice(0,10);
-$("#mf").onsubmit=async e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));d.id=crypto.randomUUID();d.numero=nextNumber();d.utilizador="m"+String(db.nextMember).padStart(4,"0");d.credencialInicial="SGD"+Math.random().toString(36).slice(2,8).toUpperCase();d.foto="";db.nextMember++;db.membros.push(d);save();profile(db.membros.length-1,true)}
-}
-function profile(i,created=false){
-let m=db.membros[i];
-content.innerHTML=T("Perfil do membro",created?"Membro cadastrado com sucesso.":"Ficha individual",B("← Lista geral","light","page('membros')"))+
-`<div class=card><h2>${esc(m.nome)}</h2><p><b>Nº de membro:</b> ${esc(m.numero)} &nbsp; <b>Estado:</b> ${esc(m.estado)}</p><p><b>Unidade:</b> ${esc(m.unidade||"—")} &nbsp; <b>Função:</b> ${esc(m.funcao||"—")} &nbsp; <b>Classe:</b> ${esc(m.classe||"—")}</p><p><b>Nascimento:</b> ${esc(m.nascimento||"—")} &nbsp; <b>Telefone:</b> ${esc(m.telefone||"—")}</p><p><b>Encarregado:</b> ${esc(m.encarregado||"—")} — ${esc(m.contactoEncarregado||"—")}</p>
-<p><b>Acesso inicial ao SGD:</b> Utilizador <b>${esc(m.utilizador||"—")}</b> · Palavra-passe <b>${esc(m.credencialInicial||"—")}</b></p><p><b>Pai:</b> ${esc(m.pai||"—")} &nbsp; <b>Mãe:</b> ${esc(m.mae||"—")}</p><p><b>Escola:</b> ${esc(m.escola||"—")} &nbsp; <b>Classe:</b> ${esc(m.classeEscolar||"—")}</p></div>
-<div class=actions>${B("✏️ Editar","light",`editMember(${i})`)}${B("📄 Ficha A4","light",`printA4(${i})`)}${B("🖨️ Cartão térmico","light",`printThermal(${i})`)}</div>`
-}
-function editMember(i){
-let m=db.membros[i];content.innerHTML=T("Editar membro","Alterar os dados do cadastro",B("← Voltar","light",`profile(${i})`))+
-`<form id=ef><div class=card><div class=grid>${field("numero","Nº de membro","text",true)}${field("nome","Nome completo","text",true)}${field("nascimento","Nascimento","date")}${field("telefone","Telefone")}${select("unidade","Unidade",db.unidades.map(u=>u.nome))}${select("funcao","Função",["Desbravador","Conselheiro","Vice-conselheiro","Diretor","Secretário","Tesoureiro","Capelão"])}${select("classe","Classe",["Amigo","Companheiro","Pesquisador","Pioneiro","Excursionista","Guia"])}${select("estado","Estado",["Ativo","Inativo","Suspenso"])}</div></div><div class=actions><button class="btn primary">Guardar</button></div></form>`;
-["numero","nome","nascimento","telefone","unidade","funcao","classe","estado"].forEach(k=>{let el=$(`[name=${k}]`);if(el)el.value=m[k]||""});
-$("#ef").onsubmit=e=>{e.preventDefault();Object.assign(db.membros[i],Object.fromEntries(new FormData(e.target)));save();profile(i)}
-}
-function unidades(){
-content.innerHTML=T("Unidades","Criar, editar e administrar unidades",B("+ Nova unidade","primary","unitForm()"))+
-`<div class=card><table><thead><tr><th>Unidade</th><th>Responsável</th><th>Membros</th><th>Estado</th><th>Ação</th></tr></thead><tbody>${db.unidades.map((u,i)=>`<tr><td><b>${esc(u.nome)}</b></td><td>${esc(u.responsavel||"—")}</td><td>${db.membros.filter(m=>m.unidade===u.nome).length}</td><td>${esc(u.estado)}</td><td>${B("Editar","light",`unitForm(${i})`)}</td></tr>`).join("")}</tbody></table></div>`
-}
-function unitForm(i=null){
-let u=i===null?{nome:"",responsavel:"",estado:"Ativa"}:db.unidades[i];
-content.innerHTML=T(i===null?"Nova unidade":"Editar unidade","Formulário de unidade",B("← Voltar","light","page('unidades')"))+
-`<form id=uf><div class=card><div class=grid>${field("nome","Nome *","text",true)}${field("responsavel","Responsável")}${select("estado","Estado",["Ativa","Inativa"])}</div></div><div class=actions><button class="btn primary">Guardar</button></div></form>`;
-["nome","responsavel","estado"].forEach(k=>{let el=$(`[name=${k}]`);if(el)el.value=u[k]||""});
-$("#uf").onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));if(i===null)db.unidades.push({id:crypto.randomUUID(),...d});else db.unidades[i]=d;save();page("unidades")}
-}
-function atividades(){
-content.innerHTML=T("Atividades","Registo e gestão das atividades",B("+ Nova atividade","primary","activityForm()"))+
-`<div class=card><table><thead><tr><th>Atividade</th><th>Data</th><th>Hora</th><th>Local</th><th>Responsável</th><th>Custo</th></tr></thead><tbody>${db.atividades.map(a=>`<tr><td>${esc(a.nome)}</td><td>${esc(a.data)}</td><td>${esc(a.hora)}</td><td>${esc(a.local)}</td><td>${esc(a.responsavel)}</td><td>${money(a.custo)} Kz</td></tr>`).join("")||`<tr><td colspan=6 class=muted>Nenhuma atividade registada.</td></tr>`}</tbody></table></div>`
-}
-function activityForm(){
-content.innerHTML=T("Registar atividade","Formulário completo",B("← Voltar","light","page('atividades')"))+
-`<form id=af><div class=card><div class=grid>${field("nome","Nome da atividade *","text",true)}${field("data","Data *","date",true)}${field("hora","Hora","time")}${field("local","Local")}${field("responsavel","Responsável")}${field("custo","Custo (Kz)","number")}</div>${field("descricao","Descrição")}</div><div class=actions><button class="btn primary">Guardar atividade</button></div></form>`;
-$("#af").onsubmit=e=>{e.preventDefault();db.atividades.push(Object.fromEntries(new FormData(e.target)));save();page("atividades")}
-}
-function financas(){
-let rec=db.financas.filter(x=>x.tipo==="Receita").reduce((a,x)=>a+Number(x.valor),0),desp=db.financas.filter(x=>x.tipo==="Despesa").reduce((a,x)=>a+Number(x.valor),0);
-content.innerHTML=T("Finanças","Registar pagamentos, receitas e despesas",B("+ Novo movimento","primary","financeForm()"))+
-`<div class=cards><div class=card>Receitas<strong>${money(rec)} Kz</strong></div><div class=card>Despesas<strong>${money(desp)} Kz</strong></div><div class=card>Saldo<strong>${money(rec-desp)} Kz</strong></div><div class=card>Movimentos<strong>${db.financas.length}</strong></div></div>
-<div class=card><h3>Histórico financeiro</h3><div style="overflow:auto"><table><thead><tr><th>Data</th><th>Tipo</th><th>Membro que fez o pagamento</th><th>Nº membro</th><th>Categoria</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>${db.financas.map(x=>`<tr><td>${esc(x.data)}</td><td>${esc(x.tipo)}</td><td><b>${esc(x.membroNome||"—")}</b></td><td>${esc(x.membroNumero||"—")}</td><td>${esc(x.categoria)}</td><td>${esc(x.descricao)}</td><td>${money(x.valor)} Kz</td></tr>`).join("")||`<tr><td colspan=7 class=muted>Nenhum movimento registado.</td></tr>`}</tbody></table></div></div>`
-}
-function financeForm(){
-content.innerHTML=T("Novo movimento financeiro","O pagamento pode ser ligado diretamente a um membro",B("← Voltar","light","page('financas')"))+
-`<form id=ff><div class=card><div class=grid>${select("tipo","Tipo",["Receita","Despesa"],true)}
-<div class=field><label>Membro que fez o pagamento</label><select name=membroId><option value="">Nenhum / não aplicável</option>${db.membros.map(m=>`<option value="${esc(m.id)}">${esc(m.nome)} — ${esc(m.numero)}</option>`).join("")}</select></div>
-${field("categoria","Categoria *","text",true)}${field("valor","Valor (Kz) *","number",true)}${field("data","Data *","date",true)}${field("descricao","Descrição")}${select("forma","Forma de pagamento",["Dinheiro","Transferência","Depósito","Multicaixa Express","Outro"])}</div></div><div class=actions><button class="btn primary">Guardar movimento</button></div></form>`;
-$('[name=data]').value=new Date().toISOString().slice(0,10);
-$("#ff").onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target)),m=db.membros.find(x=>x.id===d.membroId);d.membroNome=m?.nome||"";d.membroNumero=m?.numero||"";d.id=crypto.randomUUID();db.financas.push(d);save();page("financas")}
-}
-function relatorios(){
-content.innerHTML=T("Relatórios","Acesso aos principais relatórios do clube")+
-`<div class=cards><div class=card><h3>Lista geral dos membros</h3><p class=muted>Todos os dados dos membros.</p>${B("Abrir","light","page('membros')")}</div><div class=card><h3>Membros por unidade</h3><p class=muted>Quantidade e composição por unidade.</p>${B("Abrir","light","unitReport()")}</div><div class=card><h3>Atividades</h3><p class=muted>Histórico das atividades.</p>${B("Abrir","light","page('atividades')")}</div><div class=card><h3>Financeiro</h3><p class=muted>Pagamentos, receitas, despesas e saldo.</p>${B("Abrir","light","page('financas')")}</div></div>`
-}
-function unitReport(){
-content.innerHTML=T("Membros por unidade","Relatório geral",B("← Voltar","light","page('relatorios')"))+
-`<div class=card><table><thead><tr><th>Unidade</th><th>Membros</th></tr></thead><tbody>${db.unidades.map(u=>`<tr><td>${esc(u.nome)}</td><td>${db.membros.filter(m=>m.unidade===u.nome).length}</td></tr>`).join("")}</tbody></table></div>`
-}
-function definicoes(){
-content.innerHTML=T("Definições gerais","Configurações do clube e impressão")+
-`<form id=cf><div class=card><h3>Dados do clube</h3><div class=grid>${field("nomeClube","Nome do clube")}${field("diretor","Diretor")}${field("telefone","Telefone")}${field("email","E-mail")}</div></div><div class=card><h3>Impressão</h3><div class=grid>${select("papel","Papel térmico",["58 mm","80 mm"])}${select("ficha","Ficha principal",["A4"])}</div></div><div class=actions><button class="btn primary">Guardar definições</button></div></form>`;
-Object.keys(db.config).forEach(k=>{let el=$(`[name=${k}]`);if(el)el.value=db.config[k]||""});
-$("#cf").onsubmit=e=>{e.preventDefault();Object.assign(db.config,Object.fromEntries(new FormData(e.target)));save();alert("Definições guardadas.")}
-}
-function printA4(i){
-let m=db.membros[i],w=open("","_blank");w.document.write(`<html><head><title>Ficha A4 — ${esc(m.nome)}</title><style>body{font-family:Arial;margin:35mm 20mm}h1{text-align:center}.row{padding:9px 0;border-bottom:1px solid #ddd}</style></head><body><h1>FICHA DE CADASTRO</h1><h2>${esc(db.config.nomeClube)}</h2>${["numero","nome","nascimento","unidade","funcao","classe","estado","telefone","endereco","encarregado","contactoEncarregado","escola","dataCadastro","utilizador","credencialInicial"].map(k=>`<div class=row><b>${esc(k)}:</b> ${esc(m[k]||"—")}</div>`).join("")}<script>setTimeout(()=>print(),300)<\/script>
+
+content.innerHTML=
+
+T(
+"Cadastrar membro",
+"Preencha os dados; o número será criado automaticamente ao guardar",
+B(
+"← Lista geral",
+"light",
+"page('membros')"
+)
+)+
+
+`
+
+<form id=mf>
+
+<div class=card>
+
+<h3>
+Dados pessoais
+</h3>
+
+<div class=grid>
+
+${field(
+"nome",
+"Nome completo *",
+"text",
+true
+)}
+
+${field(
+"nascimento",
+"Data de nascimento",
+"date"
+)}
+
+${select(
+"sexo",
+"Sexo",
+[
+"Masculino",
+"Feminino",
+"Outro"
+]
+)}
+
+${field(
+"documento",
+"Nº do documento"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${field(
+"endereco",
+"Endereço"
+)}
+
+${field(
+"dataCadastro",
+"Data de cadastro *",
+"date",
+true
+)}
+
+</div>
+
+</div>
 
 
-</body></html>`);w.document.close()
-}
-function printThermal(i){
-let m=db.membros[i],w=open("","_blank","width=420,height=650");w.document.write(`<html><head><style>@page{size:58mm auto;margin:0}body{width:58mm;font:11px Arial;padding:4mm}h2{font-size:14px;text-align:center}p{margin:6px 0}</style></head><body><h2>SGD<br>FICHA DO MEMBRO</h2><hr><p><b>Nome:</b> ${esc(m.nome)}</p><p><b>Nº:</b> ${esc(m.numero)}</p><p><b>Unidade:</b> ${esc(m.unidade||"—")}</p><p><b>Função:</b> ${esc(m.funcao||"—")}</p><p><b>Estado:</b> ${esc(m.estado||"—")}</p><p><b>Cadastro:</b> ${esc(m.dataCadastro||"—")}</p><p><b>Utilizador:</b> ${esc(m.utilizador||"—")}</p><p><b>Senha inicial:</b> ${esc(m.credencialInicial||"—")}</p><hr><script>setTimeout(()=>print(),300)<\/script>
-</body></html>`);w.document.close()
-}
-async function logout(){await SGD_CENTRAL.logout();sessionStorage.removeItem("sgd_auth");localStorage.removeItem("sgd_remember");location.reload()}
-const pages={dashboard,membros,membroForm,profile,editMember,unidades,unitForm,atividades,activityForm,financas,financeForm,relatorios,unitReport,definicoes};
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
-$("#loginForm").onsubmit=async e=>{
-  e.preventDefault();
-  const d=Object.fromEntries(new FormData(e.target));
-  $("#loginError").classList.add("hidden");
-  try{
-    const auth=await SGD_CENTRAL.login(d.user.trim(),d.pass);
-    sessionStorage.setItem("sgd_auth","1");
-    if(d.remember) localStorage.setItem("sgd_remember","1");
-    $("#login").classList.add("hidden");
-    $("#app").classList.remove("hidden");
-    page("dashboard");
-  }catch(err){
-    $("#loginError").textContent="E-mail ou palavra-passe incorretos.";
-    $("#loginError").classList.remove("hidden");
-  }
+<div class=card>
+
+<h3>
+Dados do clube
+</h3>
+
+<div class=grid>
+
+${select(
+"unidade",
+"Unidade",
+db.unidades
+.filter(
+u=>u.estado==="Ativa"
+)
+.map(
+u=>u.nome
+)
+)}
+
+${select(
+"funcao",
+"Função/Cargo",
+[
+"Desbravador",
+"Conselheiro",
+"Vice-conselheiro",
+"Diretor",
+"Secretário",
+"Tesoureiro",
+"Capelão"
+]
+)}
+
+${select(
+"classe",
+"Classe",
+[
+"Amigo",
+"Companheiro",
+"Pesquisador",
+"Pioneiro",
+"Excursionista",
+"Guia"
+]
+)}
+
+${select(
+"estado",
+"Estado",
+[
+"Ativo",
+"Inativo",
+"Suspenso"
+]
+)}
+
+</div>
+
+</div>
+
+
+<div class=card>
+
+<h3>
+Família e escola
+</h3>
+
+<div class=grid>
+
+${field(
+"encarregado",
+"Nome do encarregado"
+)}
+
+${field(
+"contactoEncarregado",
+"Contacto do encarregado"
+)}
+
+${field(
+"pai",
+"Nome do pai"
+)}
+
+${field(
+"mae",
+"Nome da mãe"
+)}
+
+${field(
+"escola",
+"Escola"
+)}
+
+${field(
+"classeEscolar",
+"Classe escolar"
+)}
+
+</div>
+
+</div>
+
+
+<div class=card>
+
+<h3>
+Fotografia
+</h3>
+
+${field(
+"foto",
+"Fotografia",
+"file"
+)}
+
+</div>
+
+
+<div class=actions>
+
+<button class="btn primary">
+Cadastrar membro
+</button>
+
+</div>
+
+</form>
+`;
+
+$('[name=dataCadastro]').value =
+new Date()
+.toISOString()
+.slice(0,10);
+
+
+$("#mf").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+let d=
+Object.fromEntries(
+new FormData(e.target)
+);
+
+d.id=crypto.randomUUID();
+
+d.numero=nextNumber();
+
+d.utilizador=
+"m"+
+String(db.nextMember)
+.padStart(4,"0");
+
+d.credencialInicial=
+"SGD"+
+Math.random()
+.toString(36)
+.slice(2,8)
+.toUpperCase();
+
+d.foto="";
+
+db.nextMember++;
+
+db.membros.push(d);
+
+save();
+
+profile(
+db.membros.length-1,
+true
+);
+
 };
+
+}
+
+
+/* PERFIL MEMBRO */
+
+function profile(i,created=false){
+
+let m=db.membros[i];
+
+content.innerHTML=
+
+T(
+"Perfil do membro",
+created
+?"Membro cadastrado com sucesso."
+:"Ficha individual",
+B(
+"← Lista geral",
+"light",
+"page('membros')"
+)
+)+
+
+`
+
+<div class=card>
+
+<h2>
+${esc(m.nome)}
+</h2>
+
+<p>
+<b>Nº de membro:</b>
+${esc(m.numero)}
+&nbsp;
+<b>Estado:</b>
+${esc(m.estado)}
+</p>
+
+<p>
+<b>Unidade:</b>
+${esc(m.unidade||"—")}
+&nbsp;
+
+<b>Função:</b>
+${esc(m.funcao||"—")}
+&nbsp;
+
+<b>Classe:</b>
+${esc(m.classe||"—")}
+</p>
+
+<p>
+<b>Nascimento:</b>
+${esc(m.nascimento||"—")}
+&nbsp;
+
+<b>Telefone:</b>
+${esc(m.telefone||"—")}
+</p>
+
+<p>
+<b>Encarregado:</b>
+${esc(m.encarregado||"—")}
+—
+${esc(m.contactoEncarregado||"—")}
+</p>
+
+<p>
+<b>Acesso inicial ao SGD:</b>
+Utilizador
+<b>${esc(m.utilizador||"—")}</b>
+·
+
+Palavra-passe
+<b>${esc(m.credencialInicial||"—")}</b>
+</p>
+
+<p>
+<b>Pai:</b>
+${esc(m.pai||"—")}
+&nbsp;
+
+<b>Mãe:</b>
+${esc(m.mae||"—")}
+</p>
+
+<p>
+<b>Escola:</b>
+${esc(m.escola||"—")}
+&nbsp;
+
+<b>Classe:</b>
+${esc(m.classeEscolar||"—")}
+</p>
+
+</div>
+
+<div class=actions>
+
+${B(
+"✏️ Editar",
+"light",
+`editMember(${i})`
+)}
+
+${B(
+"📄 Ficha A4",
+"light",
+`printA4(${i})`
+)}
+
+${B(
+"🖨️ Cartão térmico",
+"light",
+`printThermal(${i})`
+)}
+
+</div>
+`;
+
+}
+
+
+/* EDITAR MEMBRO */
+
+function editMember(i){
+
+let m=db.membros[i];
+
+content.innerHTML=
+
+T(
+"Editar membro",
+"Alterar os dados do cadastro",
+B(
+"← Voltar",
+"light",
+`profile(${i})`
+)
+)+
+
+`
+
+<form id=ef>
+
+<div class=card>
+
+<div class=grid>
+
+${field(
+"numero",
+"Nº de membro",
+"text",
+true
+)}
+
+${field(
+"nome",
+"Nome completo",
+"text",
+true
+)}
+
+${field(
+"nascimento",
+"Nascimento",
+"date"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${select(
+"unidade",
+"Unidade",
+db.unidades.map(
+u=>u.nome
+)
+)}
+
+${select(
+"funcao",
+"Função",
+[
+"Desbravador",
+"Conselheiro",
+"Vice-conselheiro",
+"Diretor",
+"Secretário",
+"Tesoureiro",
+"Capelão"
+]
+)}
+
+${select(
+"classe",
+"Classe",
+[
+"Amigo",
+"Companheiro",
+"Pesquisador",
+"Pioneiro",
+"Excursionista",
+"Guia"
+]
+)}
+
+${select(
+"estado",
+"Estado",
+[
+"Ativo",
+"Inativo",
+"Suspenso"
+]
+)}
+
+</div>
+
+</div>
+
+<div class=actions>
+
+<button class="btn primary">
+Guardar
+</button>
+
+</div>
+
+</form>
+`;
+
+[
+"numero",
+"nome",
+"nascimento",
+"telefone",
+"unidade",
+"funcao",
+"classe",
+"estado"
+]
+.forEach(
+k=>{
+let el=$(`[name=${k}]`);
+if(el)el.value=m[k]||"";
+}
+);
+
+
+$("#ef").onsubmit=e=>{
+
+e.preventDefault();
+
+Object.assign(
+db.membros[i],
+Object.fromEntries(
+new FormData(e.target)
+)
+);
+
+save();
+
+profile(i);
+
+};
+
+}
+
+
+/* UNIDADES */
+
+function unidades(){
+
+content.innerHTML=
+
+T(
+"Unidades",
+"Criar, editar e administrar unidades",
+B(
+"+ Nova unidade",
+"primary",
+"unitForm()"
+)
+)+
+
+`
+
+<div class=card>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Unidade</th>
+<th>Responsável</th>
+<th>Membros</th>
+<th>Estado</th>
+<th>Ação</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${db.unidades.map(
+(u,i)=>
+
+`<tr>
+
+<td>
+<b>${esc(u.nome)}</b>
+</td>
+
+<td>
+${esc(u.responsavel||"—")}
+</td>
+
+<td>
+${db.membros.filter(
+m=>m.unidade===u.nome
+).length}
+</td>
+
+<td>
+${esc(u.estado)}
+</td>
+
+<td>
+${B(
+"Editar",
+"light",
+`unitForm(${i})`
+)}
+</td>
+
+</tr>`
+).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+`;
+
+}
+
+
+function unitForm(i=null){
+
+let u=
+i===null
+?
+{
+nome:"",
+responsavel:"",
+estado:"Ativa"
+}
+:
+db.unidades[i];
+
+
+content.innerHTML=
+
+T(
+i===null
+?"Nova unidade"
+:"Editar unidade",
+"Formulário de unidade",
+B(
+"← Voltar",
+"light",
+"page('unidades')"
+)
+)+
+
+`
+
+<form id=uf>
+
+<div class=card>
+
+<div class=grid>
+
+${field(
+"nome",
+"Nome *",
+"text",
+true
+)}
+
+${field(
+"responsavel",
+"Responsável"
+)}
+
+${select(
+"estado",
+"Estado",
+[
+"Ativa",
+"Inativa"
+]
+)}
+
+</div>
+
+</div>
+
+<div class=actions>
+
+<button class="btn primary">
+Guardar
+</button>
+
+</div>
+
+</form>
+`;
+
+[
+"nome",
+"responsavel",
+"estado"
+]
+.forEach(
+k=>{
+let el=$(`[name=${k}]`);
+if(el)el.value=u[k]||"";
+}
+);
+
+
+$("#uf").onsubmit=e=>{
+
+e.preventDefault();
+
+let d=
+Object.fromEntries(
+new FormData(e.target)
+);
+
+if(i===null)
+db.unidades.push({
+id:crypto.randomUUID(),
+...d
+});
+
+else
+db.unidades[i]=d;
+
+save();
+
+page("unidades");
+
+};
+
+}
+
+
+/* ATIVIDADES */
+
+function atividades(){
+
+content.innerHTML=
+
+T(
+"Atividades",
+"Registo e gestão das atividades",
+B(
+"+ Nova atividade",
+"primary",
+"activityForm()"
+)
+)+
+
+`
+
+<div class=card>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Atividade</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Local</th>
+<th>Responsável</th>
+<th>Custo</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${db.atividades.map(
+a=>
+
+`<tr>
+
+<td>${esc(a.nome)}</td>
+<td>${esc(a.data)}</td>
+<td>${esc(a.hora)}</td>
+<td>${esc(a.local)}</td>
+<td>${esc(a.responsavel)}</td>
+<td>${money(a.custo)} Kz</td>
+
+</tr>`
+).join("")||
+
+`<tr>
+
+<td colspan=6 class=muted>
+Nenhuma atividade registada.
+</td>
+
+</tr>`
+}
+
+</tbody>
+
+</table>
+
+</div>
+`;
+
+}
+
+
+function activityForm(){
+
+content.innerHTML=
+
+T(
+"Registar atividade",
+"Formulário completo",
+B(
+"← Voltar",
+"light",
+"page('atividades')"
+)
+)+
+
+`
+
+<form id=af>
+
+<div class=card>
+
+<div class=grid>
+
+${field(
+"nome",
+"Nome da atividade *",
+"text",
+true
+)}
+
+${field(
+"data",
+"Data *",
+"date",
+true
+)}
+
+${field(
+"hora",
+"Hora",
+"time"
+)}
+
+${field(
+"local",
+"Local"
+)}
+
+${field(
+"responsavel",
+"Responsável"
+)}
+
+${field(
+"custo",
+"Custo (Kz)",
+"number"
+)}
+
+</div>
+
+${field(
+"descricao",
+"Descrição"
+)}
+
+</div>
+
+<div class=actions>
+
+<button class="btn primary">
+Guardar atividade
+</button>
+
+</div>
+
+</form>
+`;
+
+$("#af").onsubmit=e=>{
+
+e.preventDefault();
+
+db.atividades.push(
+Object.fromEntries(
+new FormData(e.target)
+)
+);
+
+save();
+
+page("atividades");
+
+};
+
+}
+
+
+/* FINANÇAS */
+
+function financas(){
+
+let rec=
+db.financas
+.filter(
+x=>x.tipo==="Receita"
+)
+.reduce(
+(a,x)=>a+Number(x.valor),
+0
+);
+
+let desp=
+db.financas
+.filter(
+x=>x.tipo==="Despesa"
+)
+.reduce(
+(a,x)=>a+Number(x.valor),
+0
+);
+
+
+content.innerHTML=
+
+T(
+"Finanças",
+"Registar pagamentos, receitas e despesas",
+B(
+"+ Novo movimento",
+"primary",
+"financeForm()"
+)
+)+
+
+`
+
+<div class=cards>
+
+<div class=card>
+Receitas
+<strong>
+${money(rec)} Kz
+</strong>
+</div>
+
+<div class=card>
+Despesas
+<strong>
+${money(desp)} Kz
+</strong>
+</div>
+
+<div class=card>
+Saldo
+<strong>
+${money(rec-desp)} Kz
+</strong>
+</div>
+
+<div class=card>
+Movimentos
+<strong>
+${db.financas.length}
+</strong>
+</div>
+
+</div>
+
+
+<div class=card>
+
+<h3>
+Histórico financeiro
+</h3>
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Data</th>
+<th>Tipo</th>
+<th>Membro que fez o pagamento</th>
+<th>Nº membro</th>
+<th>Categoria</th>
+<th>Descrição</th>
+<th>Valor</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${db.financas.map(
+x=>
+
+`<tr>
+
+<td>${esc(x.data)}</td>
+<td>${esc(x.tipo)}</td>
+
+<td>
+<b>${esc(x.membroNome||"—")}</b>
+</td>
+
+<td>
+${esc(x.membroNumero||"—")}
+</td>
+
+<td>
+${esc(x.categoria)}
+</td>
+
+<td>
+${esc(x.descricao)}
+</td>
+
+<td>
+${money(x.valor)} Kz
+</td>
+
+</tr>`
+).join("")||
+
+`<tr>
+
+<td colspan=7 class=muted>
+Nenhum movimento registado.
+</td>
+
+</tr>`
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+`;
+
+}
+
+
+function financeForm(){
+
+content.innerHTML=
+
+T(
+"Novo movimento financeiro",
+"O pagamento pode ser ligado diretamente a um membro",
+B(
+"← Voltar",
+"light",
+"page('financas')"
+)
+)+
+
+`
+
+<form id=ff>
+
+<div class=card>
+
+<div class=grid>
+
+${select(
+"tipo",
+"Tipo",
+[
+"Receita",
+"Despesa"
+],
+true
+)}
+
+<div class=field>
+
+<label>
+Membro que fez o pagamento
+</label>
+
+<select name=membroId>
+
+<option value="">
+Nenhum / não aplicável
+</option>
+
+${db.membros.map(
+m=>
+
+`<option value="${esc(m.id)}">
+
+${esc(m.nome)}
+—
+${esc(m.numero)}
+
+</option>`
+).join("")}
+
+</select>
+
+</div>
+
+${field(
+"categoria",
+"Categoria *",
+"text",
+true
+)}
+
+${field(
+"valor",
+"Valor (Kz) *",
+"number",
+true
+)}
+
+${field(
+"data",
+"Data *",
+"date",
+true
+)}
+
+${field(
+"descricao",
+"Descrição"
+)}
+
+${select(
+"forma",
+"Forma de pagamento",
+[
+"Dinheiro",
+"Transferência",
+"Depósito",
+"Multicaixa Express",
+"Outro"
+]
+)}
+
+</div>
+
+</div>
+
+<div class=actions>
+
+<button class="btn primary">
+Guardar movimento
+</button>
+
+</div>
+
+</form>
+`;
+
+$('[name=data]').value=
+new Date()
+.toISOString()
+.slice(0,10);
+
+
+$("#ff").onsubmit=e=>{
+
+e.preventDefault();
+
+let d=
+Object.fromEntries(
+new FormData(e.target)
+);
+
+let m=
+db.membros.find(
+x=>x.id===d.membroId
+);
+
+d.membroNome=
+m?.nome||"";
+
+d.membroNumero=
+m?.numero||"";
+
+d.id=crypto.randomUUID();
+
+db.financas.push(d);
+
+save();
+
+page("financas");
+
+};
+
+}
+
+
+/* RELATÓRIOS */
+
+function relatorios(){
+
+content.innerHTML=
+
+T(
+"Relatórios",
+"Acesso aos principais relatórios do clube"
+)+
+
+`
+
+<div class=cards>
+
+<div class=card>
+
+<h3>
+Lista geral dos membros
+</h3>
+
+<p class=muted>
+Todos os dados dos membros.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('membros')"
+)}
+
+</div>
+
+
+<div class=card>
+
+<h3>
+Membros por unidade
+</h3>
+
+<p class=muted>
+Quantidade e composição por unidade.
+</p>
+
+${B(
+"Abrir",
+"light",
+"unitReport()"
+)}
+
+</div>
+
+
+<div class=card>
+
+<h3>
+Atividades
+</h3>
+
+<p class=muted>
+Histórico das atividades.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('atividades')"
+)}
+
+</div>
+
+
+<div class=card>
+
+<h3>
+Financeiro
+</h3>
+
+<p class=muted>
+Pagamentos, receitas, despesas e saldo.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('financas')"
+)}
+
+</div>
+
+</div>
+`;
+
+}
+
+
+function unitReport(){
+
+content.innerHTML=
+
+T(
+"Membros por unidade",
+"Relatório geral",
+B(
+"← Voltar",
+"light",
+"page('relatorios')"
+)
+)+
+
+`
+
+<div class=card>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Unidade</th>
+<th>Membros</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${db.unidades.map(
+u=>
+
+`<tr>
+
+<td>
+${esc(u.nome)}
+</td>
+
+<td>
+${db.membros.filter(
+m=>m.unidade===u.nome
+).length}
+</td>
+
+</tr>`
+).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+`;
+
+}
+
+
+/* DEFINIÇÕES */
+
+function definicoes(){
+
+content.innerHTML=
+
+T(
+"Definições gerais",
+"Configurações do clube e impressão"
+)+
+
+`
+
+<form id=cf>
+
+<div class=card>
+
+<h3>
+Dados do clube
+</h3>
+
+<div class=grid>
+
+${field(
+"nomeClube",
+"Nome do clube"
+)}
+
+${field(
+"diretor",
+"Diretor"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${field(
+"email",
+"E-mail"
+)}
+
+</div>
+
+</div>
+
+
+<div class=card>
+
+<h3>
+Impressão
+</h3>
+
+<div class=grid>
+
+${select(
+"papel",
+"Papel térmico",
+[
+"58 mm",
+"80 mm"
+]
+)}
+
+${select(
+"ficha",
+"Ficha principal",
+[
+"A4"
+]
+)}
+
+</div>
+
+</div>
+
+
+<div class=actions>
+
+<button class="btn primary">
+Guardar definições
+</button>
+
+</div>
+
+</form>
+`;
+
+Object.keys(db.config)
+.forEach(
+k=>{
+let el=$(`[name=${k}]`);
+if(el)
+el.value=db.config[k]||"";
+}
+);
+
+
+$("#cf").onsubmit=e=>{
+
+e.preventDefault();
+
+Object.assign(
+db.config,
+Object.fromEntries(
+new FormData(e.target)
+)
+);
+
+save();
+
+alert(
+"Definições guardadas."
+);
+
+};
+
+}
+
+
+/* MINHA CONTA */
+
+async function conta(){
+
+let session=
+await SGD_CENTRAL.session();
+
+
+if(!session){
+
+alert(
+"Sessão expirada. Entre novamente."
+);
+
+return;
+
+}
+
+
+let emailAtual=
+session.user.email||"";
+
+
+content.innerHTML=
+
+T(
+"Minha conta",
+"Gerencie as suas credenciais de acesso ao SGD"
+)+
+
+
+`
+
+<div class=card>
+
+<h3>
+Conta atual
+</h3>
+
+<p>
+<b>E-mail:</b>
+${esc(emailAtual)}
+</p>
+
+</div>
+
+
+<div class=card>
+
+<h3>
+🔑 Alterar palavra-passe
+</h3>
+
+<p class=muted>
+
+Por segurança, confirme a sua palavra-passe atual antes de definir uma nova.
+
+</p>
+
+
+<form id=passwordForm>
+
+${field(
+"currentPassword",
+"Palavra-passe atual",
+"password",
+true
+)}
+
+${field(
+"newPassword",
+"Nova palavra-passe",
+"password",
+true
+)}
+
+${field(
+"confirmPassword",
+"Confirmar nova palavra-passe",
+"password",
+true
+)}
+
+
+<div
+id=passwordMessage
+class="notice hidden">
+</div>
+
+
+<div class=actions>
+
+<button class="btn primary">
+
+Alterar palavra-passe
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+
+<div class=card>
+
+<h3>
+📧 Alterar e-mail
+</h3>
+
+<p class=muted>
+
+Depois da alteração, poderá ser necessário confirmar o novo e-mail através da mensagem enviada pelo Supabase.
+
+</p>
+
+
+<form id=emailForm>
+
+${field(
+"newEmail",
+"Novo e-mail",
+"email",
+true
+)}
+
+
+<div
+id=emailMessage
+class="notice hidden">
+</div>
+
+
+<div class=actions>
+
+<button class="btn primary">
+
+Alterar e-mail
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+`;
+
+
+/* ALTERAR SENHA */
+
+$("#passwordForm").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+const d=
+Object.fromEntries(
+new FormData(e.target)
+);
+
+const msg=
+$("#passwordMessage");
+
+msg.className=
+"notice hidden";
+
+msg.textContent="";
+
+
+if(
+d.newPassword.length<6
+){
+
+msg.textContent=
+"A nova palavra-passe deve ter pelo menos 6 caracteres.";
+
+msg.className=
+"notice error";
+
+return;
+
+}
+
+
+if(
+d.newPassword !==
+d.confirmPassword
+){
+
+msg.textContent=
+"As novas palavras-passe não coincidem.";
+
+msg.className=
+"notice error";
+
+return;
+
+}
+
+
+try{
+
+const c=
+await SGD_CENTRAL.init();
+
+
+/*
+Confirma a palavra-passe atual
+*/
+
+const {
+error:loginError
+}=
+await c.auth.signInWithPassword({
+
+email:emailAtual,
+
+password:d.currentPassword
+
+});
+
+
+if(loginError){
+
+throw new Error(
+"A palavra-passe atual está incorreta."
+);
+
+}
+
+
+/*
+Atualiza a palavra-passe
+*/
+
+const {
+error
+}=
+await c.auth.updateUser({
+
+password:d.newPassword
+
+});
+
+
+if(error)
+throw error;
+
+
+msg.textContent=
+"Palavra-passe alterada com sucesso.";
+
+msg.className=
+"notice";
+
+
+e.target.reset();
+
+
+}catch(err){
+
+msg.textContent=
+err.message||
+"Não foi possível alterar a palavra-passe.";
+
+msg.className=
+"notice error";
+
+}
+
+};
+
+
+/* ALTERAR EMAIL */
+
+$("#emailForm").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+const d=
+Object.fromEntries(
+new FormData(e.target)
+);
+
+const msg=
+$("#emailMessage");
+
+msg.className=
+"notice hidden";
+
+msg.textContent="";
+
+
+if(
+d.newEmail.trim().toLowerCase()
+===
+emailAtual.toLowerCase()
+){
+
+msg.textContent=
+"Este já é o seu e-mail atual.";
+
+msg.className=
+"notice error";
+
+return;
+
+}
+
+
+try{
+
+const c=
+await SGD_CENTRAL.init();
+
+
+const {
+error
+}=
+await c.auth.updateUser({
+
+email:
+d.newEmail.trim()
+
+});
+
+
+if(error)
+throw error;
+
+
+msg.textContent=
+"Pedido enviado. Verifique o novo e-mail para confirmar a alteração.";
+
+msg.className=
+"notice";
+
+
+e.target.reset();
+
+
+}catch(err){
+
+msg.textContent=
+err.message||
+"Não foi possível alterar o e-mail.";
+
+msg.className=
+"notice error";
+
+}
+
+};
+
+}
+
+
+/* IMPRESSÃO A4 */
+
+function printA4(i){
+
+let m=db.membros[i];
+
+let w=
+open(
+"",
+"_blank"
+);
+
+w.document.write(
+
+`<html>
+
+<head>
+
+<title>
+Ficha A4 — ${esc(m.nome)}
+</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:35mm 20mm
+}
+
+h1{
+text-align:center
+}
+
+.row{
+padding:9px 0;
+border-bottom:1px solid #ddd
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>
+FICHA DE CADASTRO
+</h1>
+
+<h2>
+${esc(db.config.nomeClube)}
+</h2>
+
+${[
+"numero",
+"nome",
+"nascimento",
+"unidade",
+"funcao",
+"classe",
+"estado",
+"telefone",
+"endereco",
+"encarregado",
+"contactoEncarregado",
+"escola",
+"dataCadastro",
+"utilizador",
+"credencialInicial"
+]
+.map(
+k=>
+`<div class=row>
+<b>${esc(k)}:</b>
+${esc(m[k]||"—")}
+</div>`
+).join("")}
+
+<script>
+setTimeout(()=>print(),300)
+<\/script>
+
+</body>
+
+</html>`
+);
+
+w.document.close();
+
+}
+
+
+/* IMPRESSÃO TÉRMICA */
+
+function printThermal(i){
+
+let m=db.membros[i];
+
+let w=
+open(
+"",
+"_blank",
+"width=420,height=650"
+);
+
+w.document.write(
+
+`<html>
+
+<head>
+
+<style>
+
+@page{
+size:58mm auto;
+margin:0
+}
+
+body{
+width:58mm;
+font:11px Arial;
+padding:4mm
+}
+
+h2{
+font-size:14px;
+text-align:center
+}
+
+p{
+margin:6px 0
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>
+SGD
+<br>
+FICHA DO MEMBRO
+</h2>
+
+<hr>
+
+<p>
+<b>Nome:</b>
+${esc(m.nome)}
+</p>
+
+<p>
+<b>Nº:</b>
+${esc(m.numero)}
+</p>
+
+<p>
+<b>Unidade:</b>
+${esc(m.unidade||"—")}
+</p>
+
+<p>
+<b>Função:</b>
+${esc(m.funcao||"—")}
+</p>
+
+<p>
+<b>Estado:</b>
+${esc(m.estado||"—")}
+</p>
+
+<p>
+<b>Cadastro:</b>
+${esc(m.dataCadastro||"—")}
+</p>
+
+<p>
+<b>Utilizador:</b>
+${esc(m.utilizador||"—")}
+</p>
+
+<p>
+<b>Senha inicial:</b>
+${esc(m.credencialInicial||"—")}
+</p>
+
+<hr>
+
+<script>
+setTimeout(()=>print(),300)
+<\/script>
+
+</body>
+
+</html>`
+);
+
+w.document.close();
+
+}
+
+
+/* LOGOUT */
+
+async function logout(){
+
+await SGD_CENTRAL.logout();
+
+sessionStorage.removeItem(
+"sgd_auth"
+);
+
+localStorage.removeItem(
+"sgd_remember"
+);
+
+location.reload();
+
+}
+
+
+/* PÁGINAS */
+
+const pages={
+
+dashboard,
+
+membros,
+
+membroForm,
+
+profile,
+
+editMember,
+
+unidades,
+
+unitForm,
+
+atividades,
+
+activityForm,
+
+financas,
+
+financeForm,
+
+relatorios,
+
+unitReport,
+
+definicoes,
+
+conta
+
+};
+
+
+/* MENU */
+
+document
+.querySelectorAll("nav button")
+.forEach(
+b=>
+b.onclick=
+()=>page(b.dataset.page)
+);
+
+
+/* LOGIN */
+
+$("#loginForm").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+const d=
+Object.fromEntries(
+new FormData(e.target)
+);
+
+$("#loginError")
+.classList.add("hidden");
+
+
+try{
+
+const auth=
+await SGD_CENTRAL.login(
+d.user.trim(),
+d.pass
+);
+
+sessionStorage.setItem(
+"sgd_auth",
+"1"
+);
+
+if(d.remember){
+
+localStorage.setItem(
+"sgd_remember",
+"1"
+);
+
+}
+
+
+$("#login")
+.classList.add(
+"hidden"
+);
+
+$("#app")
+.classList.remove(
+"hidden"
+);
+
+page("dashboard");
+
+
+}catch(err){
+
+$("#loginError")
+.textContent=
+"E-mail ou palavra-passe incorretos.";
+
+$("#loginError")
+.classList.remove(
+"hidden"
+);
+
+}
+
+};
+
+
+/* RECUPERAR SESSÃO */
+
 (async()=>{
-  try{
-    const session=await SGD_CENTRAL.session();
-    if(session){
-      sessionStorage.setItem("sgd_auth","1");
-      $("#login").classList.add("hidden");
-      $("#app").classList.remove("hidden");
-      page("dashboard");
-    }
-  }catch(e){}
+
+try{
+
+const session=
+await SGD_CENTRAL.session();
+
+if(session){
+
+sessionStorage.setItem(
+"sgd_auth",
+"1"
+);
+
+$("#login")
+.classList.add(
+"hidden"
+);
+
+$("#app")
+.classList.remove(
+"hidden"
+);
+
+page("dashboard");
+
+}
+
+}catch(e){}
+
 })();
+
 </script>
 
-</body></html>
+</body>
+  </html>
