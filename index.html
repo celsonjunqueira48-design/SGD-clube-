@@ -29,6 +29,30 @@ window.SGD_SUPABASE_URL = "https://edttbjysaqdounpghsdn.supabase.co";
 window.SGD_SUPABASE_ANON_KEY = "sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+window.SGD_CENTRAL = {
+  client: null,
+  async init(){
+    if(!window.supabase) throw new Error("Não foi possível carregar o serviço de autenticação.");
+    if(!this.client) this.client = window.supabase.createClient(window.SGD_SUPABASE_URL, window.SGD_SUPABASE_ANON_KEY);
+    return this.client;
+  },
+  async login(email,password){
+    const c=await this.init();
+    const {data,error}=await c.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    return data;
+  },
+  async session(){
+    const c=await this.init();
+    return (await c.auth.getSession()).data.session;
+  },
+  async logout(){
+    if(this.client) await this.client.auth.signOut();
+  }
+};
+</script>
+
 </head>
 <body>
 <div id="login" class="login">
@@ -39,7 +63,7 @@ window.SGD_SUPABASE_ANON_KEY = "sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
 <div class="field"><label>Palavra-passe</label><input name="pass" type="password" required></div>
 <label style="display:flex;gap:8px;align-items:center;text-align:left;font-size:13px;margin-bottom:14px"><input name="remember" type="checkbox"> Lembrar sessão</label>
 <button class="btn primary full">Entrar</button></form>
-<p style="font-size:12px">Teste: <b>admin</b> / <b>admin123</b></p>
+<p style="font-size:12px" class="muted">Use o e-mail e a palavra-passe da sua conta do SGD.</p>
 </div></div>
 
 <div id="app" class="hidden">
@@ -154,76 +178,44 @@ $("#cf").onsubmit=e=>{e.preventDefault();Object.assign(db.config,Object.fromEntr
 }
 function printA4(i){
 let m=db.membros[i],w=open("","_blank");w.document.write(`<html><head><title>Ficha A4 — ${esc(m.nome)}</title><style>body{font-family:Arial;margin:35mm 20mm}h1{text-align:center}.row{padding:9px 0;border-bottom:1px solid #ddd}</style></head><body><h1>FICHA DE CADASTRO</h1><h2>${esc(db.config.nomeClube)}</h2>${["numero","nome","nascimento","unidade","funcao","classe","estado","telefone","endereco","encarregado","contactoEncarregado","escola","dataCadastro","utilizador","credencialInicial"].map(k=>`<div class=row><b>${esc(k)}:</b> ${esc(m[k]||"—")}</div>`).join("")}<script>setTimeout(()=>print(),300)<\/script>
-<script>
-window.SGD_CENTRAL = {
-  client: null,
-  async init() {
-    if (!window.supabase) throw new Error("Biblioteca Supabase não carregada.");
-    this.client = window.supabase.createClient(
-      window.SGD_SUPABASE_URL,
-      window.SGD_SUPABASE_ANON_KEY
-    );
-    return this.client;
-  },
-  async login(email, password) {
-    await this.init();
-    const {data, error} = await this.client.auth.signInWithPassword({email, password});
-    if (error) throw error;
-    return data;
-  },
-  async logout() {
-    if (this.client) await this.client.auth.signOut();
-  },
-  async saveMember(m) {
-    await this.init();
-    const row = {
-      numero_membro: m.numero || null,
-      nome: m.nome,
-      nascimento: m.nascimento || null,
-      sexo: m.sexo || null,
-      documento: m.documento || null,
-      telefone: m.telefone || null,
-      endereco: m.endereco || null,
-      funcao: m.funcao || null,
-      classe: m.classe || null,
-      estado: m.estado || "Ativo",
-      encarregado: m.encarregado || null,
-      contacto_encarregado: m.contactoEncarregado || null,
-      pai: m.pai || null,
-      mae: m.mae || null,
-      escola: m.escola || null,
-      classe_escolar: m.classeEscolar || null,
-      data_cadastro: m.dataCadastro || null,
-      utilizador: m.utilizador || null
-    };
-    const {data, error} = await this.client
-      .from("membros")
-      .upsert(row, {onConflict: "numero_membro"})
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
-  },
-  async loadMembers() {
-    await this.init();
-    const {data, error} = await this.client
-      .from("membros")
-      .select("*")
-      .order("created_at", {ascending: true});
-    if (error) throw error;
-    return data || [];
-  }
-};
-</script>
+
+
 </body></html>`);w.document.close()
 }
 function printThermal(i){
-let m=db.membros[i],w=open("","_blank","width=420,height=650");w.document.write(`<html><head><style>@page{size:58mm auto;margin:0}body{width:58mm;font:11px Arial;padding:4mm}h2{font-size:14px;text-align:center}p{margin:6px 0}</style></head><body><h2>SGD<br>FICHA DO MEMBRO</h2><hr><p><b>Nome:</b> ${esc(m.nome)}</p><p><b>Nº:</b> ${esc(m.numero)}</p><p><b>Unidade:</b> ${esc(m.unidade||"—")}</p><p><b>Função:</b> ${esc(m.funcao||"—")}</p><p><b>Estado:</b> ${esc(m.estado||"—")}</p><p><b>Cadastro:</b> ${esc(m.dataCadastro||"—")}</p><p><b>Utilizador:</b> ${esc(m.utilizador||"—")}</p><p><b>Senha inicial:</b> ${esc(m.credencialInicial||"—")}</p><hr><script>setTimeout(()=>print(),300)<\/script></body></html>`);w.document.close()
+let m=db.membros[i],w=open("","_blank","width=420,height=650");w.document.write(`<html><head><style>@page{size:58mm auto;margin:0}body{width:58mm;font:11px Arial;padding:4mm}h2{font-size:14px;text-align:center}p{margin:6px 0}</style></head><body><h2>SGD<br>FICHA DO MEMBRO</h2><hr><p><b>Nome:</b> ${esc(m.nome)}</p><p><b>Nº:</b> ${esc(m.numero)}</p><p><b>Unidade:</b> ${esc(m.unidade||"—")}</p><p><b>Função:</b> ${esc(m.funcao||"—")}</p><p><b>Estado:</b> ${esc(m.estado||"—")}</p><p><b>Cadastro:</b> ${esc(m.dataCadastro||"—")}</p><p><b>Utilizador:</b> ${esc(m.utilizador||"—")}</p><p><b>Senha inicial:</b> ${esc(m.credencialInicial||"—")}</p><hr><script>setTimeout(()=>print(),300)<\/script>
+</body></html>`);w.document.close()
 }
-function logout(){sessionStorage.removeItem("sgd_auth");localStorage.removeItem("sgd_remember");location.reload()}
+async function logout(){await SGD_CENTRAL.logout();sessionStorage.removeItem("sgd_auth");localStorage.removeItem("sgd_remember");location.reload()}
 const pages={dashboard,membros,membroForm,profile,editMember,unidades,unitForm,atividades,activityForm,financas,financeForm,relatorios,unitReport,definicoes};
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
-$("#loginForm").onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));if(d.user==="admin"&&d.pass==="admin123"){sessionStorage.setItem("sgd_auth","1");if(d.remember)localStorage.setItem("sgd_remember","1");$("#login").classList.add("hidden");$("#app").classList.remove("hidden");page("dashboard")}else $("#loginError").classList.remove("hidden")};
-if(sessionStorage.getItem("sgd_auth")||localStorage.getItem("sgd_remember")){$("#login").classList.add("hidden");$("#app").classList.remove("hidden");page("dashboard")}
+$("#loginForm").onsubmit=async e=>{
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(e.target));
+  $("#loginError").classList.add("hidden");
+  try{
+    const auth=await SGD_CENTRAL.login(d.user.trim(),d.pass);
+    sessionStorage.setItem("sgd_auth","1");
+    if(d.remember) localStorage.setItem("sgd_remember","1");
+    $("#login").classList.add("hidden");
+    $("#app").classList.remove("hidden");
+    page("dashboard");
+  }catch(err){
+    $("#loginError").textContent="E-mail ou palavra-passe incorretos.";
+    $("#loginError").classList.remove("hidden");
+  }
+};
+(async()=>{
+  try{
+    const session=await SGD_CENTRAL.session();
+    if(session){
+      sessionStorage.setItem("sgd_auth","1");
+      $("#login").classList.add("hidden");
+      $("#app").classList.remove("hidden");
+      page("dashboard");
+    }
+  }catch(e){}
+})();
 </script>
+
 </body></html>
