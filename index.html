@@ -1,356 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SGD — Sistema de Gestão do Clube</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SGD - Sistema de Gestão do Clube</title>
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+body{margin:0;font-family:Arial;background:#f4f7fb;color:#172033}
 button,input,select{font:inherit}
 .hidden{display:none!important}
-
-.login{
- min-height:100vh;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:20px;
- background:linear-gradient(135deg,#1769e0,#0d4da8)
-}
-.login-box{
- width:100%;
- max-width:420px;
- background:#fff;
- padding:30px;
- border-radius:18px;
- box-shadow:0 15px 40px #0003;
-}
-.logo{
- width:80px;height:80px;
- margin:0 auto 15px;
- border-radius:18px;
- background:#1769e0;
- color:white;
- display:grid;
- place-items:center;
- font-size:24px;
- font-weight:bold;
-}
-h1,h2,h3{margin-top:0}
-.center{text-align:center}
-
-.field{margin-bottom:15px}
-.field label{
- display:block;
- margin-bottom:6px;
- font-weight:bold;
- font-size:14px
-}
-.field input,.field select{
- width:100%;
- padding:11px;
- border:1px solid #d5ddea;
- border-radius:9px;
-}
-
-.btn{
- border:0;
- border-radius:9px;
- padding:11px 15px;
- cursor:pointer;
- font-weight:bold;
-}
+.btn{border:0;border-radius:8px;padding:10px 15px;font-weight:bold;cursor:pointer}
 .primary{background:#1769e0;color:white}
-.light{background:#eaf1ff;color:#1769e0}
-.danger{background:#fff0f0;color:#b42318}
-.full{width:100%}
-
-.error{
- background:#fff0f0;
- color:#b42318;
- padding:10px;
- border-radius:8px;
- margin-bottom:15px;
-}
-.success{
- background:#eaf8ef;
- color:#16794a;
- padding:10px;
- border-radius:8px;
- margin-bottom:15px;
-}
-
-header{
- height:68px;
- background:white;
- border-bottom:1px solid #e4e9f1;
- display:flex;
- align-items:center;
- padding:0 20px;
- gap:12px;
-}
-.brand b{display:block;font-size:18px}
-.brand small{color:#6d788a}
-
-.layout{
- display:flex;
- min-height:calc(100vh - 68px)
-}
-
-aside{
- width:235px;
- background:#1769e0;
- color:white;
- padding:18px 12px;
- flex-shrink:0;
-}
-
-nav button{
- width:100%;
- background:transparent;
- border:0;
- color:white;
- text-align:left;
- padding:12px;
- margin:2px 0;
- border-radius:8px;
- cursor:pointer;
-}
-nav button:hover,nav button.active{
- background:#ffffff25
-}
-
-.section{
- font-size:11px;
- opacity:.7;
- margin:12px;
- font-weight:bold;
-}
-
-main{
- flex:1;
- padding:25px;
- max-width:1450px;
-}
-
-.top{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:15px;
- margin-bottom:20px;
-}
-
-.top h1{margin:0}
-.muted{color:#6d788a}
-
-.card{
- background:white;
- border:1px solid #e4e9f1;
- border-radius:14px;
- padding:18px;
- margin-bottom:16px;
-}
-
-.cards{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:15px;
-}
-
-.stat strong{
- display:block;
- font-size:28px;
- margin-top:8px;
-}
-
-.grid{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:15px;
-}
-
-.toolbar{
- display:flex;
- gap:10px;
- margin-bottom:15px;
-}
-.toolbar input{
- padding:10px;
- border:1px solid #d5ddea;
- border-radius:9px;
- width:100%;
- max-width:400px;
-}
-
-table{
- width:100%;
- border-collapse:collapse;
-}
-th,td{
- padding:10px;
- border-bottom:1px solid #edf0f4;
- text-align:left;
- font-size:13px;
-}
-th{color:#6d788a}
-
-.badge{
- display:inline-block;
- padding:5px 9px;
- border-radius:20px;
- background:#eaf8ef;
- color:#16794a;
- font-size:11px;
- font-weight:bold;
-}
-
-.actions{
- display:flex;
- gap:10px;
- flex-wrap:wrap;
- justify-content:flex-end;
- margin-top:15px;
-}
-
+.light{background:#eef4ff;color:#1769e0}
+.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#1769e0,#0d4da8);padding:20px}
+.login-card{background:white;padding:30px;border-radius:18px;width:min(430px,100%);text-align:center}
+.logo{width:90px;height:90px;border-radius:20px;background:#1769e0;color:white;display:grid;place-items:center;margin:auto;font-size:25px;font-weight:bold}
+.field{display:flex;flex-direction:column;text-align:left;gap:6px;margin-bottom:14px}
+.field input,.field select{padding:11px;border:1px solid #d5ddea;border-radius:8px}
+header{height:68px;background:white;border-bottom:1px solid #ddd;display:flex;align-items:center;padding:0 20px;gap:12px}
+.layout{display:flex;min-height:calc(100vh - 68px)}
+aside{width:230px;background:#1769e0;color:white;padding:18px}
+nav button{display:block;width:100%;border:0;background:transparent;color:white;text-align:left;padding:12px;border-radius:8px;margin:3px 0;cursor:pointer}
+nav button:hover{background:#ffffff22}
+main{flex:1;padding:25px;max-width:1450px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.card{background:white;border:1px solid #e4e9f1;border-radius:14px;padding:20px;margin-bottom:16px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+.badge{padding:5px 8px;border-radius:20px;background:#eaf8ef;color:#176b36;font-size:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.toolbar{display:flex;gap:10px;margin-bottom:15px}
+.toolbar input{padding:10px;border:1px solid #ddd;border-radius:8px;min-width:250px}
+.credentials{background:#eef8ff;border:2px solid #1769e0;border-radius:12px;padding:18px}
+.credentials strong{font-size:18px}
 @media(max-width:850px){
- aside{width:70px}
- aside .section{display:none}
- nav button{font-size:0;text-align:center}
- nav button::first-letter{font-size:20px}
- main{padding:15px}
- .cards{grid-template-columns:1fr 1fr}
- .grid{grid-template-columns:1fr}
- .top{flex-direction:column;align-items:flex-start}
-}
-
-@media(max-width:500px){
- .cards{grid-template-columns:1fr}
+aside{width:70px;padding:10px}
+nav button{font-size:0;text-align:center}
+nav button::first-letter{font-size:20px}
+.cards{grid-template-columns:1fr 1fr}
+.grid{grid-template-columns:1fr}
+main{padding:15px}
 }
 </style>
+
+<script>
+window.SGD_SUPABASE_URL="https://edttbjysaqdounpghsdn.supabase.co";
+window.SGD_SUPABASE_ANON_KEY="sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen" class="login">
-
-<div class="login-box">
-
+<div id="login" class="login">
+<div class="login-card">
 <div class="logo">SGD</div>
+<h1>SGD</h1>
+<p>Sistema de Gestão do Clube</p>
 
-<h1 class="center">SGD</h1>
-<p class="center muted">Sistema de Gestão do Clube</p>
-
-<div id="loginError" class="error hidden"></div>
+<div id="loginError" class="hidden" style="color:#b42318;margin-bottom:15px">
+E-mail ou palavra-passe incorretos.
+</div>
 
 <form id="loginForm">
 
 <div class="field">
 <label>E-mail</label>
-<input id="email" type="email" required autocomplete="email">
+<input name="email" type="email" required>
 </div>
 
 <div class="field">
 <label>Palavra-passe</label>
-<input id="password" type="password" required autocomplete="current-password">
+<input name="password" type="password" required>
 </div>
 
-<button type="submit" class="btn primary full">
-Entrar
-</button>
+<button class="btn primary" style="width:100%">Entrar</button>
 
 </form>
-
 </div>
 </div>
 
 
-<!-- APLICAÇÃO -->
 <div id="app" class="hidden">
 
 <header>
+<div class="logo" style="width:42px;height:42px;border-radius:9px;font-size:12px">SGD</div>
 
-<div class="logo" style="width:42px;height:42px;margin:0;font-size:12px">
-SGD
-</div>
-
-<div class="brand">
-<b>Sistema de Gestão do Clube</b>
+<div>
+<b>Sistema de Gestão do Clube</b><br>
 <small>Secretaria / Direção</small>
 </div>
 
-<div style="margin-left:auto;display:flex;gap:8px">
-
-<button class="btn light" onclick="showPage('conta')">
-👤 Minha conta
-</button>
-
-<button class="btn light" onclick="logout()">
-Sair
-</button>
-
+<div style="margin-left:auto">
+<button class="btn light" onclick="logout()">Sair</button>
 </div>
-
 </header>
-
 
 <div class="layout">
 
 <aside>
 
-<div class="section">PRINCIPAL</div>
-
 <nav>
-<button data-page="dashboard" onclick="showPage('dashboard')">
-🏠 Dashboard
-</button>
-
-<button data-page="membros" onclick="showPage('membros')">
-👥 Membros
-</button>
-
-<button data-page="unidades" onclick="showPage('unidades')">
-🏕️ Unidades
-</button>
-</nav>
-
-
-<div class="section">GESTÃO</div>
-
-<nav>
-
-<button data-page="atividades" onclick="showPage('atividades')">
-📅 Atividades
-</button>
-
-<button data-page="financas" onclick="showPage('financas')">
-💰 Finanças
-</button>
-
-</nav>
-
-
-<div class="section">ADMINISTRAÇÃO</div>
-
-<nav>
-
-<button data-page="relatorios" onclick="showPage('relatorios')">
-📄 Relatórios
-</button>
-
-<button data-page="definicoes" onclick="showPage('definicoes')">
-⚙️ Definições
-</button>
-
+<button onclick="page('dashboard')">🏠 Dashboard</button>
+<button onclick="page('membros')">👥 Membros</button>
+<button onclick="page('unidades')">🏕️ Unidades</button>
+<button onclick="page('atividades')">📅 Atividades</button>
+<button onclick="page('financas')">💰 Finanças</button>
+<button onclick="page('relatorios')">📄 Relatórios</button>
+<button onclick="page('definicoes')">⚙️ Definições</button>
+<button onclick="page('conta')">👤 Minha conta</button>
 </nav>
 
 </aside>
-
 
 <main id="content"></main>
 
@@ -360,1584 +125,1853 @@ Sair
 
 <script>
 
-/* =====================================================
-   CONFIGURAÇÃO SUPABASE
-===================================================== */
+let client;
+let db={
+membros:[],
+unidades:[],
+atividades:[],
+financas:[],
+config:{}
+};
 
-const SUPABASE_URL =
-"https://edttbjysaqdounpghsdn.supabase.co";
+const $=s=>document.querySelector(s);
+const content=$("#content");
 
-const SUPABASE_KEY =
-"sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
 
-const supabaseClient =
-window.supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
+async function supabase(){
+
+if(!client){
+
+client=window.supabase.createClient(
+window.SGD_SUPABASE_URL,
+window.SGD_SUPABASE_ANON_KEY
 );
 
+}
 
-/* =====================================================
-   VARIÁVEIS
-===================================================== */
-
-let membros=[];
-let unidades=[];
-let atividades=[];
-let financas=[];
-
-const content =
-document.getElementById("content");
-
-
-/* =====================================================
-   UTILITÁRIOS
-===================================================== */
-
-function esc(value){
-
- return String(value ?? "")
- .replace(/[&<>"']/g,function(x){
-  return {
-   "&":"&amp;",
-   "<":"&lt;",
-   ">":"&gt;",
-   '"':"&quot;",
-   "'":"&#039;"
-  }[x];
- });
+return client;
 
 }
 
 
-function money(value){
+async function loadDB(){
 
- return Number(value || 0)
- .toLocaleString("pt-AO",{
-  minimumFractionDigits:2,
-  maximumFractionDigits:2
- });
+const c=await supabase();
 
-}
+const [m,u,a,f,conf]=await Promise.all([
 
+c.from("membros").select("*").order("created_at",{ascending:true}),
 
-function errorMessage(message){
+c.from("unidades").select("*").order("nome"),
 
- alert(message);
+c.from("atividades").select("*").order("data",{ascending:false}),
 
-}
+c.from("financas").select("*").order("data",{ascending:false}),
 
+c.from("configuracoes").select("*").limit(1)
 
-/* =====================================================
-   CARREGAR DADOS
-===================================================== */
+]);
 
-async function carregarDados(){
+if(m.error)throw m.error;
+if(u.error)throw u.error;
+if(a.error)throw a.error;
+if(f.error)throw f.error;
+if(conf.error)throw conf.error;
 
- try{
-
-  const m =
-  await supabaseClient
-  .from("membros")
-  .select("*");
-
-  if(!m.error)
-   membros=m.data || [];
-
-  const u =
-  await supabaseClient
-  .from("unidades")
-  .select("*");
-
-  if(!u.error)
-   unidades=u.data || [];
-
-  const a =
-  await supabaseClient
-  .from("atividades")
-  .select("*");
-
-  if(!a.error)
-   atividades=a.data || [];
-
-  const f =
-  await supabaseClient
-  .from("financas")
-  .select("*");
-
-  if(!f.error)
-   financas=f.data || [];
-
- }catch(e){
-
-  console.error(e);
-
- }
+db.membros=m.data||[];
+db.unidades=u.data||[];
+db.atividades=a.data||[];
+db.financas=f.data||[];
+db.config=conf.data?.[0]||{};
 
 }
 
 
-/* =====================================================
-   DASHBOARD
-===================================================== */
+async function refresh(){
+
+try{
+
+await loadDB();
+
+}catch(e){
+
+console.error(e);
+
+alert("Erro ao carregar o Supabase: "+e.message);
+
+}
+
+}
+
+
+function esc(v){
+
+return String(v??"").replace(/[&<>"']/g,m=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+
+}[m]));
+
+}
+
+
+function money(v){
+
+return Number(v||0).toLocaleString("pt-AO",{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
+
+}
+
+
+function numeroMembro(){
+
+const ano=new Date().getFullYear();
+
+let maior=0;
+
+db.membros.forEach(m=>{
+
+let n=String(m.numero_membro||"");
+
+let match=n.match(/-(\d+)$/);
+
+if(match){
+
+maior=Math.max(maior,Number(match[1]));
+
+}
+
+});
+
+return "DBV-"+ano+"-"+String(maior+1).padStart(4,"0");
+
+}
+
+
+function utilizador(){
+
+const n=numeroMembro().split("-").pop();
+
+return "M"+n;
+
+}
+
+
+function senhaInicial(){
+
+const chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+let s="SGD@";
+
+for(let i=0;i<8;i++){
+
+s+=chars[Math.floor(Math.random()*chars.length)];
+
+}
+
+return s;
+
+}
+
+
+function field(n,l,t="text",req=false){
+
+return `
+<div class="field">
+<label>${l}</label>
+<input name="${n}" type="${t}" ${req?"required":""}>
+</div>`;
+
+}
+
+
+function select(n,l,arr,req=false){
+
+return `
+<div class="field">
+<label>${l}</label>
+
+<select name="${n}" ${req?"required":""}>
+
+<option value="">Selecionar</option>
+
+${arr.map(x=>{
+
+if(typeof x==="object"){
+
+return `<option value="${esc(x.id)}">${esc(x.nome)}</option>`;
+
+}
+
+return `<option>${esc(x)}</option>`;
+
+}).join("")}
+
+</select>
+
+</div>`;
+
+}
+
+
+function top(title,text,button=""){
+
+return `
+<div class="top">
+
+<div>
+<h1>${title}</h1>
+<p>${text}</p>
+</div>
+
+${button}
+
+</div>`;
+
+}
+
+
+function btn(text,cls="primary",fn=""){
+
+return `<button class="btn ${cls}" onclick="${fn}">${text}</button>`;
+
+}
+
+
+function page(p){
+
+if(pages[p])pages[p]();
+
+}
+
+
+/* DASHBOARD */
 
 async function dashboard(){
 
- await carregarDados();
+await refresh();
 
- let receitas=financas
- .filter(x=>x.tipo==="Receita")
- .reduce((a,x)=>a+Number(x.valor||0),0);
+let receitas=db.financas
+.filter(x=>x.tipo==="Receita")
+.reduce((a,x)=>a+Number(x.valor||0),0);
 
- let despesas=financas
- .filter(x=>x.tipo==="Despesa")
- .reduce((a,x)=>a+Number(x.valor||0),0);
+let despesas=db.financas
+.filter(x=>x.tipo==="Despesa")
+.reduce((a,x)=>a+Number(x.valor||0),0);
 
- content.innerHTML=`
+content.innerHTML=
 
- <div class="top">
+top(
+"Dashboard",
+"Visão geral do clube",
+btn("+ Cadastrar membro","primary","page('membroForm')")
+)+
 
- <div>
- <h1>Dashboard</h1>
- <p class="muted">
- Visão geral do clube
- </p>
- </div>
+`
+<div class="cards">
 
- <button class="btn primary"
- onclick="showPage('membroForm')">
- + Cadastrar membro
- </button>
+<div class="card">
+👥 Membros
+<h2>${db.membros.length}</h2>
+</div>
 
- </div>
+<div class="card">
+🏕️ Unidades
+<h2>${db.unidades.length}</h2>
+</div>
 
+<div class="card">
+📅 Atividades
+<h2>${db.atividades.length}</h2>
+</div>
 
- <div class="cards">
+<div class="card">
+💰 Saldo
+<h2>${money(receitas-despesas)} Kz</h2>
+</div>
 
- <div class="card stat">
- 👥 Membros
- <strong>${membros.length}</strong>
- </div>
+</div>
 
- <div class="card stat">
- 🏕️ Unidades
- <strong>${unidades.length}</strong>
- </div>
-
- <div class="card stat">
- 📅 Atividades
- <strong>${atividades.length}</strong>
- </div>
-
- <div class="card stat">
- 💰 Saldo
- <strong>${money(receitas-despesas)} Kz</strong>
- </div>
-
- </div>
-
-
- <div class="card">
-
- <h3>Acesso rápido</h3>
-
- <div class="actions" style="justify-content:flex-start">
-
- <button class="btn light"
- onclick="showPage('membros')">
- 👥 Membros
- </button>
-
- <button class="btn light"
- onclick="showPage('unidades')">
- 🏕️ Unidades
- </button>
-
- <button class="btn light"
- onclick="showPage('atividades')">
- 📅 Atividades
- </button>
-
- <button class="btn light"
- onclick="showPage('financas')">
- 💰 Finanças
- </button>
-
- </div>
-
- </div>
-
- `;
+<div class="card">
+<h3>Acesso rápido</h3>
+${btn("👥 Membros","light","page('membros')")}
+${btn("🏕️ Unidades","light","page('unidades')")}
+${btn("📅 Atividades","light","page('atividades')")}
+${btn("💰 Finanças","light","page('financas')")}
+</div>`;
 
 }
 
 
-/* =====================================================
-   MEMBROS
-===================================================== */
+/* MEMBROS */
 
-async function membrosPage(){
+async function membros(){
 
- await carregarDados();
+await refresh();
 
- content.innerHTML=`
+content.innerHTML=
 
- <div class="top">
+top(
+"Membros",
+"Todos os membros cadastrados",
+btn("+ Cadastrar membro","primary","page('membroForm')")
+)+
 
- <div>
- <h1>Membros</h1>
- <p class="muted">
- Lista dos membros cadastrados
- </p>
- </div>
+`
+<div class="card">
 
- <button class="btn primary"
- onclick="showPage('membroForm')">
- + Cadastrar membro
- </button>
+<div class="toolbar">
 
- </div>
+<input id="search"
+placeholder="Pesquisar membro..."
+oninput="renderMembros()">
 
+</div>
 
- <div class="card">
+<div style="overflow:auto">
 
- <div class="toolbar">
+<table>
 
- <input
- id="pesquisaMembro"
- placeholder="Pesquisar membro..."
- oninput="filtrarMembros()">
+<thead>
+<tr>
+<th>Nº</th>
+<th>Nome</th>
+<th>Unidade</th>
+<th>Função</th>
+<th>Classe</th>
+<th>Telefone</th>
+<th>Estado</th>
+<th>Ação</th>
+</tr>
+</thead>
 
- </div>
+<tbody id="memberRows"></tbody>
 
+</table>
 
- <div style="overflow:auto">
+</div>
 
- <table>
+</div>`;
 
- <thead>
-
- <tr>
- <th>Nome</th>
- <th>Unidade</th>
- <th>Função</th>
- <th>Classe</th>
- <th>Telefone</th>
- <th>Estado</th>
- </tr>
-
- </thead>
-
- <tbody id="listaMembros"></tbody>
-
- </table>
-
- </div>
-
- </div>
-
- `;
-
- renderMembros();
+renderMembros();
 
 }
 
 
 function renderMembros(){
 
- const busca =
- (document.getElementById("pesquisaMembro")?.value || "")
- .toLowerCase();
+let q=($("#search")?.value||"").toLowerCase();
 
- const lista =
- membros.filter(m=>{
+let arr=db.membros.filter(m=>
 
-  return (
-   String(m.nome||"")
-   .toLowerCase()
-   .includes(busca)
-  );
+(`${m.numero_membro||""} ${m.nome||""}`).toLowerCase().includes(q)
 
- });
+);
 
+$("#memberRows").innerHTML=
 
- const tbody =
- document.getElementById("listaMembros");
+arr.map(m=>`
 
- if(!tbody)return;
+<tr>
 
- tbody.innerHTML =
- lista.map(m=>`
+<td><b>${esc(m.numero_membro)}</b></td>
 
- <tr>
+<td>${esc(m.nome)}</td>
 
- <td>
- <b>${esc(m.nome||"—")}</b>
- </td>
+<td>${esc(
+db.unidades.find(u=>u.id===m.unidade_id)?.nome||"—"
+)}</td>
 
- <td>${esc(m.unidade||"—")}</td>
+<td>${esc(m.funcao||"—")}</td>
 
- <td>${esc(m.funcao||"—")}</td>
+<td>${esc(m.classe||"—")}</td>
 
- <td>${esc(m.classe||"—")}</td>
+<td>${esc(m.telefone||"—")}</td>
 
- <td>${esc(m.telefone||"—")}</td>
+<td><span class="badge">${esc(m.estado||"Ativo")}</span></td>
 
- <td>
- <span class="badge">
- ${esc(m.estado||"Ativo")}
- </span>
- </td>
+<td>${btn("Abrir","light",`profile('${m.id}')`)}</td>
 
- </tr>
+</tr>
 
- `).join("")
- ||
- `<tr>
- <td colspan="6" class="muted">
- Nenhum membro encontrado.
- </td>
- </tr>`;
+`).join("")||
+
+`<tr><td colspan="8">Nenhum membro encontrado.</td></tr>`;
 
 }
 
 
-function filtrarMembros(){
-
- renderMembros();
-
-}
-
-
-/* =====================================================
-   CADASTRO DE MEMBRO
-===================================================== */
+/* CADASTRO */
 
 async function membroForm(){
 
- await carregarDados();
+await refresh();
 
- content.innerHTML=`
+let numero=numeroMembro();
+let user=utilizador();
+let senha=senhaInicial();
 
- <div class="top">
+content.innerHTML=
 
- <div>
- <h1>Cadastrar membro</h1>
- <p class="muted">
- Preencha os dados do membro
- </p>
- </div>
+top(
+"Cadastrar membro",
+"Preencha os dados do novo membro",
+btn("← Voltar","light","page('membros')")
+)+
 
- <button class="btn light"
- onclick="showPage('membros')">
- ← Voltar
- </button>
+`
+<form id="memberForm">
 
- </div>
+<div class="card">
 
+<h3>Dados pessoais</h3>
 
- <form id="formMembro">
+<div class="grid">
 
- <div class="card">
+${field("nome","Nome completo *","text",true)}
 
- <h3>Dados pessoais</h3>
+${field("nascimento","Data de nascimento","date")}
 
- <div class="grid">
+${select("sexo","Sexo",[
+"Masculino",
+"Feminino",
+"Outro"
+])}
 
- <div class="field">
- <label>Nome completo *</label>
- <input name="nome" required>
- </div>
+${field("documento","Nº do documento")}
 
- <div class="field">
- <label>Data de nascimento</label>
- <input name="nascimento" type="date">
- </div>
+${field("telefone","Telefone")}
 
- <div class="field">
- <label>Sexo</label>
- <select name="sexo">
- <option value="">Selecionar</option>
- <option>Masculino</option>
- <option>Feminino</option>
- <option>Outro</option>
- </select>
- </div>
+${field("endereco","Endereço")}
 
- <div class="field">
- <label>Nº do documento</label>
- <input name="documento">
- </div>
+</div>
 
- <div class="field">
- <label>Telefone</label>
- <input name="telefone">
- </div>
+</div>
 
- <div class="field">
- <label>Endereço</label>
- <input name="endereco">
- </div>
 
- </div>
+<div class="card">
 
- </div>
+<h3>Dados do clube</h3>
 
+<div class="grid">
 
- <div class="card">
+${select(
+"unidade_id",
+"Unidade",
+db.unidades.filter(u=>u.estado==="Ativa")
+.map(u=>({id:u.id,nome:u.nome}))
+)}
 
- <h3>Dados do clube</h3>
+${select(
+"funcao",
+"Função",
+[
+"Desbravador",
+"Conselheiro",
+"Vice-conselheiro",
+"Diretor",
+"Secretário",
+"Tesoureiro",
+"Capelão"
+]
+)}
 
- <div class="grid">
+${select(
+"classe",
+"Classe",
+[
+"Amigo",
+"Companheiro",
+"Pesquisador",
+"Pioneiro",
+"Excursionista",
+"Guia"
+]
+)}
 
- <div class="field">
- <label>Unidade</label>
+${select(
+"estado",
+"Estado",
+[
+"Ativo",
+"Inativo",
+"Suspenso"
+]
+)}
 
- <select name="unidade">
+</div>
 
- <option value="">Selecionar</option>
+</div>
 
- ${unidades.map(u=>`
- <option value="${esc(u.nome)}">
- ${esc(u.nome)}
- </option>
- `).join("")}
 
- </select>
+<div class="card">
 
- </div>
+<h3>Família e escola</h3>
 
+<div class="grid">
 
- <div class="field">
- <label>Função</label>
+${field("pai","Nome do pai")}
 
- <select name="funcao">
+${field("mae","Nome da mãe")}
 
- <option value="">Selecionar</option>
+${field("encarregado","Nome do encarregado")}
 
- <option>Desbravador</option>
- <option>Conselheiro</option>
- <option>Vice-conselheiro</option>
- <option>Diretor</option>
- <option>Secretário</option>
- <option>Tesoureiro</option>
- <option>Capelão</option>
+${field("contacto_encarregado","Contacto do encarregado")}
 
- </select>
+${field("escola","Escola")}
 
- </div>
+${field("classe_escolar","Classe escolar")}
 
+</div>
 
- <div class="field">
- <label>Classe</label>
+</div>
 
- <select name="classe">
 
- <option value="">Selecionar</option>
+<div class="card">
 
- <option>Amigo</option>
- <option>Companheiro</option>
- <option>Pesquisador</option>
- <option>Pioneiro</option>
- <option>Excursionista</option>
- <option>Guia</option>
+<h3>Credenciais do membro</h3>
 
- </select>
+<div class="credentials">
 
- </div>
+<p><b>Nº do membro:</b><br>
+<strong>${esc(numero)}</strong></p>
 
+<p><b>Utilizador:</b><br>
+<strong>${esc(user)}</strong></p>
 
- <div class="field">
- <label>Estado</label>
+<p><b>Palavra-passe inicial:</b><br>
+<strong>${esc(senha)}</strong></p>
 
- <select name="estado">
+<small>
+Guarde estas informações. A palavra-passe inicial não é armazenada em texto no banco.
+</small>
 
- <option>Ativo</option>
- <option>Inativo</option>
- <option>Suspenso</option>
+</div>
 
- </select>
+</div>
 
- </div>
 
- </div>
+<div class="actions">
 
- </div>
+<button class="btn primary">
+Cadastrar membro
+</button>
 
+</div>
 
- <div class="card">
+</form>`;
 
- <h3>Família e escola</h3>
 
- <div class="grid">
+$('[name=estado]').value="Ativo";
 
- <div class="field">
- <label>Encarregado</label>
- <input name="encarregado">
- </div>
 
- <div class="field">
- <label>Contacto do encarregado</label>
- <input name="contacto_encarregado">
- </div>
+$("#memberForm").onsubmit=async e=>{
 
- <div class="field">
- <label>Nome do pai</label>
- <input name="pai">
- </div>
+e.preventDefault();
 
- <div class="field">
- <label>Nome da mãe</label>
- <input name="mae">
- </div>
+const form=new FormData(e.target);
 
- <div class="field">
- <label>Escola</label>
- <input name="escola">
- </div>
+let d=Object.fromEntries(form);
 
- <div class="field">
- <label>Classe escolar</label>
- <input name="classe_escolar">
- </div>
+delete d.foto;
 
- </div>
+d.numero_membro=numero;
+d.utilizador=user;
+d.data_cadastro=new Date().toISOString().slice(0,10);
 
- </div>
+try{
 
+const c=await supabase();
 
- <div class="actions">
+const {data,error}=await c
+.from("membros")
+.insert([d])
+.select()
+.single();
 
- <button class="btn primary">
- Cadastrar membro
- </button>
+if(error)throw error;
 
- </div>
+await showCredentials(data,numero,user,senha);
 
- </form>
+}catch(err){
 
- `;
+console.error(err);
 
-
- document
- .getElementById("formMembro")
- .addEventListener("submit",cadastrarMembro);
+alert(
+"Erro ao cadastrar membro:\n\n"+
+err.message
+);
 
 }
-
-
-async function cadastrarMembro(event){
-
- event.preventDefault();
-
- const form=event.target;
-
- const dados=
- Object.fromEntries(
-  new FormData(form)
- );
-
-
- /*
-  IMPORTANTE:
-  Não criamos "numero" aqui porque
-  a tua tabela mostrou que essa coluna
-  não existe.
- */
-
- try{
-
-  const {data,error}=
-  await supabaseClient
-  .from("membros")
-  .insert([dados])
-  .select()
-  .single();
-
-  if(error)throw error;
-
-  alert("Membro cadastrado com sucesso!");
-
-  showPage("membros");
-
- }catch(error){
-
-  console.error(error);
-
-  alert(
-   "Erro ao cadastrar membro:\n"+
-   error.message
-  );
-
- }
-
-}
-
-
-/* =====================================================
-   UNIDADES
-===================================================== */
-
-async function unidadesPage(){
-
- await carregarDados();
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Unidades</h1>
- <p class="muted">
- Gestão das unidades do clube
- </p>
- </div>
-
- <button class="btn primary"
- onclick="novaUnidade()">
- + Nova unidade
- </button>
-
- </div>
-
-
- <div class="card">
-
- <table>
-
- <thead>
-
- <tr>
- <th>Unidade</th>
- <th>Responsável</th>
- <th>Estado</th>
- </tr>
-
- </thead>
-
- <tbody>
-
- ${unidades.map(u=>`
-
- <tr>
-
- <td>
- <b>${esc(u.nome||"—")}</b>
- </td>
-
- <td>${esc(u.responsavel||"—")}</td>
-
- <td>
- <span class="badge">
- ${esc(u.estado||"Ativa")}
- </span>
- </td>
-
- </tr>
-
- `).join("")
- ||
- `<tr>
- <td colspan="3" class="muted">
- Nenhuma unidade cadastrada.
- </td>
- </tr>`}
-
- </tbody>
-
- </table>
-
- </div>
-
- `;
-
-}
-
-
-function novaUnidade(){
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Nova unidade</h1>
- </div>
-
- <button class="btn light"
- onclick="showPage('unidades')">
- ← Voltar
- </button>
-
- </div>
-
-
- <form id="formUnidade">
-
- <div class="card">
-
- <div class="field">
- <label>Nome da unidade *</label>
- <input name="nome" required>
- </div>
-
- <div class="field">
- <label>Responsável</label>
- <input name="responsavel">
- </div>
-
- <div class="field">
- <label>Estado</label>
-
- <select name="estado">
- <option>Ativa</option>
- <option>Inativa</option>
- </select>
-
- </div>
-
- </div>
-
-
- <div class="actions">
-
- <button class="btn primary">
- Guardar unidade
- </button>
-
- </div>
-
- </form>
-
- `;
-
-
- document
- .getElementById("formUnidade")
- .addEventListener("submit",async e=>{
-
-  e.preventDefault();
-
-  const dados=
-  Object.fromEntries(
-   new FormData(e.target)
-  );
-
-  const {error}=
-  await supabaseClient
-  .from("unidades")
-  .insert([dados]);
-
-  if(error){
-
-   alert("Erro: "+error.message);
-   return;
-
-  }
-
-  alert("Unidade criada!");
-
-  showPage("unidades");
-
- });
-
-}
-
-
-/* =====================================================
-   ATIVIDADES
-===================================================== */
-
-async function atividadesPage(){
-
- await carregarDados();
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Atividades</h1>
- <p class="muted">
- Gestão das atividades do clube
- </p>
- </div>
-
- <button class="btn primary"
- onclick="novaAtividade()">
- + Nova atividade
- </button>
-
- </div>
-
-
- <div class="card">
-
- <table>
-
- <thead>
-
- <tr>
- <th>Nome</th>
- <th>Data</th>
- <th>Hora</th>
- <th>Local</th>
- <th>Responsável</th>
- </tr>
-
- </thead>
-
- <tbody>
-
- ${atividades.map(a=>`
-
- <tr>
-
- <td>${esc(a.nome||"—")}</td>
- <td>${esc(a.data||"—")}</td>
- <td>${esc(a.hora||"—")}</td>
- <td>${esc(a.local||"—")}</td>
- <td>${esc(a.responsavel||"—")}</td>
-
- </tr>
-
- `).join("")
- ||
- `<tr>
- <td colspan="5" class="muted">
- Nenhuma atividade cadastrada.
- </td>
- </tr>`}
-
- </tbody>
-
- </table>
-
- </div>
-
- `;
-
-}
-
-
-function novaAtividade(){
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Nova atividade</h1>
- </div>
-
- <button class="btn light"
- onclick="showPage('atividades')">
- ← Voltar
- </button>
-
- </div>
-
-
- <form id="formAtividade">
-
- <div class="card">
-
- <div class="grid">
-
- <div class="field">
- <label>Nome *</label>
- <input name="nome" required>
- </div>
-
- <div class="field">
- <label>Data *</label>
- <input name="data" type="date" required>
- </div>
-
- <div class="field">
- <label>Hora</label>
- <input name="hora" type="time">
- </div>
-
- <div class="field">
- <label>Local</label>
- <input name="local">
- </div>
-
- <div class="field">
- <label>Responsável</label>
- <input name="responsavel">
- </div>
-
- <div class="field">
- <label>Custo</label>
- <input name="custo" type="number">
- </div>
-
- </div>
-
- </div>
-
-
- <div class="actions">
-
- <button class="btn primary">
- Guardar atividade
- </button>
-
- </div>
-
- </form>
-
- `;
-
-
- document
- .getElementById("formAtividade")
- .addEventListener("submit",async e=>{
-
-  e.preventDefault();
-
-  const dados=
-  Object.fromEntries(
-   new FormData(e.target)
-  );
-
-  const {error}=
-  await supabaseClient
-  .from("atividades")
-  .insert([dados]);
-
-  if(error){
-
-   alert("Erro: "+error.message);
-   return;
-
-  }
-
-  alert("Atividade criada!");
-
-  showPage("atividades");
-
- });
-
-}
-
-
-/* =====================================================
-   FINANÇAS
-===================================================== */
-
-async function financasPage(){
-
- await carregarDados();
-
- let receitas=
- financas
- .filter(x=>x.tipo==="Receita")
- .reduce((a,x)=>a+Number(x.valor||0),0);
-
- let despesas=
- financas
- .filter(x=>x.tipo==="Despesa")
- .reduce((a,x)=>a+Number(x.valor||0),0);
-
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Finanças</h1>
- <p class="muted">
- Gestão financeira do clube
- </p>
- </div>
-
- <button class="btn primary"
- onclick="novoMovimento()">
- + Novo movimento
- </button>
-
- </div>
-
-
- <div class="cards">
-
- <div class="card stat">
- Receitas
- <strong>${money(receitas)} Kz</strong>
- </div>
-
- <div class="card stat">
- Despesas
- <strong>${money(despesas)} Kz</strong>
- </div>
-
- <div class="card stat">
- Saldo
- <strong>${money(receitas-despesas)} Kz</strong>
- </div>
-
- </div>
-
-
- <div class="card">
-
- <table>
-
- <thead>
-
- <tr>
- <th>Data</th>
- <th>Tipo</th>
- <th>Categoria</th>
- <th>Valor</th>
- </tr>
-
- </thead>
-
- <tbody>
-
- ${financas.map(f=>`
-
- <tr>
- <td>${esc(f.data||"—")}</td>
- <td>${esc(f.tipo||"—")}</td>
- <td>${esc(f.categoria||"—")}</td>
- <td>${money(f.valor)} Kz</td>
- </tr>
-
- `).join("")
- ||
- `<tr>
- <td colspan="4" class="muted">
- Nenhum movimento.
- </td>
- </tr>`}
-
- </tbody>
-
- </table>
-
- </div>
-
- `;
-
-}
-
-
-function novoMovimento(){
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Novo movimento</h1>
- </div>
-
- <button class="btn light"
- onclick="showPage('financas')">
- ← Voltar
- </button>
-
- </div>
-
-
- <form id="formFinanceiro">
-
- <div class="card">
-
- <div class="grid">
-
- <div class="field">
- <label>Tipo *</label>
-
- <select name="tipo" required>
- <option>Receita</option>
- <option>Despesa</option>
- </select>
-
- </div>
-
- <div class="field">
- <label>Categoria *</label>
- <input name="categoria" required>
- </div>
-
- <div class="field">
- <label>Valor *</label>
- <input name="valor" type="number" required>
- </div>
-
- <div class="field">
- <label>Data *</label>
- <input name="data" type="date" required>
- </div>
-
- <div class="field">
- <label>Descrição</label>
- <input name="descricao">
- </div>
-
- </div>
-
- </div>
-
-
- <div class="actions">
-
- <button class="btn primary">
- Guardar
- </button>
-
- </div>
-
- </form>
-
- `;
-
-
- document
- .getElementById("formFinanceiro")
- .addEventListener("submit",async e=>{
-
-  e.preventDefault();
-
-  const dados=
-  Object.fromEntries(
-   new FormData(e.target)
-  );
-
-  const {error}=
-  await supabaseClient
-  .from("financas")
-  .insert([dados]);
-
-  if(error){
-
-   alert("Erro: "+error.message);
-   return;
-
-  }
-
-  alert("Movimento guardado!");
-
-  showPage("financas");
-
- });
-
-}
-
-
-/* =====================================================
-   RELATÓRIOS
-===================================================== */
-
-function relatorios(){
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Relatórios</h1>
- <p class="muted">
- Relatórios do clube
- </p>
- </div>
-
- </div>
-
-
- <div class="cards">
-
- <div class="card">
- <h3>👥 Membros</h3>
- <p class="muted">
- Lista geral dos membros.
- </p>
-
- <button class="btn light"
- onclick="showPage('membros')">
- Abrir
- </button>
- </div>
-
-
- <div class="card">
- <h3>🏕️ Unidades</h3>
- <p class="muted">
- Unidades cadastradas.
- </p>
-
- <button class="btn light"
- onclick="showPage('unidades')">
- Abrir
- </button>
- </div>
-
-
- <div class="card">
- <h3>📅 Atividades</h3>
- <p class="muted">
- Atividades do clube.
- </p>
-
- <button class="btn light"
- onclick="showPage('atividades')">
- Abrir
- </button>
- </div>
-
-
- <div class="card">
- <h3>💰 Finanças</h3>
- <p class="muted">
- Movimentos financeiros.
- </p>
-
- <button class="btn light"
- onclick="showPage('financas')">
- Abrir
- </button>
- </div>
-
- </div>
-
- `;
-
-}
-
-
-/* =====================================================
-   DEFINIÇÕES
-===================================================== */
-
-function definicoes(){
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Definições</h1>
- <p class="muted">
- Configurações do sistema
- </p>
- </div>
-
- </div>
-
-
- <div class="card">
-
- <h3>Impressão</h3>
-
- <div class="grid">
-
- <div class="field">
- <label>Papel térmico</label>
-
- <select id="papel">
- <option>58 mm</option>
- <option>80 mm</option>
- </select>
-
- </div>
-
- <div class="field">
- <label>Ficha</label>
-
- <select id="ficha">
- <option>A4</option>
- </select>
-
- </div>
-
- </div>
-
- <button class="btn primary"
- onclick="alert('Configuração preparada.')">
- Guardar
- </button>
-
- </div>
-
- `;
-
-}
-
-
-/* =====================================================
-   MINHA CONTA
-===================================================== */
-
-async function conta(){
-
- const {data,error}=
- await supabaseClient.auth.getUser();
-
- if(error){
-
-  alert(error.message);
-  return;
-
- }
-
- const email=
- data.user?.email || "";
-
- content.innerHTML=`
-
- <div class="top">
-
- <div>
- <h1>Minha conta</h1>
- <p class="muted">
- Dados da conta de acesso
- </p>
- </div>
-
- </div>
-
-
- <div class="card">
-
- <h3>Conta atual</h3>
-
- <p>
- <b>E-mail:</b>
- ${esc(email)}
- </p>
-
- </div>
-
-
- <div class="card">
-
- <h3>Alterar palavra-passe</h3>
-
- <form id="formSenha">
-
- <div class="field">
- <label>Nova palavra-passe</label>
- <input
- name="senha"
- type="password"
- minlength="6"
- required>
- </div>
-
- <button class="btn primary">
- Alterar palavra-passe
- </button>
-
- </form>
-
- </div>
-
- `;
-
-
- document
- .getElementById("formSenha")
- .addEventListener("submit",async e=>{
-
-  e.preventDefault();
-
-  const senha=
-  new FormData(e.target).get("senha");
-
-  const {error}=
-  await supabaseClient.auth.updateUser({
-   password:senha
-  });
-
-  if(error){
-
-   alert("Erro: "+error.message);
-   return;
-
-  }
-
-  alert("Palavra-passe alterada com sucesso!");
-
-  e.target.reset();
-
- });
-
-}
-
-
-/* =====================================================
-   NAVEGAÇÃO
-===================================================== */
-
-const paginas={
-
- dashboard:dashboard,
- membros:membrosPage,
- membroForm:membroForm,
- unidades:unidadesPage,
- atividades:atividadesPage,
- financas:financasPage,
- relatorios:relatorios,
- definicoes:definicoes,
- conta:conta
 
 };
 
+}
 
-async function showPage(nome){
 
- document
- .querySelectorAll("nav button")
- .forEach(btn=>{
+async function showCredentials(m,numero,user,senha){
 
-  btn.classList.toggle(
-   "active",
-   btn.dataset.page===nome
-  );
+content.innerHTML=
 
- });
+top(
+"Membro cadastrado",
+"O cadastro foi realizado com sucesso."
+)+
 
- if(paginas[nome]){
+`
+<div class="card">
 
-  try{
+<div class="credentials">
 
-   await paginas[nome]();
+<h2>Credenciais do membro</h2>
 
-  }catch(error){
+<p><b>Nome:</b><br>${esc(m.nome)}</p>
 
-   console.error(error);
+<p><b>Nº do membro:</b><br>
+<strong>${esc(numero)}</strong></p>
 
-   content.innerHTML=`
-   <div class="card error">
-   Erro ao carregar esta página:
-   ${esc(error.message)}
-   </div>
-   `;
+<p><b>Utilizador:</b><br>
+<strong>${esc(user)}</strong></p>
 
-  }
+<p><b>Palavra-passe inicial:</b><br>
+<strong>${esc(senha)}</strong></p>
 
- }
+<hr>
+
+<p>
+⚠️ Entregue estas credenciais ao membro.
+</p>
+
+</div>
+
+<div class="actions">
+
+${btn("👥 Lista de membros","light","page('membros')")}
+
+${btn("👤 Abrir perfil","primary",`profile('${m.id}')`)}
+
+</div>
+
+</div>`;
 
 }
 
 
-/* =====================================================
-   LOGIN
-===================================================== */
+/* PERFIL */
 
-document
-.getElementById("loginForm")
-.addEventListener("submit",async function(e){
+async function profile(id){
 
- e.preventDefault();
+await refresh();
 
- const email=
- document.getElementById("email")
- .value.trim();
+let m=db.membros.find(x=>x.id===id);
 
- const password=
- document.getElementById("password")
- .value;
+if(!m){
 
- const errorBox=
- document.getElementById("loginError");
+alert("Membro não encontrado.");
 
- errorBox.classList.add("hidden");
+return;
 
- try{
+}
 
-  const {data,error}=
-  await supabaseClient.auth
-  .signInWithPassword({
-   email:email,
-   password:password
-  });
+let unidade=db.unidades.find(u=>u.id===m.unidade_id);
 
-  if(error)throw error;
+content.innerHTML=
 
-  document
-  .getElementById("loginScreen")
-  .classList.add("hidden");
+top(
+"Perfil do membro",
+"Ficha individual",
+btn("← Voltar","light","page('membros')")
+)+
 
-  document
-  .getElementById("app")
-  .classList.remove("hidden");
+`
+<div class="card">
 
-  await showPage("dashboard");
+<h2>${esc(m.nome)}</h2>
 
- }catch(error){
+<p><b>Nº:</b> ${esc(m.numero_membro)}</p>
 
-  console.error(error);
+<p><b>Utilizador:</b> ${esc(m.utilizador||"—")}</p>
 
-  errorBox.textContent=
-  "Não foi possível entrar: "+
-  error.message;
+<p><b>Unidade:</b> ${esc(unidade?.nome||"—")}</p>
 
-  errorBox.classList.remove("hidden");
+<p><b>Função:</b> ${esc(m.funcao||"—")}</p>
 
- }
+<p><b>Classe:</b> ${esc(m.classe||"—")}</p>
+
+<p><b>Estado:</b> ${esc(m.estado||"—")}</p>
+
+<p><b>Nascimento:</b> ${esc(m.nascimento||"—")}</p>
+
+<p><b>Sexo:</b> ${esc(m.sexo||"—")}</p>
+
+<p><b>Documento:</b> ${esc(m.documento||"—")}</p>
+
+<p><b>Telefone:</b> ${esc(m.telefone||"—")}</p>
+
+<p><b>Endereço:</b> ${esc(m.endereco||"—")}</p>
+
+<hr>
+
+<p><b>Pai:</b> ${esc(m.pai||"—")}</p>
+
+<p><b>Mãe:</b> ${esc(m.mae||"—")}</p>
+
+<p><b>Encarregado:</b> ${esc(m.encarregado||"—")}</p>
+
+<p><b>Contacto:</b> ${esc(m.contacto_encarregado||"—")}</p>
+
+<p><b>Escola:</b> ${esc(m.escola||"—")}</p>
+
+<p><b>Classe escolar:</b> ${esc(m.classe_escolar||"—")}</p>
+
+<p><b>Data de cadastro:</b> ${esc(m.data_cadastro||"—")}</p>
+
+</div>
+
+<div class="actions">
+
+${btn("✏️ Editar","light",`editMember('${m.id}')`)}
+
+${btn("🖨️ Imprimir A4","primary",`printA4('${m.id}')`)}
+
+</div>`;
+
+}
+
+
+/* EDITAR */
+
+async function editMember(id){
+
+await refresh();
+
+let m=db.membros.find(x=>x.id===id);
+
+let unidade=db.unidades.find(u=>u.id===m.unidade_id);
+
+content.innerHTML=
+
+top(
+"Editar membro",
+"Alterar dados do cadastro",
+btn("← Voltar","light",`profile('${id}')`)
+)+
+
+`
+<form id="editForm">
+
+<div class="card">
+
+<div class="grid">
+
+${field("numero_membro","Nº do membro","text",true)}
+
+${field("nome","Nome completo","text",true)}
+
+${field("nascimento","Nascimento","date")}
+
+${field("sexo","Sexo")}
+
+${field("documento","Documento")}
+
+${field("telefone","Telefone")}
+
+${field("endereco","Endereço")}
+
+${select(
+"unidade_id",
+"Unidade",
+db.unidades.map(u=>({id:u.id,nome:u.nome}))
+)}
+
+${select(
+"funcao",
+"Função",
+[
+"Desbravador",
+"Conselheiro",
+"Vice-conselheiro",
+"Diretor",
+"Secretário",
+"Tesoureiro",
+"Capelão"
+]
+)}
+
+${select(
+"classe",
+"Classe",
+[
+"Amigo",
+"Companheiro",
+"Pesquisador",
+"Pioneiro",
+"Excursionista",
+"Guia"
+]
+)}
+
+${select(
+"estado",
+"Estado",
+[
+"Ativo",
+"Inativo",
+"Suspenso"
+]
+)}
+
+${field("pai","Pai")}
+
+${field("mae","Mãe")}
+
+${field("encarregado","Encarregado")}
+
+${field("contacto_encarregado","Contacto do encarregado")}
+
+${field("escola","Escola")}
+
+${field("classe_escolar","Classe escolar")}
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn primary">
+Guardar alterações
+</button>
+
+</div>
+
+</form>`;
+
+
+let keys=[
+"numero_membro",
+"nome",
+"nascimento",
+"sexo",
+"documento",
+"telefone",
+"endereco",
+"unidade_id",
+"funcao",
+"classe",
+"estado",
+"pai",
+"mae",
+"encarregado",
+"contacto_encarregado",
+"escola",
+"classe_escolar"
+];
+
+keys.forEach(k=>{
+
+let el=$(`[name="${k}"]`);
+
+if(el)el.value=m[k]||"";
 
 });
 
 
-/* =====================================================
-   LOGOUT
-===================================================== */
+$("#editForm").onsubmit=async e=>{
 
-async function logout(){
+e.preventDefault();
 
- await supabaseClient.auth.signOut();
+let d=Object.fromEntries(new FormData(e.target));
 
- location.reload();
+try{
+
+const c=await supabase();
+
+const {error}=await c
+.from("membros")
+.update(d)
+.eq("id",id);
+
+if(error)throw error;
+
+await profile(id);
+
+}catch(err){
+
+alert("Erro ao guardar: "+err.message);
+
+}
+
+};
 
 }
 
 
-/* =====================================================
-   VERIFICAR SESSÃO
-===================================================== */
+/* UNIDADES */
 
-(async function(){
+async function unidades(){
 
- try{
+await refresh();
 
-  const {data,error}=
-  await supabaseClient.auth.getSession();
+content.innerHTML=
 
-  if(error)throw error;
+top(
+"Unidades",
+"Gestão das unidades",
+btn("+ Nova unidade","primary","unitForm()")
+)+
 
-  if(data.session){
+`
+<div class="card">
 
-   document
-   .getElementById("loginScreen")
-   .classList.add("hidden");
+<table>
 
-   document
-   .getElementById("app")
-   .classList.remove("hidden");
+<thead>
+<tr>
+<th>Nome</th>
+<th>Responsável</th>
+<th>Membros</th>
+<th>Estado</th>
+<th>Ação</th>
+</tr>
+</thead>
 
-   await showPage("dashboard");
+<tbody>
 
-  }
+${db.unidades.map(u=>`
 
- }catch(error){
+<tr>
 
-  console.error(
-   "Erro ao verificar sessão:",
-   error
-  );
+<td>${esc(u.nome)}</td>
 
- }
+<td>${esc(u.responsavel||"—")}</td>
+
+<td>${db.membros.filter(m=>m.unidade_id===u.id).length}</td>
+
+<td>${esc(u.estado||"—")}</td>
+
+<td>
+${btn("Editar","light",`unitForm('${u.id}')`)}
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>`;
+
+}
+
+
+async function unitForm(id=null){
+
+await refresh();
+
+let u=id
+?db.unidades.find(x=>x.id===id)
+:{nome:"",responsavel:"",estado:"Ativa"};
+
+content.innerHTML=
+
+top(
+id?"Editar unidade":"Nova unidade",
+"Dados da unidade",
+btn("← Voltar","light","page('unidades')")
+)+
+
+`
+<form id="unitForm">
+
+<div class="card">
+
+<div class="grid">
+
+${field("nome","Nome *","text",true)}
+
+${field("responsavel","Responsável")}
+
+${select(
+"estado",
+"Estado",
+["Ativa","Inativa"]
+)}
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn primary">
+Guardar
+</button>
+
+</div>
+
+</form>`;
+
+
+["nome","responsavel","estado"].forEach(k=>{
+
+let el=$(`[name="${k}"]`);
+
+if(el)el.value=u[k]||"";
+
+});
+
+
+$("#unitForm").onsubmit=async e=>{
+
+e.preventDefault();
+
+let d=Object.fromEntries(new FormData(e.target));
+
+try{
+
+const c=await supabase();
+
+let result;
+
+if(id){
+
+result=await c
+.from("unidades")
+.update(d)
+.eq("id",id);
+
+}else{
+
+result=await c
+.from("unidades")
+.insert([d]);
+
+}
+
+if(result.error)throw result.error;
+
+page("unidades");
+
+}catch(err){
+
+alert("Erro: "+err.message);
+
+}
+
+};
+
+}
+
+
+/* ATIVIDADES */
+
+async function atividades(){
+
+await refresh();
+
+content.innerHTML=
+
+top(
+"Atividades",
+"Gestão das atividades",
+btn("+ Nova atividade","primary","activityForm()")
+)+
+
+`
+<div class="card">
+
+<table>
+
+<thead>
+<tr>
+<th>Nome</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Local</th>
+<th>Responsável</th>
+<th>Custo</th>
+</tr>
+</thead>
+
+<tbody>
+
+${db.atividades.map(a=>`
+
+<tr>
+<td>${esc(a.nome)}</td>
+<td>${esc(a.data||"")}</td>
+<td>${esc(a.hora||"")}</td>
+<td>${esc(a.local||"")}</td>
+<td>${esc(a.responsavel||"")}</td>
+<td>${money(a.custo)} Kz</td>
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>`;
+
+}
+
+
+async function activityForm(){
+
+content.innerHTML=
+
+top(
+"Nova atividade",
+"Registar atividade",
+btn("← Voltar","light","page('atividades')")
+)+
+
+`
+<form id="activityForm">
+
+<div class="card">
+
+<div class="grid">
+
+${field("nome","Nome *","text",true)}
+
+${field("data","Data *","date",true)}
+
+${field("hora","Hora","time")}
+
+${field("local","Local")}
+
+${field("responsavel","Responsável")}
+
+${field("custo","Custo","number")}
+
+</div>
+
+${field("descricao","Descrição")}
+
+</div>
+
+<div class="actions">
+
+<button class="btn primary">
+Guardar atividade
+</button>
+
+</div>
+
+</form>`;
+
+
+$("#activityForm").onsubmit=async e=>{
+
+e.preventDefault();
+
+let d=Object.fromEntries(new FormData(e.target));
+
+try{
+
+const c=await supabase();
+
+const {error}=await c
+.from("atividades")
+.insert([d]);
+
+if(error)throw error;
+
+page("atividades");
+
+}catch(err){
+
+alert("Erro: "+err.message);
+
+}
+
+};
+
+}
+
+
+/* FINANÇAS */
+
+async function financas(){
+
+await refresh();
+
+let rec=db.financas
+.filter(x=>x.tipo==="Receita")
+.reduce((a,x)=>a+Number(x.valor||0),0);
+
+let desp=db.financas
+.filter(x=>x.tipo==="Despesa")
+.reduce((a,x)=>a+Number(x.valor||0),0);
+
+content.innerHTML=
+
+top(
+"Finanças",
+"Receitas e despesas",
+btn("+ Novo movimento","primary","financeForm()")
+)+
+
+`
+<div class="cards">
+
+<div class="card">
+Receitas
+<h2>${money(rec)} Kz</h2>
+</div>
+
+<div class="card">
+Despesas
+<h2>${money(desp)} Kz</h2>
+</div>
+
+<div class="card">
+Saldo
+<h2>${money(rec-desp)} Kz</h2>
+</div>
+
+<div class="card">
+Movimentos
+<h2>${db.financas.length}</h2>
+</div>
+
+</div>
+
+<div class="card">
+
+<table>
+
+<thead>
+<tr>
+<th>Data</th>
+<th>Tipo</th>
+<th>Membro</th>
+<th>Categoria</th>
+<th>Valor</th>
+</tr>
+</thead>
+
+<tbody>
+
+${db.financas.map(x=>`
+
+<tr>
+<td>${esc(x.data||"")}</td>
+<td>${esc(x.tipo||"")}</td>
+<td>${esc(x.membro_nome||"—")}</td>
+<td>${esc(x.categoria||"")}</td>
+<td>${money(x.valor)} Kz</td>
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>`;
+
+}
+
+
+async function financeForm(){
+
+await refresh();
+
+content.innerHTML=
+
+top(
+"Novo movimento",
+"Registar receita ou despesa",
+btn("← Voltar","light","page('financas')")
+)+
+
+`
+<form id="financeForm">
+
+<div class="card">
+
+<div class="grid">
+
+${select(
+"tipo",
+"Tipo",
+["Receita","Despesa"],
+true
+)}
+
+<div class="field">
+
+<label>Membro</label>
+
+<select name="membro_id">
+
+<option value="">
+Nenhum
+</option>
+
+${db.membros.map(m=>`
+
+<option value="${esc(m.id)}">
+${esc(m.nome)} — ${esc(m.numero_membro)}
+</option>
+
+`).join("")}
+
+</select>
+
+</div>
+
+${field("categoria","Categoria","text",true)}
+
+${field("valor","Valor (Kz)","number",true)}
+
+${field("data","Data","date",true)}
+
+${field("descricao","Descrição")}
+
+${select(
+"forma",
+"Forma de pagamento",
+[
+"Dinheiro",
+"Transferência",
+"Depósito",
+"Multicaixa Express",
+"Outro"
+]
+)}
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn primary">
+Guardar
+</button>
+
+</div>
+
+</form>`;
+
+
+$('[name=data]').value=new Date().toISOString().slice(0,10);
+
+
+$("#financeForm").onsubmit=async e=>{
+
+e.preventDefault();
+
+let d=Object.fromEntries(new FormData(e.target));
+
+let m=db.membros.find(x=>x.id===d.membro_id);
+
+d.membro_nome=m?.nome||"";
+d.membro_numero=m?.numero_membro||"";
+
+try{
+
+const c=await supabase();
+
+const {error}=await c
+.from("financas")
+.insert([d]);
+
+if(error)throw error;
+
+page("financas");
+
+}catch(err){
+
+alert("Erro: "+err.message);
+
+}
+
+};
+
+}
+
+
+/* RELATÓRIOS */
+
+async function relatorios(){
+
+await refresh();
+
+content.innerHTML=
+
+top(
+"Relatórios",
+"Relatórios do clube"
+)+
+
+`
+<div class="cards">
+
+<div class="card">
+<h3>👥 Membros</h3>
+<p>Total: ${db.membros.length}</p>
+${btn("Abrir","light","page('membros')")}
+</div>
+
+<div class="card">
+<h3>🏕️ Unidades</h3>
+<p>Total: ${db.unidades.length}</p>
+${btn("Abrir","light","page('unidades')")}
+</div>
+
+<div class="card">
+<h3>📅 Atividades</h3>
+<p>Total: ${db.atividades.length}</p>
+${btn("Abrir","light","page('atividades')")}
+</div>
+
+<div class="card">
+<h3>💰 Finanças</h3>
+<p>Total: ${db.financas.length}</p>
+${btn("Abrir","light","page('financas')")}
+</div>
+
+</div>`;
+
+}
+
+
+/* DEFINIÇÕES */
+
+async function definicoes(){
+
+await refresh();
+
+content.innerHTML=
+
+top(
+"Definições",
+"Configurações do clube"
+)+
+
+`
+<form id="configForm">
+
+<div class="card">
+
+<div class="grid">
+
+${field("nome_clube","Nome do clube")}
+
+${field("diretor","Diretor")}
+
+${field("telefone","Telefone")}
+
+${field("email","E-mail")}
+
+${select(
+"papel",
+"Papel térmico",
+["58 mm","80 mm"]
+)}
+
+${select(
+"ficha",
+"Ficha",
+["A4"]
+)}
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn primary">
+Guardar definições
+</button>
+
+</div>
+
+</form>`;
+
+
+[
+"nome_clube",
+"diretor",
+"telefone",
+"email",
+"papel",
+"ficha"
+].forEach(k=>{
+
+let el=$(`[name="${k}"]`);
+
+if(el)el.value=db.config[k]||"";
+
+});
+
+
+$("#configForm").onsubmit=async e=>{
+
+e.preventDefault();
+
+let d=Object.fromEntries(new FormData(e.target));
+
+try{
+
+const c=await supabase();
+
+let result;
+
+if(db.config.id){
+
+result=await c
+.from("configuracoes")
+.update(d)
+.eq("id",db.config.id);
+
+}else{
+
+result=await c
+.from("configuracoes")
+.insert([d]);
+
+}
+
+if(result.error)throw result.error;
+
+alert("Definições guardadas.");
+
+}catch(err){
+
+alert("Erro: "+err.message);
+
+}
+
+};
+
+}
+
+
+/* CONTA */
+
+async function conta(){
+
+const c=await supabase();
+
+const {data,error}=await c.auth.getUser();
+
+if(error)throw error;
+
+content.innerHTML=
+
+top(
+"Minha conta",
+"Dados da conta administrativa"
+)+
+
+`
+<div class="card">
+
+<h3>E-mail atual</h3>
+
+<p>${esc(data.user?.email||"")}</p>
+
+</div>
+
+<div class="card">
+
+<h3>Alterar palavra-passe</h3>
+
+<form id="passwordForm">
+
+${field(
+"senha",
+"Nova palavra-passe",
+"password",
+true
+)}
+
+${field(
+"confirmar",
+"Confirmar palavra-passe",
+"password",
+true
+)}
+
+<div class="actions">
+
+<button class="btn primary">
+Alterar
+</button>
+
+</div>
+
+</form>
+
+</div>`;
+
+
+$("#passwordForm").onsubmit=async e=>{
+
+e.preventDefault();
+
+let d=Object.fromEntries(new FormData(e.target));
+
+if(d.senha!==d.confirmar){
+
+alert("As palavras-passe não coincidem.");
+
+return;
+
+}
+
+const {error}=await c.auth.updateUser({
+password:d.senha
+});
+
+if(error){
+
+alert("Erro: "+error.message);
+
+return;
+
+}
+
+alert("Palavra-passe alterada com sucesso.");
+
+e.target.reset();
+
+};
+
+}
+
+
+/* IMPRESSÃO */
+
+async function printA4(id){
+
+await refresh();
+
+let m=db.membros.find(x=>x.id===id);
+
+let unidade=db.unidades.find(u=>u.id===m.unidade_id);
+
+let w=window.open("","_blank");
+
+w.document.write(`
+
+<html>
+
+<head>
+
+<title>Ficha - ${esc(m.nome)}</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:25mm;
+}
+
+h1{text-align:center}
+
+.row{
+padding:10px;
+border-bottom:1px solid #ddd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>FICHA DE MEMBRO</h1>
+
+<h2>${esc(db.config.nome_clube||"Clube de Desbravadores")}</h2>
+
+<div class="row">
+<b>Nº:</b> ${esc(m.numero_membro)}
+</div>
+
+<div class="row">
+<b>Nome:</b> ${esc(m.nome)}
+</div>
+
+<div class="row">
+<b>Unidade:</b> ${esc(unidade?.nome||"—")}
+</div>
+
+<div class="row">
+<b>Função:</b> ${esc(m.funcao||"—")}
+</div>
+
+<div class="row">
+<b>Classe:</b> ${esc(m.classe||"—")}
+</div>
+
+<div class="row">
+<b>Estado:</b> ${esc(m.estado||"—")}
+</div>
+
+<div class="row">
+<b>Nascimento:</b> ${esc(m.nascimento||"—")}
+</div>
+
+<div class="row">
+<b>Telefone:</b> ${esc(m.telefone||"—")}
+</div>
+
+<div class="row">
+<b>Endereço:</b> ${esc(m.endereco||"—")}
+</div>
+
+<div class="row">
+<b>Encarregado:</b> ${esc(m.encarregado||"—")}
+</div>
+
+<div class="row">
+<b>Contacto:</b> ${esc(m.contacto_encarregado||"—")}
+</div>
+
+<div class="row">
+<b>Escola:</b> ${esc(m.escola||"—")}
+</div>
+
+<div class="row">
+<b>Data de cadastro:</b> ${esc(m.data_cadastro||"—")}
+</div>
+
+<script>
+setTimeout(()=>window.print(),500)
+<\/script>
+
+</body>
+</html>
+`);
+
+w.document.close();
+
+}
+
+
+/* LOGOUT */
+
+async function logout(){
+
+const c=await supabase();
+
+await c.auth.signOut();
+
+location.reload();
+
+}
+
+
+/* PÁGINAS */
+
+const pages={
+dashboard,
+membros,
+membroForm,
+profile,
+editMember,
+unidades,
+unitForm,
+atividades,
+activityForm,
+financas,
+financeForm,
+relatorios,
+definicoes,
+conta
+};
+
+
+/* LOGIN */
+
+$("#loginForm").onsubmit=async e=>{
+
+e.preventDefault();
+
+$("#loginError").classList.add("hidden");
+
+let d=Object.fromEntries(new FormData(e.target));
+
+try{
+
+const c=await supabase();
+
+const {error}=await c.auth.signInWithPassword({
+
+email:d.email.trim(),
+
+password:d.password
+
+});
+
+if(error)throw error;
+
+$("#login").classList.add("hidden");
+
+$("#app").classList.remove("hidden");
+
+await dashboard();
+
+}catch(err){
+
+console.error(err);
+
+$("#loginError").textContent=
+"Erro ao entrar: "+err.message;
+
+$("#loginError").classList.remove("hidden");
+
+}
+
+};
+
+
+/* SESSÃO */
+
+(async()=>{
+
+try{
+
+const c=await supabase();
+
+const {data}=await c.auth.getSession();
+
+if(data.session){
+
+$("#login").classList.add("hidden");
+
+$("#app").classList.remove("hidden");
+
+await dashboard();
+
+}
+
+}catch(e){
+
+console.error(e);
+
+}
 
 })();
 
 </script>
 
 </body>
-  </html>
+</html>
