@@ -1,666 +1,472 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="utf-8">
+<title>SGD — Sistema de Gestão</title>
 
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1"
->
-
-<title>SGD — Sistema de Gestão do Clube</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-:root{
---blue:#1769e0;
---blue-dark:#0d4da8;
---bg:#f4f7fb;
---text:#172033;
---muted:#6d788a;
---line:#e4e9f1;
---green:#16794a;
---red:#b42318;
---white:#fff;
-}
-
 *{
-box-sizing:border-box;
+    box-sizing:border-box;
 }
 
 body{
-margin:0;
-font-family:Arial,sans-serif;
-background:var(--bg);
-color:var(--text);
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
 }
 
-button,
-input,
-select,
-textarea{
-font:inherit;
+button,input,select,textarea{
+    font:inherit;
 }
 
 button{
-cursor:pointer;
+    cursor:pointer;
 }
 
 .hidden{
-display:none!important;
+    display:none!important;
 }
 
 .btn{
-border:0;
-border-radius:9px;
-padding:10px 15px;
-font-weight:700;
-cursor:pointer;
+    border:0;
+    border-radius:8px;
+    padding:11px 15px;
+    font-weight:bold;
 }
 
 .primary{
-background:var(--blue);
-color:#fff;
+    background:#1769e0;
+    color:white;
 }
 
-.light{
-background:#eef4ff;
-color:var(--blue);
+.secondary{
+    background:#eaf1ff;
+    color:#1769e0;
 }
 
 .danger{
-background:#fff0f0;
-color:var(--red);
+    background:#ffecec;
+    color:#b42318;
 }
 
 .full{
-width:100%;
+    width:100%;
 }
 
 .login{
-min-height:100vh;
-display:grid;
-place-items:center;
-padding:20px;
-background:
-linear-gradient(
-135deg,
-#1769e0,
-#0d4da8
-);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    background:linear-gradient(135deg,#1769e0,#0d4da8);
 }
 
 .login-card{
-width:min(430px,100%);
-background:#fff;
-border-radius:20px;
-padding:32px;
-box-shadow:0 18px 50px #001b4433;
-text-align:center;
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:32px;
+    border-radius:20px;
+    box-shadow:0 20px 60px #0004;
 }
 
-.club-logo,
-.mini-logo{
-background:var(--blue);
-color:#fff;
-display:grid;
-place-items:center;
-font-weight:900;
-}
-
-.club-logo{
-width:92px;
-height:92px;
-border-radius:20px;
-margin:0 auto 18px;
-font-size:24px;
-}
-
-.mini-logo{
-width:42px;
-height:42px;
-border-radius:10px;
-font-size:11px;
+.logo{
+    width:85px;
+    height:85px;
+    margin:0 auto 20px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#1769e0;
+    color:white;
+    font-size:24px;
+    font-weight:900;
 }
 
 .login-card h1{
-margin:0 0 5px;
+    text-align:center;
+    margin:0;
 }
 
-.login-card p,
-.muted{
-color:var(--muted);
+.login-card p{
+    text-align:center;
+    color:#6d788a;
 }
 
 .field{
-display:flex;
-flex-direction:column;
-gap:7px;
-text-align:left;
-margin-bottom:14px;
+    margin-bottom:15px;
 }
 
 .field label{
-font-size:13px;
-font-weight:700;
+    display:block;
+    font-weight:bold;
+    font-size:13px;
+    margin-bottom:6px;
 }
 
 .field input,
 .field select,
 .field textarea{
-padding:11px;
-border:1px solid #d5ddea;
-border-radius:9px;
-background:#fff;
-width:100%;
+    width:100%;
+    padding:11px;
+    border:1px solid #d4dce8;
+    border-radius:8px;
+    outline:none;
 }
 
-.field textarea{
-min-height:90px;
-resize:vertical;
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+    border-color:#1769e0;
 }
 
 .notice{
-padding:11px;
-border-radius:9px;
-margin-bottom:14px;
-background:#eaf8ef;
-color:var(--green);
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:15px;
 }
 
 .error{
-background:#fff0f0;
-color:var(--red);
+    background:#fff0f0;
+    color:#b42318;
 }
 
 .success{
-background:#eaf8ef;
-color:var(--green);
+    background:#eaf8ef;
+    color:#16794a;
 }
 
 header{
-height:68px;
-background:#fff;
-border-bottom:1px solid var(--line);
-display:flex;
-align-items:center;
-padding:0 22px;
-gap:12px;
+    height:68px;
+    background:white;
+    border-bottom:1px solid #e4e9f1;
+    display:flex;
+    align-items:center;
+    padding:0 20px;
+    gap:12px;
+}
+
+.mini-logo{
+    width:43px;
+    height:43px;
+    background:#1769e0;
+    color:white;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:bold;
 }
 
 .brand b{
-display:block;
-font-size:18px;
+    display:block;
 }
 
 .brand small{
-color:var(--muted);
+    color:#6d788a;
 }
 
 .layout{
-display:flex;
-min-height:calc(100vh - 68px);
+    display:flex;
+    min-height:calc(100vh - 68px);
 }
 
 aside{
-width:240px;
-background:var(--blue);
-color:#fff;
-padding:18px 12px;
-flex-shrink:0;
+    width:240px;
+    background:#1769e0;
+    color:white;
+    padding:18px 12px;
 }
 
 .section{
-font-size:11px;
-opacity:.7;
-margin:10px 12px 7px;
-font-weight:700;
+    font-size:11px;
+    opacity:.7;
+    margin:12px;
+    font-weight:bold;
 }
 
 nav button{
-width:100%;
-border:0;
-background:transparent;
-color:#fff;
-text-align:left;
-padding:11px 12px;
-border-radius:8px;
-margin:2px 0;
-cursor:pointer;
+    display:block;
+    width:100%;
+    border:0;
+    background:transparent;
+    color:white;
+    padding:12px;
+    text-align:left;
+    border-radius:8px;
+    margin-bottom:3px;
 }
 
 nav button:hover,
 nav button.active{
-background:#ffffff24;
+    background:#ffffff22;
 }
 
 main{
-flex:1;
-padding:28px;
-max-width:1450px;
-overflow:auto;
+    flex:1;
+    padding:25px;
+    max-width:1500px;
 }
 
 .top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:15px;
-margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
 }
 
 .top h1{
-margin:0;
-font-size:26px;
+    margin:0;
+}
+
+.muted{
+    color:#6d788a;
 }
 
 .cards{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:14px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
 }
 
 .card{
-background:#fff;
-border:1px solid var(--line);
-border-radius:14px;
-padding:19px;
-margin-bottom:16px;
-box-shadow:0 5px 18px #17203308;
+    background:white;
+    border:1px solid #e4e9f1;
+    border-radius:14px;
+    padding:20px;
+    margin-bottom:16px;
 }
 
 .stat strong{
-display:block;
-font-size:27px;
-margin-top:8px;
+    display:block;
+    font-size:28px;
+    margin-top:10px;
 }
 
 .grid{
-display:grid;
-grid-template-columns:
-repeat(2,minmax(0,1fr));
-gap:15px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
 }
 
 .actions{
-display:flex;
-gap:9px;
-justify-content:flex-end;
-flex-wrap:wrap;
-margin-top:14px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th,
-td{
-padding:10px;
-border-bottom:1px solid #edf0f4;
-text-align:left;
-font-size:13px;
-vertical-align:middle;
-}
-
-th{
-font-size:12px;
-color:var(--muted);
-}
-
-.badge{
-display:inline-block;
-padding:5px 8px;
-border-radius:99px;
-background:#eaf8ef;
-color:#176b36;
-font-size:11px;
-font-weight:700;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    margin-top:15px;
 }
 
 .toolbar{
-display:flex;
-gap:9px;
-flex-wrap:wrap;
-margin-bottom:14px;
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
 }
 
 .toolbar input{
-padding:10px;
-border:1px solid #d5ddea;
-border-radius:9px;
-min-width:240px;
+    flex:1;
+    padding:11px;
+    border:1px solid #d4dce8;
+    border-radius:8px;
+}
+
+.table-wrap{
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:11px;
+    border-bottom:1px solid #edf0f4;
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    color:#6d788a;
+    font-size:12px;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:30px;
+    background:#eaf8ef;
+    color:#176b36;
+    font-size:11px;
+    font-weight:bold;
 }
 
 .member-photo{
-width:70px;
-height:70px;
-object-fit:cover;
-border-radius:12px;
-border:1px solid var(--line);
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#eaf1ff;
 }
 
 .profile-photo{
-width:140px;
-height:140px;
-object-fit:cover;
-border-radius:15px;
-border:1px solid var(--line);
+    width:130px;
+    height:130px;
+    border-radius:15px;
+    object-fit:cover;
+    background:#eaf1ff;
 }
 
-.empty-photo{
-width:70px;
-height:70px;
-border-radius:12px;
-background:#eef2f7;
-display:grid;
-place-items:center;
-font-size:28px;
+.credentials{
+    background:#f4f7fb;
+    border:1px dashed #1769e0;
+    border-radius:10px;
+    padding:15px;
 }
 
-.profile-layout{
-display:grid;
-grid-template-columns:160px 1fr;
-gap:25px;
-align-items:start;
+.credential-value{
+    font-size:18px;
+    font-weight:bold;
+    color:#1769e0;
+    word-break:break-all;
 }
 
-.info-grid{
-display:grid;
-grid-template-columns:
-repeat(2,minmax(0,1fr));
-gap:12px;
+@media(max-width:900px){
+
+    aside{
+        width:70px;
+    }
+
+    aside .section{
+        display:none;
+    }
+
+    nav button{
+        font-size:0;
+        text-align:center;
+    }
+
+    nav button::first-letter{
+        font-size:20px;
+    }
+
+    .cards{
+        grid-template-columns:1fr 1fr;
+    }
 }
 
-.info{
-background:#f8fafc;
-border-radius:9px;
-padding:12px;
+@media(max-width:650px){
+
+    main{
+        padding:15px;
+    }
+
+    .cards,
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .top{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    header{
+        padding:0 10px;
+    }
+
+    .brand{
+        font-size:13px;
+    }
 }
-
-.info small{
-display:block;
-color:var(--muted);
-font-size:11px;
-margin-bottom:5px;
-}
-
-.info b{
-font-size:14px;
-}
-
-.loading{
-text-align:center;
-padding:40px;
-color:var(--muted);
-}
-
-@media(max-width:850px){
-
-aside{
-width:72px;
-}
-
-.section{
-display:none;
-}
-
-nav button{
-font-size:0;
-text-align:center;
-}
-
-nav button::first-letter{
-font-size:20px;
-}
-
-.cards{
-grid-template-columns:1fr 1fr;
-}
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.info-grid{
-grid-template-columns:1fr;
-}
-
-.profile-layout{
-grid-template-columns:1fr;
-}
-
-main{
-padding:16px;
-}
-
-.top{
-align-items:flex-start;
-flex-direction:column;
-}
-
-}
-
-@media(max-width:500px){
-
-.cards{
-grid-template-columns:1fr;
-}
-
-header{
-padding:0 12px;
-}
-
-.brand small{
-display:none;
-}
-
-header .btn{
-padding:8px;
-font-size:12px;
-}
-
-}
-
-@media print{
-
-aside,
-header,
-.actions,
-.no-print{
-display:none!important;
-}
-
-main{
-padding:0;
-}
-
-.card{
-box-shadow:none;
-border:0;
-}
-
-}
-
 </style>
 
-
 <script>
-
 window.SGD_SUPABASE_URL =
 "https://edttbjysaqdounpghsdn.supabase.co";
 
 window.SGD_SUPABASE_ANON_KEY =
 "sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
-
-</script>
-
-<script
-src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 
 </head>
 
-
 <body>
 
+<!-- LOGIN -->
 
-<!-- =========================
-     LOGIN
-========================= -->
-
-<div id="login" class="login">
+<div id="loginScreen" class="login">
 
 <div class="login-card">
 
-<div class="club-logo">
-SGD
-</div>
+<div class="logo">SGD</div>
 
 <h1>SGD</h1>
 
-<p>
-Sistema de Gestão do Clube
-</p>
+<p>Sistema de Gestão do Clube</p>
 
-<div
-id="loginError"
-class="notice error hidden">
-</div>
+<div id="loginError" class="notice error hidden"></div>
 
 <form id="loginForm">
 
 <div class="field">
-
-<label>
-E-mail
-</label>
-
+<label>E-mail</label>
 <input
-name="user"
+name="email"
 type="email"
 autocomplete="email"
-required
->
-
+required>
 </div>
-
 
 <div class="field">
-
-<label>
-Palavra-passe
-</label>
-
+<label>Palavra-passe</label>
 <input
-name="pass"
+name="password"
 type="password"
 autocomplete="current-password"
-required
->
-
+required>
 </div>
 
-
-<label
-style="
-display:flex;
-gap:8px;
-align-items:center;
-text-align:left;
-font-size:13px;
-margin-bottom:14px;
-">
-
-<input
-name="remember"
-type="checkbox"
->
-
-Lembrar sessão
-
-</label>
-
-
 <button
-class="btn primary full"
-type="submit"
 id="loginButton"
->
-
+class="btn primary full"
+type="submit">
 Entrar
-
 </button>
 
 </form>
 
-
-<p
-style="font-size:12px"
-class="muted"
->
-
-Use o e-mail e a palavra-passe
-da sua conta do SGD.
-
-</p>
-
 </div>
-
 </div>
 
 
+<!-- APLICAÇÃO -->
 
-<!-- =========================
-     APLICAÇÃO
-========================= -->
-
-<div
-id="app"
-class="hidden"
->
-
+<div id="app" class="hidden">
 
 <header>
 
-<div class="mini-logo">
-SGD
-</div>
+<div class="mini-logo">SGD</div>
 
 <div class="brand">
-
-<b>
-Sistema de Gestão do Clube
-</b>
-
-<small>
-Secretaria / Direção
-</small>
-
+<b>Sistema de Gestão do Clube</b>
+<small>Secretaria / Direção</small>
 </div>
 
-
-<div
-style="
-margin-left:auto;
-display:flex;
-gap:8px;
-"
->
+<div style="margin-left:auto">
 
 <button
-class="btn light"
-onclick="page('conta')"
->
-👤 Minha conta
-</button>
-
-<button
-class="btn light"
-onclick="logout()"
->
+class="btn secondary"
+onclick="logout()">
 Sair
 </button>
 
@@ -669,15 +475,11 @@ Sair
 </header>
 
 
-
 <div class="layout">
-
 
 <aside>
 
-<div class="section">
-PRINCIPAL
-</div>
+<div class="section">PRINCIPAL</div>
 
 <nav>
 
@@ -695,10 +497,7 @@ PRINCIPAL
 
 </nav>
 
-
-<div class="section">
-GESTÃO
-</div>
+<div class="section">GESTÃO</div>
 
 <nav>
 
@@ -712,10 +511,7 @@ GESTÃO
 
 </nav>
 
-
-<div class="section">
-ADMINISTRAÇÃO
-</div>
+<div class="section">ADMINISTRAÇÃO</div>
 
 <nav>
 
@@ -723,8 +519,8 @@ ADMINISTRAÇÃO
 📄 Relatórios
 </button>
 
-<button data-page="definicoes">
-⚙️ Definições
+<button data-page="conta">
+👤 Minha conta
 </button>
 
 </nav>
@@ -732,4719 +528,2477 @@ ADMINISTRAÇÃO
 </aside>
 
 
-<main id="content">
-
-<div class="loading">
-A carregar...
-</div>
-
-</main>
-
+<main id="content"></main>
 
 </div>
 
 </div>
-
 
 
 <script>
 
+let supabaseClient;
 
-/* =========================
-   VARIÁVEIS
-========================= */
-
-let client = null;
-
-let db = {
-
-membros:[],
-unidades:[],
-atividades:[],
-financas:[],
-config:{}
-
+const db = {
+    membros:[],
+    unidades:[],
+    atividades:[],
+    financas:[],
+    configuracoes:null
 };
-
-const $ = s =>
-document.querySelector(s);
 
 const content =
-document.querySelector("#content");
+document.getElementById("content");
 
 
-
-/* =========================
+/* =================================
    SUPABASE
-========================= */
+================================= */
 
-async function initSupabase(){
+function getClient(){
 
-if(!window.supabase){
+    if(!supabaseClient){
 
-throw new Error(
-"Supabase não carregou."
-);
+        if(!window.supabase){
 
-}
+            throw new Error(
+                "Biblioteca do Supabase não carregou."
+            );
 
-if(!client){
+        }
 
-client =
-window.supabase.createClient(
-window.SGD_SUPABASE_URL,
-window.SGD_SUPABASE_ANON_KEY
-);
+        supabaseClient =
+        window.supabase.createClient(
+            window.SGD_SUPABASE_URL,
+            window.SGD_SUPABASE_ANON_KEY
+        );
+    }
 
-}
-
-return client;
-
-}
-
-
-
-/* =========================
-   ESCAPE
-========================= */
-
-function esc(x){
-
-return String(x ?? "")
-.replace(/[&<>"']/g,m=>({
-
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#39;"
-
-}[m]));
-
+    return supabaseClient;
 }
 
 
+/* =================================
+   UTILITÁRIOS
+================================= */
 
-/* =========================
-   DINHEIRO
-========================= */
+function esc(value){
 
-function money(v){
+    return String(value ?? "")
+    .replace(/[&<>"']/g, function(m){
 
-return Number(v || 0)
-.toLocaleString(
-"pt-AO",
-{
-minimumFractionDigits:2,
-maximumFractionDigits:2
+        return {
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#39;"
+        }[m];
+
+    });
 }
-);
 
+
+function money(value){
+
+    return Number(value || 0)
+    .toLocaleString("pt-AO",{
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+    });
 }
 
 
+function showError(message){
 
-/* =========================
-   BOTÃO
-========================= */
+    console.error(message);
 
-function B(t,c="primary",fn=""){
+    alert(message);
+}
 
-return `
-<button
-class="btn ${c}"
-onclick="${fn}"
->
-${t}
-</button>
-`;
+
+function getToday(){
+
+    return new Date()
+    .toISOString()
+    .slice(0,10);
 
 }
 
 
+function randomPassword(){
 
-/* =========================
-   TOPO
-========================= */
+    const chars =
+    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
 
-function T(h,s,b=""){
+    let result = "";
 
-return `
-<div class="top">
+    for(let i=0;i<8;i++){
 
-<div>
+        result +=
+        chars[Math.floor(Math.random()*chars.length)];
 
-<h1>
-${h}
-</h1>
+    }
 
-<p class="muted">
-${s}
-</p>
-
-</div>
-
-${b}
-
-</div>
-`;
+    return result;
 
 }
 
 
+function generateNumber(){
 
-/* =========================
-   FIELD
-========================= */
+    const year =
+    new Date().getFullYear();
 
-function field(
-n,
-l,
-t="text",
-req=false
-){
+    const number =
+    db.membros.length + 1;
 
-return `
-<div class="field">
-
-<label>
-${l}
-</label>
-
-<input
-name="${n}"
-type="${t}"
-${req ? "required" : ""}
->
-
-</div>
-`;
+    return "DBV-" +
+    year +
+    "-" +
+    String(number).padStart(4,"0");
 
 }
 
 
+function generateUsername(){
 
-/* =========================
-   SELECT
-========================= */
-
-function select(
-n,
-l,
-arr,
-req=false
-){
-
-return `
-<div class="field">
-
-<label>
-${l}
-</label>
-
-<select
-name="${n}"
-${req ? "required" : ""}
->
-
-<option value="">
-Selecionar
-</option>
-
-${arr.map(x=>`
-
-<option value="${esc(x)}">
-${esc(x)}
-</option>
-
-`).join("")}
-
-</select>
-
-</div>
-`;
+    return "membro" +
+    String(db.membros.length + 1)
+    .padStart(4,"0");
 
 }
 
 
+function B(text,cls="primary",fn=""){
 
-/* =========================
-   CARREGAR BANCO
-========================= */
-
-async function loadDB(){
-
-const c =
-await initSupabase();
-
-
-/*
- * Cada consulta é independente.
- * Assim, se uma tabela der erro,
- * conseguimos saber exatamente qual.
- */
-
-
-const membros =
-await c
-.from("membros")
-.select("*")
-.order(
-"created_at",
-{ascending:false}
-);
-
-
-if(membros.error){
-
-throw new Error(
-"Erro na tabela membros: "+
-membros.error.message
-);
+    return `
+    <button
+        type="button"
+        class="btn ${cls}"
+        onclick="${fn}">
+        ${text}
+    </button>
+    `;
 
 }
 
 
-const unidades =
-await c
-.from("unidades")
-.select("*")
-.order("nome");
+function top(title,subtitle="",button=""){
 
+    return `
+    <div class="top">
 
-if(unidades.error){
+        <div>
+            <h1>${title}</h1>
+            <p class="muted">${subtitle}</p>
+        </div>
 
-throw new Error(
-"Erro na tabela unidades: "+
-unidades.error.message
-);
+        <div>
+            ${button}
+        </div>
 
-}
-
-
-let atividades =
-await c
-.from("atividades")
-.select("*")
-.order(
-"data",
-{ascending:false}
-);
-
-
-if(atividades.error){
-
-/*
- * Atividades não impede o sistema
- * de abrir.
- */
-
-console.warn(
-"Atividades:",
-atividades.error.message
-);
-
-atividades.data=[];
+    </div>
+    `;
 
 }
 
 
-let financas =
-await c
-.from("financas")
-.select("*")
-.order(
-"data",
-{ascending:false}
-);
+function field(name,label,type="text",required=false){
 
+    return `
+    <div class="field">
 
-if(financas.error){
+        <label>${label}</label>
 
-console.warn(
-"Finanças:",
-financas.error.message
-);
+        <input
+            name="${name}"
+            type="${type}"
+            ${required ? "required" : ""}
+        >
 
-financas.data=[];
+    </div>
+    `;
 
 }
 
 
-let configuracoes =
-await c
-.from("configuracoes")
-.select("*")
-.limit(1);
+function selectField(name,label,options,required=false){
 
+    return `
+    <div class="field">
 
-if(configuracoes.error){
+        <label>${label}</label>
 
-console.warn(
-"Configurações:",
-configuracoes.error.message
-);
+        <select
+            name="${name}"
+            ${required ? "required" : ""}>
 
-configuracoes.data=[];
+            <option value="">
+                Selecionar
+            </option>
 
-}
+            ${options.map(option => `
+                <option value="${esc(option.value ?? option)}">
+                    ${esc(option.label ?? option)}
+                </option>
+            `).join("")}
 
+        </select>
 
-db.membros =
-membros.data || [];
-
-db.unidades =
-unidades.data || [];
-
-db.atividades =
-atividades.data || [];
-
-db.financas =
-financas.data || [];
-
-db.config =
-configuracoes.data?.[0] || {
-
-nome_clube:
-"Clube de Desbravadores",
-
-papel:"58 mm",
-
-ficha:"A4"
-
-};
-
-
-return db;
+    </div>
+    `;
 
 }
 
 
+/* =================================
+   CARREGAR DADOS
+================================= */
 
-/* =========================
-   REFRESH
-========================= */
+async function loadData(){
 
-async function refresh(){
+    const c = getClient();
 
-try{
+    /*
+       IMPORTANTE:
+       Cada tabela é carregada separadamente.
+       Assim, se uma falhar, o login não é bloqueado.
+    */
 
-await loadDB();
+    try{
 
-return true;
+        const r =
+        await c
+        .from("membros")
+        .select("*")
+        .order("created_at",{ascending:false});
 
-}catch(e){
+        if(!r.error){
 
-console.error(e);
+            db.membros =
+            r.data || [];
 
-return false;
+        }else{
+
+            console.error(
+                "Erro membros:",
+                r.error
+            );
+
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+
+    try{
+
+        const r =
+        await c
+        .from("unidades")
+        .select("*")
+        .order("nome");
+
+        if(!r.error){
+
+            db.unidades =
+            r.data || [];
+
+        }else{
+
+            console.error(
+                "Erro unidades:",
+                r.error
+            );
+
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+
+    try{
+
+        const r =
+        await c
+        .from("atividades")
+        .select("*")
+        .order("data",{ascending:false});
+
+        if(!r.error){
+
+            db.atividades =
+            r.data || [];
+
+        }else{
+
+            console.error(
+                "Erro atividades:",
+                r.error
+            );
+
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+
+    try{
+
+        const r =
+        await c
+        .from("financas")
+        .select("*")
+        .order("data",{ascending:false});
+
+        if(!r.error){
+
+            db.financas =
+            r.data || [];
+
+        }else{
+
+            console.error(
+                "Erro finanças:",
+                r.error
+            );
+
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+
+    try{
+
+        const r =
+        await c
+        .from("configuracoes")
+        .select("*")
+        .limit(1);
+
+        if(!r.error){
+
+            db.configuracoes =
+            r.data?.[0] || null;
+
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+    }
 
 }
 
-}
 
-
-
-/* =========================
-   NÚMERO AUTOMÁTICO
-========================= */
-
-function nextNumber(){
-
-let year =
-new Date()
-.getFullYear();
-
-let max=0;
-
-db.membros.forEach(m=>{
-
-let n =
-String(
-m.numero_membro || ""
-);
-
-let match =
-n.match(
-/DBV-\d{4}-(\d+)/
-);
-
-if(match){
-
-max =
-Math.max(
-max,
-Number(match[1])
-);
-
-}
-
-});
-
-return `
-DBV-${year}-${
-String(max+1).padStart(4,"0")
-}
-`;
-
-}
-
-
-
-/* =========================
-   UTILIZADOR AUTOMÁTICO
-========================= */
-
-function nextUsername(){
-
-let max=0;
-
-db.membros.forEach(m=>{
-
-let u =
-String(
-m.utilizador || ""
-);
-
-let match =
-u.match(/^m(\d+)$/i);
-
-if(match){
-
-max =
-Math.max(
-max,
-Number(match[1])
-);
-
-}
-
-});
-
-return `
-m${String(max+1).padStart(4,"0")}
-`;
-
-}
-
-
-
-/* =========================
-   PASSWORD AUTOMÁTICA
-========================= */
-
-function generatePassword(){
-
-const chars =
-"ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
-
-let password="";
-
-for(
-let i=0;
-i<8;
-i++
-){
-
-password +=
-chars[
-Math.floor(
-Math.random()*chars.length
-)
-];
-
-}
-
-return password;
-
-}
-
-
-
-/* =========================
-   NAVEGAÇÃO
-========================= */
-
-function page(p){
+/* =================================
+   LOGIN
+================================= */
 
 document
-.querySelectorAll("nav button")
-.forEach(b=>{
+.getElementById("loginForm")
+.addEventListener("submit",async function(e){
 
-b.classList.toggle(
-"active",
-b.dataset.page===p
-);
+    e.preventDefault();
+
+    const button =
+    document.getElementById("loginButton");
+
+    const errorBox =
+    document.getElementById("loginError");
+
+    errorBox.classList.add("hidden");
+
+    button.disabled = true;
+
+    button.textContent =
+    "A entrar...";
+
+    const form =
+    new FormData(e.target);
+
+    const email =
+    String(form.get("email") || "")
+    .trim();
+
+    const password =
+    String(form.get("password") || "");
+
+    try{
+
+        const c =
+        getClient();
+
+        const result =
+        await c.auth.signInWithPassword({
+            email:email,
+            password:password
+        });
+
+        if(result.error){
+
+            throw result.error;
+
+        }
+
+        /*
+          MUITO IMPORTANTE:
+          Primeiro mostramos a aplicação.
+          Não esperamos o banco de dados.
+        */
+
+        document
+        .getElementById("loginScreen")
+        .classList.add("hidden");
+
+        document
+        .getElementById("app")
+        .classList.remove("hidden");
+
+
+        /*
+          Depois carregamos os dados.
+          Se alguma tabela falhar,
+          o sistema continua aberto.
+        */
+
+        await loadData();
+
+        await dashboard();
+
+    }catch(error){
+
+        console.error(
+            "ERRO DE LOGIN:",
+            error
+        );
+
+        errorBox.textContent =
+        "Não foi possível iniciar sessão: " +
+        (error.message || "Erro desconhecido.");
+
+        errorBox.classList.remove("hidden");
+
+    }finally{
+
+        button.disabled = false;
+
+        button.textContent =
+        "Entrar";
+
+    }
 
 });
 
 
-if(pages[p]){
+/* =================================
+   SESSÃO AUTOMÁTICA
+================================= */
 
-pages[p]();
+async function checkSession(){
+
+    try{
+
+        const c =
+        getClient();
+
+        const result =
+        await c.auth.getSession();
+
+        if(result.data.session){
+
+            document
+            .getElementById("loginScreen")
+            .classList.add("hidden");
+
+            document
+            .getElementById("app")
+            .classList.remove("hidden");
+
+            await loadData();
+
+            await dashboard();
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Sessão:",
+            error
+        );
+
+    }
 
 }
 
+
+checkSession();
+
+
+/* =================================
+   NAVEGAÇÃO
+================================= */
+
+function page(name){
+
+    document
+    .querySelectorAll("nav button")
+    .forEach(button => {
+
+        button.classList.toggle(
+            "active",
+            button.dataset.page === name
+        );
+
+    });
+
+    if(pages[name]){
+
+        pages[name]();
+
+    }
+
 }
 
 
-
-/* =========================
+/* =================================
    DASHBOARD
-========================= */
+================================= */
 
 async function dashboard(){
 
-content.innerHTML=`
+    await loadData();
 
-<div class="loading">
-A carregar o dashboard...
-</div>
+    const receitas =
+    db.financas
+    .filter(x => x.tipo === "Receita")
+    .reduce(
+        (total,x) =>
+        total + Number(x.valor || 0),
+        0
+    );
 
-`;
+    const despesas =
+    db.financas
+    .filter(x => x.tipo === "Despesa")
+    .reduce(
+        (total,x) =>
+        total + Number(x.valor || 0),
+        0
+    );
 
-
-const ok =
-await refresh();
-
-
-if(!ok){
-
-content.innerHTML=`
-
-${T(
-"Dashboard",
-"Não foi possível carregar todos os dados."
-)}
-
-<div class="card">
-
-<div class="notice error">
-
-A sessão está ativa, mas ocorreu
-um problema ao consultar o banco de dados.
-
-</div>
-
-<p class="muted">
-Verifique o erro apresentado no console
-ou tente novamente.
-</p>
-
-${B(
-"🔄 Tentar novamente",
-"primary",
-"dashboard()"
-)}
-
-</div>
-
-`;
-
-return;
-
-}
+    const unidadesAtivas =
+    db.unidades
+    .filter(x =>
+        x.estado === "Ativa"
+    ).length;
 
 
-let rec =
-db.financas
-.filter(
-x=>x.tipo==="Receita"
-)
-.reduce(
-(a,x)=>
-a+Number(x.valor||0),
-0
-);
+    content.innerHTML =
 
+    top(
+        "Dashboard",
+        "Visão geral do clube",
+        B(
+            "+ Cadastrar membro",
+            "primary",
+            "page('membroForm')"
+        )
+    )
 
-let desp =
-db.financas
-.filter(
-x=>x.tipo==="Despesa"
-)
-.reduce(
-(a,x)=>
-a+Number(x.valor||0),
-0
-);
+    +
 
+    `
+    <div class="cards">
 
-content.innerHTML=
+        <div class="card stat">
+            👥 Membros
+            <strong>
+                ${db.membros.length}
+            </strong>
+        </div>
 
-T(
-"Dashboard",
-"Visão geral do clube",
-B(
-"+ Cadastrar membro",
-"primary",
-"page('membroForm')"
-)
-)
+        <div class="card stat">
+            🏕️ Unidades
+            <strong>
+                ${unidadesAtivas}
+            </strong>
+        </div>
 
-+
+        <div class="card stat">
+            📅 Atividades
+            <strong>
+                ${db.atividades.length}
+            </strong>
+        </div>
 
-`
+        <div class="card stat">
+            💰 Saldo
+            <strong>
+                ${money(receitas-despesas)} Kz
+            </strong>
+        </div>
 
-<div class="cards">
+    </div>
 
+    <div class="card">
 
-<div class="card stat">
+        <h3>Acesso rápido</h3>
 
-👥 Membros
+        <div class="actions"
+             style="justify-content:flex-start">
 
-<strong>
-${db.membros.length}
-</strong>
+            ${B(
+                "👥 Membros",
+                "secondary",
+                "page('membros')"
+            )}
 
-</div>
+            ${B(
+                "🏕️ Unidades",
+                "secondary",
+                "page('unidades')"
+            )}
 
+            ${B(
+                "📅 Atividades",
+                "secondary",
+                "page('atividades')"
+            )}
 
-<div class="card stat">
+            ${B(
+                "💰 Finanças",
+                "secondary",
+                "page('financas')"
+            )}
 
-🏕️ Unidades
+        </div>
 
-<strong>
-${
-db.unidades.filter(
-x=>x.estado==="Ativa"
-).length
-}
-</strong>
-
-</div>
-
-
-<div class="card stat">
-
-📅 Atividades
-
-<strong>
-${db.atividades.length}
-</strong>
-
-</div>
-
-
-<div class="card stat">
-
-💰 Saldo
-
-<strong>
-${money(rec-desp)} Kz
-</strong>
-
-</div>
-
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Acesso rápido
-</h3>
-
-<div
-class="actions"
-style="justify-content:flex-start"
->
-
-${B(
-"Lista geral",
-"light",
-"page('membros')"
-)}
-
-${B(
-"Unidades",
-"light",
-"page('unidades')"
-)}
-
-${B(
-"Atividades",
-"light",
-"page('atividades')"
-)}
-
-${B(
-"Finanças",
-"light",
-"page('financas')"
-)}
-
-${B(
-"Relatórios",
-"light",
-"page('relatorios')"
-)}
-
-</div>
-
-</div>
-
-`;
+    </div>
+    `;
 
 }
 
 
-
-/* =========================
+/* =================================
    MEMBROS
-========================= */
+================================= */
 
 async function membros(){
 
-content.innerHTML=`
+    await loadData();
 
-<div class="loading">
-A carregar membros...
-</div>
+    content.innerHTML =
 
-`;
+    top(
+        "Membros",
+        "Cadastro e consulta dos desbravadores",
+        B(
+            "+ Cadastrar membro",
+            "primary",
+            "page('membroForm')"
+        )
+    )
 
+    +
 
-if(
-!await refresh()
-){
+    `
+    <div class="card">
 
-content.innerHTML=`
+        <div class="toolbar">
 
-${T(
-"Membros",
-"Erro ao carregar membros"
-)}
+            <input
+                id="memberSearch"
+                placeholder="Pesquisar por nome, Nº ou utilizador..."
+                oninput="renderMembers()">
 
-<div class="card">
+        </div>
 
-<div class="notice error">
+        <div class="table-wrap">
 
-Não foi possível carregar a tabela
-membros.
+            <table>
 
-</div>
+                <thead>
 
-${B(
-"Tentar novamente",
-"primary",
-"membros()"
-)}
+                    <tr>
 
-</div>
+                        <th>Foto</th>
+                        <th>Nº</th>
+                        <th>Nome</th>
+                        <th>Unidade</th>
+                        <th>Função</th>
+                        <th>Classe</th>
+                        <th>Estado</th>
+                        <th>Ação</th>
 
-`;
+                    </tr>
 
-return;
+                </thead>
 
-}
+                <tbody id="memberRows"></tbody>
 
+            </table>
 
-content.innerHTML=
+        </div>
 
-T(
-"Lista geral dos membros",
-"Todos os membros e os seus dados",
-B(
-"+ Cadastrar membro",
-"primary",
-"page('membroForm')"
-)
-)
+    </div>
+    `;
 
-+
-
-`
-
-<div class="card">
-
-<div class="toolbar">
-
-<input
-id="search"
-placeholder="Pesquisar por nome, número ou utilizador..."
-oninput="renderMemberTable()"
->
-
-</div>
-
-
-<div style="overflow:auto">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Foto</th>
-<th>Nº</th>
-<th>Nome completo</th>
-<th>Unidade</th>
-<th>Função</th>
-<th>Classe</th>
-<th>Telefone</th>
-<th>Estado</th>
-<th>Ação</th>
-
-</tr>
-
-</thead>
-
-
-<tbody
-id="memberRows">
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-`;
-
-renderMemberTable();
+    renderMembers();
 
 }
 
 
+function renderMembers(){
 
-/* =========================
-   TABELA MEMBROS
-========================= */
+    const search =
+    document
+    .getElementById("memberSearch");
 
-function renderMemberTable(){
+    if(!search)return;
 
-let q =
-(
-$("#search")?.value || ""
-)
-.toLowerCase();
+    const q =
+    search.value
+    .toLowerCase()
+    .trim();
 
+    const rows =
+    db.membros.filter(m => {
 
-let arr =
-db.membros.filter(m=>{
+        return (
+            String(m.nome || "")
+            .toLowerCase()
+            .includes(q)
+            ||
 
-let text = `
+            String(m.numero_membro || "")
+            .toLowerCase()
+            .includes(q)
+            ||
 
-${m.nome||""}
-${m.numero_membro||""}
-${m.utilizador||""}
-${m.telefone||""}
+            String(m.utilizador || "")
+            .toLowerCase()
+            .includes(q)
+        );
 
-`.toLowerCase();
-
-return text.includes(q);
-
-});
-
-
-const rows =
-$("#memberRows");
-
-
-if(!rows){
-
-return;
-
-}
+    });
 
 
-rows.innerHTML =
-
-arr.map(m=>{
-
-let unidade =
-db.unidades.find(
-u=>u.id===m.unidade_id
-);
+    const tbody =
+    document.getElementById("memberRows");
 
 
-let photo =
-m.foto_url
-?
+    if(!rows.length){
 
-`
-<img
-src="${esc(m.foto_url)}"
-class="member-photo"
-alt="Foto"
->
-`
+        tbody.innerHTML = `
+        <tr>
+            <td colspan="8"
+                class="muted">
+                Nenhum membro encontrado.
+            </td>
+        </tr>
+        `;
 
-:
+        return;
 
-`
-
-<div class="empty-photo">
-👤
-</div>
-
-`;
+    }
 
 
-return `
+    tbody.innerHTML =
+    rows.map(m => {
 
-<tr>
+        const unidade =
+        db.unidades.find(
+            u => u.id === m.unidade_id
+        );
 
-<td>
-${photo}
-</td>
+        return `
 
-<td>
+        <tr>
 
-<b>
-${esc(m.numero_membro)}
-</b>
+            <td>
 
-</td>
+                ${
+                    m.foto_url
 
-<td>
+                    ?
 
-<b>
-${esc(m.nome)}
-</b>
+                    `<img
+                        class="member-photo"
+                        src="${esc(m.foto_url)}">`
 
-<br>
+                    :
 
-<small class="muted">
-${esc(m.utilizador||"")}
-</small>
+                    `—`
+                }
 
-</td>
+            </td>
 
-<td>
-${esc(unidade?.nome||"—")}
-</td>
+            <td>
+                <b>
+                    ${esc(m.numero_membro)}
+                </b>
+            </td>
 
-<td>
-${esc(m.funcao||"—")}
-</td>
+            <td>
+                ${esc(m.nome)}
+            </td>
 
-<td>
-${esc(m.classe||"—")}
-</td>
+            <td>
+                ${esc(unidade?.nome || "—")}
+            </td>
 
-<td>
-${esc(m.telefone||"—")}
-</td>
+            <td>
+                ${esc(m.funcao || "—")}
+            </td>
 
-<td>
+            <td>
+                ${esc(m.classe || "—")}
+            </td>
 
-<span class="badge">
-${esc(m.estado||"Ativo")}
-</span>
+            <td>
+                <span class="badge">
+                    ${esc(m.estado || "Ativo")}
+                </span>
+            </td>
 
-</td>
+            <td>
+                ${B(
+                    "Abrir",
+                    "secondary",
+                    `profile('${m.id}')`
+                )}
+            </td>
 
-<td>
+        </tr>
 
-${B(
-"Abrir",
-"light",
-`profile('${m.id}')`
-)}
+        `;
 
-</td>
-
-</tr>
-
-`;
-
-}).join("")
-
-||
-
-`
-
-<tr>
-
-<td
-colspan="9"
-class="muted"
->
-
-Nenhum membro encontrado.
-
-</td>
-
-</tr>
-
-`;
+    }).join("");
 
 }
 
 
-
-/* =========================
-   FORM MEMBRO
-========================= */
+/* =================================
+   FORMULÁRIO DE MEMBRO
+================================= */
 
 async function membroForm(){
 
-await refresh();
+    await loadData();
+
+    content.innerHTML =
+
+    top(
+        "Cadastrar membro",
+        "Registo de novo desbravador",
+        B(
+            "← Voltar",
+            "secondary",
+            "page('membros')"
+        )
+    )
+
+    +
+
+    `
+    <form id="memberForm">
+
+        <div class="card">
+
+            <h3>Dados pessoais</h3>
+
+            <div class="grid">
+
+                ${field(
+                    "nome",
+                    "Nome completo *",
+                    "text",
+                    true
+                )}
+
+                ${field(
+                    "nascimento",
+                    "Data de nascimento",
+                    "date"
+                )}
+
+                ${selectField(
+                    "sexo",
+                    "Sexo",
+                    [
+                        "Masculino",
+                        "Feminino",
+                        "Outro"
+                    ]
+                )}
+
+                ${field(
+                    "documento",
+                    "Nº do documento"
+                )}
+
+                ${field(
+                    "telefone",
+                    "Telefone"
+                )}
+
+                ${field(
+                    "endereco",
+                    "Endereço"
+                )}
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Dados do clube</h3>
+
+            <div class="grid">
+
+                ${selectField(
+                    "unidade_id",
+                    "Unidade",
+                    db.unidades
+                    .filter(u =>
+                        u.estado === "Ativa"
+                    )
+                    .map(u => ({
+                        value:u.id,
+                        label:u.nome
+                    }))
+                )}
+
+                ${selectField(
+                    "funcao",
+                    "Função",
+                    [
+                        "Desbravador",
+                        "Conselheiro",
+                        "Vice-conselheiro",
+                        "Diretor",
+                        "Secretário",
+                        "Tesoureiro",
+                        "Capelão"
+                    ]
+                )}
 
+                ${selectField(
+                    "classe",
+                    "Classe",
+                    [
+                        "Amigo",
+                        "Companheiro",
+                        "Pesquisador",
+                        "Pioneiro",
+                        "Excursionista",
+                        "Guia"
+                    ]
+                )}
 
-content.innerHTML=
+                ${selectField(
+                    "estado",
+                    "Estado",
+                    [
+                        "Ativo",
+                        "Inativo",
+                        "Suspenso"
+                    ]
+                )}
 
-T(
-"Cadastrar membro",
-"Preencha os dados do membro",
-B(
-"← Lista geral",
-"light",
-"page('membros')"
-)
-)
+            </div>
 
-+
+        </div>
 
-`
 
-<form id="mf">
+        <div class="card">
 
+            <h3>Família e escola</h3>
 
-<div class="card">
+            <div class="grid">
 
-<h3>
-Dados pessoais
-</h3>
+                ${field(
+                    "encarregado",
+                    "Nome do encarregado"
+                )}
 
-<div class="grid">
+                ${field(
+                    "contacto_encarregado",
+                    "Contacto do encarregado"
+                )}
 
-${field(
-"nome",
-"Nome completo *",
-"text",
-true
-)}
+                ${field(
+                    "pai",
+                    "Nome do pai"
+                )}
 
-${field(
-"nascimento",
-"Data de nascimento",
-"date"
-)}
+                ${field(
+                    "mae",
+                    "Nome da mãe"
+                )}
 
-${select(
-"sexo",
-"Sexo",
-[
-"Masculino",
-"Feminino",
-"Outro"
-]
-)}
+                ${field(
+                    "escola",
+                    "Escola"
+                )}
 
-${field(
-"documento",
-"Nº do documento"
-)}
+                ${field(
+                    "classe_escolar",
+                    "Classe escolar"
+                )}
 
-${field(
-"telefone",
-"Telefone"
-)}
+            </div>
 
-${field(
-"endereco",
-"Endereço"
-)}
+        </div>
 
-${field(
-"data_cadastro",
-"Data de cadastro",
-"date",
-true
-)}
 
-</div>
+        <div class="card">
 
-</div>
+            <h3>Fotografia</h3>
 
+            <div class="field">
 
-<div class="card">
+                <label>
+                    Fotografia do membro
+                </label>
 
-<h3>
-Dados do clube
-</h3>
+                <input
+                    id="photoFile"
+                    type="file"
+                    accept="image/*">
 
-<div class="grid">
+            </div>
 
-<div class="field">
+        </div>
 
-<label>
-Unidade
-</label>
 
-<select
-name="unidade_id"
->
+        <div class="actions">
 
-<option value="">
-Selecionar
-</option>
-
-${db.unidades
-.filter(
-u=>u.estado==="Ativa"
-)
-.map(u=>`
+            <button
+                class="btn primary"
+                type="submit">
 
-<option
-value="${esc(u.id)}"
->
+                Cadastrar membro
 
-${esc(u.nome)}
+            </button>
 
-</option>
+        </div>
 
-`).join("")}
+    </form>
+    `;
 
-</select>
 
-</div>
+    document
+    .querySelector('[name="estado"]')
+    .value = "Ativo";
 
 
-${select(
-"funcao",
-"Função/Cargo",
-[
-"Desbravador",
-"Conselheiro",
-"Vice-conselheiro",
-"Diretor",
-"Secretário",
-"Tesoureiro",
-"Capelão"
-]
-)}
-
-
-${select(
-"classe",
-"Classe",
-[
-"Amigo",
-"Companheiro",
-"Pesquisador",
-"Pioneiro",
-"Excursionista",
-"Guia"
-]
-)}
-
-
-${select(
-"estado",
-"Estado",
-[
-"Ativo",
-"Inativo",
-"Suspenso"
-]
-)}
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Família e escola
-</h3>
-
-<div class="grid">
-
-${field(
-"encarregado",
-"Nome do encarregado"
-)}
-
-${field(
-"contacto_encarregado",
-"Contacto do encarregado"
-)}
-
-${field(
-"pai",
-"Nome do pai"
-)}
-
-${field(
-"mae",
-"Nome da mãe"
-)}
-
-${field(
-"escola",
-"Escola"
-)}
-
-${field(
-"classe_escolar",
-"Classe escolar"
-)}
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Fotografia
-</h3>
-
-<div class="field">
-
-<label>
-Foto do membro
-</label>
-
-<input
-name="foto"
-type="file"
-accept="image/*"
->
-
-<small class="muted">
-
-A fotografia será guardada
-no bucket fotos_membros.
-
-</small>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Credenciais do membro
-</h3>
-
-<p class="muted">
-
-O sistema irá gerar automaticamente
-o número de membro e o utilizador.
-
-A palavra-passe também será gerada
-automaticamente.
-
-</p>
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Cadastrar membro
-
-</button>
-
-</div>
-
-
-</form>
-
-`;
-
-
-$('[name=data_cadastro]')
-.value =
-new Date()
-.toISOString()
-.slice(0,10);
-
-
-$('[name=estado]')
-.value="Ativo";
-
-
-$("#mf").onsubmit =
-async e=>{
-
-e.preventDefault();
-
-
-const button =
-e.target.querySelector(
-'button[type="submit"]'
-);
-
-button.disabled=true;
-
-button.textContent=
-"Cadastrando...";
-
-
-try{
-
-let form =
-new FormData(e.target);
-
-
-let d =
-Object.fromEntries(form);
-
-
-/*
- * Foto
- */
-
-let file =
-e.target.querySelector(
-'[name="foto"]'
-).files[0];
-
-
-delete d.foto;
-
-
-/*
- * GERAR CREDENCIAIS
- */
-
-d.numero_membro =
-nextNumber();
-
-d.utilizador =
-nextUsername();
-
-
-let senha =
-generatePassword();
-
-
-/*
- * Se a coluna senha existir,
- * guarda a senha.
- */
-
-d.palavra_passe =
-senha;
-
-
-/*
- * FOTO
- */
-
-if(file){
-
-const c =
-await initSupabase();
-
-
-let ext =
-file.name
-.split(".")
-.pop()
-.toLowerCase();
-
-
-let path =
-`${d.numero_membro}-${Date.now()}.${ext}`;
-
-
-const upload =
-await c.storage
-.from("fotos_membros")
-.upload(
-path,
-file,
-{
-upsert:false
-}
-);
-
-
-if(upload.error){
-
-throw new Error(
-"Erro ao enviar fotografia: "+
-upload.error.message
-);
+    document
+    .getElementById("memberForm")
+    .addEventListener(
+        "submit",
+        saveMember
+    );
 
 }
 
 
-const publicUrl =
-c.storage
-.from("fotos_membros")
-.getPublicUrl(path);
+/* =================================
+   GUARDAR MEMBRO
+================================= */
+
+async function saveMember(e){
+
+    e.preventDefault();
+
+    const form =
+    new FormData(e.target);
+
+    const c =
+    getClient();
 
 
-d.foto_url =
-publicUrl.data.publicUrl;
+    const nome =
+    String(form.get("nome") || "")
+    .trim();
+
+
+    if(!nome){
+
+        alert(
+            "Digite o nome completo."
+        );
+
+        return;
+
+    }
+
+
+    /*
+      GERAÇÃO AUTOMÁTICA
+    */
+
+    const numero =
+    generateNumber();
+
+    const utilizador =
+    generateUsername();
+
+    const senha =
+    randomPassword();
+
+
+    let fotoUrl = null;
+
+
+    try{
+
+        /*
+          FOTO
+        */
+
+        const photoInput =
+        document.getElementById(
+            "photoFile"
+        );
+
+        if(
+            photoInput &&
+            photoInput.files &&
+            photoInput.files[0]
+        ){
+
+            const file =
+            photoInput.files[0];
+
+            const extension =
+            file.name
+            .split(".")
+            .pop();
+
+            const fileName =
+            numero +
+            "-" +
+            Date.now() +
+            "." +
+            extension;
+
+
+            const upload =
+            await c.storage
+            .from("fotos_membros")
+            .upload(
+                fileName,
+                file,
+                {
+                    upsert:true
+                }
+            );
+
+
+            if(upload.error){
+
+                throw upload.error;
+
+            }
+
+
+            const publicUrl =
+            c.storage
+            .from("fotos_membros")
+            .getPublicUrl(
+                fileName
+            );
+
+
+            fotoUrl =
+            publicUrl.data.publicUrl;
+
+        }
+
+
+        /*
+          DADOS PARA A TABELA
+        */
+
+        const data = {
+
+            numero_membro:numero,
+
+            nome:nome,
+
+            nascimento:
+            form.get("nascimento") || null,
+
+            sexo:
+            form.get("sexo") || null,
+
+            documento:
+            form.get("documento") || null,
+
+            telefone:
+            form.get("telefone") || null,
+
+            endereco:
+            form.get("endereco") || null,
+
+            unidade_id:
+            form.get("unidade_id") || null,
+
+            funcao:
+            form.get("funcao") || null,
+
+            classe:
+            form.get("classe") || null,
+
+            estado:
+            form.get("estado") || "Ativo",
+
+            pai:
+            form.get("pai") || null,
+
+            contacto_encarregado:
+            form.get("contacto_encarregado") || null,
+
+            encarregado:
+            form.get("encarregado") || null,
+
+            classe_escolar:
+            form.get("classe_escolar") || null,
+
+            escola:
+            form.get("escola") || null,
+
+            mae:
+            form.get("mae") || null,
+
+            foto_url:
+            fotoUrl,
+
+            utilizador:
+            utilizador,
+
+            data_cadastro:
+            getToday()
+
+        };
+
+
+        /*
+          INSERIR
+        */
+
+        const result =
+        await c
+        .from("membros")
+        .insert([data])
+        .select()
+        .single();
+
+
+        if(result.error){
+
+            throw result.error;
+
+        }
+
+
+        db.membros.unshift(
+            result.data
+        );
+
+
+        /*
+          MOSTRAR CREDENCIAIS
+        */
+
+        showMemberCredentials(
+            result.data,
+            senha
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "ERRO AO CADASTRAR:",
+            error
+        );
+
+        alert(
+            "Erro ao cadastrar membro:\n\n" +
+            error.message
+        );
+
+    }
 
 }
 
 
-const c =
-await initSupabase();
+/* =================================
+   CREDENCIAIS DO MEMBRO
+================================= */
 
-
-/*
- * IMPORTANTE:
- * unidade_id é UUID.
- * Não enviamos unidade como texto.
- */
-
-const insert =
-await c
-.from("membros")
-.insert([d])
-.select()
-.single();
-
-
-if(insert.error){
-
-throw insert.error;
-
-}
-
-
-db.membros.push(
-insert.data
-);
-
-
-alert(
-
-"Membro cadastrado com sucesso!\n\n"+
-"Nº: "+d.numero_membro+
-"\nUtilizador: "+d.utilizador+
-"\nPalavra-passe: "+senha
-
-);
-
-
-profile(
-insert.data.id,
-true,
-d.utilizador,
-senha
-);
-
-
-}catch(err){
-
-console.error(err);
-
-alert(
-"Erro ao cadastrar membro:\n\n"+
-err.message
-);
-
-}finally{
-
-button.disabled=false;
-
-button.textContent=
-"Cadastrar membro";
-
-}
-
-};
-
-}
-
-
-
-/* =========================
-   PERFIL
-========================= */
-
-async function profile(
-id,
-created=false,
-generatedUser="",
-generatedPassword=""
+function showMemberCredentials(
+    member,
+    password
 ){
 
-await refresh();
+    content.innerHTML =
+
+    top(
+        "Membro cadastrado",
+        "Cadastro realizado com sucesso"
+    )
+
+    +
+
+    `
+    <div class="card">
+
+        <div class="notice success">
+
+            O membro foi cadastrado
+            com sucesso.
+
+        </div>
+
+        <h2>
+            ${esc(member.nome)}
+        </h2>
+
+        <p>
+            Nº de membro:
+            <b>${esc(member.numero_membro)}</b>
+        </p>
 
 
-let m =
-db.membros.find(
-x=>x.id===id
-);
+        <div class="credentials">
+
+            <h3>
+                🔐 Credenciais do membro
+            </h3>
+
+            <p>
+                Utilizador
+            </p>
+
+            <div class="credential-value">
+                ${esc(member.utilizador)}
+            </div>
+
+            <p>
+                Palavra-passe inicial
+            </p>
+
+            <div class="credential-value">
+                ${esc(password)}
+            </div>
+
+            <p class="muted">
+                Guarde estas credenciais.
+                A palavra-passe mostrada aqui
+                não é recuperada novamente
+                depois de sair desta página.
+            </p>
+
+        </div>
 
 
-if(!m){
+        <div class="actions">
 
-alert(
-"Membro não encontrado."
-);
+            ${B(
+                "👥 Lista de membros",
+                "secondary",
+                "page('membros')"
+            )}
 
-return;
+            ${B(
+                "📄 Abrir ficha",
+                "primary",
+                `profile('${member.id}')`
+            )}
+
+        </div>
+
+    </div>
+    `;
 
 }
 
 
-let unidade =
-db.unidades.find(
-u=>u.id===m.unidade_id
-);
+/* =================================
+   PERFIL
+================================= */
 
+async function profile(id){
 
-let photo =
-m.foto_url
-?
+    await loadData();
 
-`
-<img
-src="${esc(m.foto_url)}"
-class="profile-photo"
-alt="Foto do membro"
->
-`
+    const member =
+    db.membros.find(
+        m => m.id === id
+    );
 
-:
 
-`
+    if(!member){
 
-<div class="empty-photo"
-style="
-width:140px;
-height:140px;
-font-size:50px;
-">
+        alert(
+            "Membro não encontrado."
+        );
 
-👤
+        return;
 
-</div>
+    }
 
-`;
 
+    const unidade =
+    db.unidades.find(
+        u => u.id === member.unidade_id
+    );
 
-content.innerHTML=
 
-T(
-"Perfil do membro",
-created
-?
-"Membro cadastrado com sucesso."
-:
-"Ficha individual",
-B(
-"← Lista geral",
-"light",
-"page('membros')"
-)
-)
+    content.innerHTML =
 
-+
+    top(
+        "Perfil do membro",
+        "Ficha individual",
+        B(
+            "← Voltar",
+            "secondary",
+            "page('membros')"
+        )
+    )
 
-`
+    +
 
-<div class="card">
+    `
+    <div class="card">
 
-<div class="profile-layout">
+        <div style="
+            display:flex;
+            gap:20px;
+            align-items:center;
+            flex-wrap:wrap;
+        ">
 
-<div>
+            ${
+                member.foto_url
 
-${photo}
+                ?
 
-</div>
+                `<img
+                    src="${esc(member.foto_url)}"
+                    class="profile-photo">`
 
+                :
 
-<div>
+                `<div class="profile-photo"
+                    style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    ">
+                    👤
+                </div>`
+            }
 
-<h2>
-${esc(m.nome)}
-</h2>
 
+            <div>
 
-<div class="info-grid">
+                <h2>
+                    ${esc(member.nome)}
+                </h2>
 
+                <p>
+                    Nº:
+                    <b>
+                        ${esc(member.numero_membro)}
+                    </b>
+                </p>
 
-<div class="info">
+                <span class="badge">
+                    ${esc(
+                        member.estado ||
+                        "Ativo"
+                    )}
+                </span>
 
-<small>
-Nº de membro
-</small>
+            </div>
 
-<b>
-${esc(m.numero_membro||"—")}
-</b>
+        </div>
 
-</div>
+    </div>
 
 
-<div class="info">
+    <div class="card">
 
-<small>
-Utilizador
-</small>
+        <h3>Dados pessoais</h3>
 
-<b>
-${esc(m.utilizador||"—")}
-</b>
+        <p>
+            <b>Nascimento:</b>
+            ${esc(member.nascimento || "—")}
+        </p>
 
-</div>
+        <p>
+            <b>Sexo:</b>
+            ${esc(member.sexo || "—")}
+        </p>
 
+        <p>
+            <b>Documento:</b>
+            ${esc(member.documento || "—")}
+        </p>
 
-<div class="info">
+        <p>
+            <b>Telefone:</b>
+            ${esc(member.telefone || "—")}
+        </p>
 
-<small>
-Unidade
-</small>
+        <p>
+            <b>Endereço:</b>
+            ${esc(member.endereco || "—")}
+        </p>
 
-<b>
-${esc(unidade?.nome||"—")}
-</b>
+    </div>
 
-</div>
 
+    <div class="card">
 
-<div class="info">
+        <h3>Dados do clube</h3>
 
-<small>
-Função
-</small>
+        <p>
+            <b>Unidade:</b>
+            ${esc(unidade?.nome || "—")}
+        </p>
 
-<b>
-${esc(m.funcao||"—")}
-</b>
+        <p>
+            <b>Função:</b>
+            ${esc(member.funcao || "—")}
+        </p>
 
-</div>
+        <p>
+            <b>Classe:</b>
+            ${esc(member.classe || "—")}
+        </p>
 
+    </div>
 
-<div class="info">
 
-<small>
-Classe
-</small>
+    <div class="card">
 
-<b>
-${esc(m.classe||"—")}
-</b>
+        <h3>Família e escola</h3>
 
-</div>
+        <p>
+            <b>Encarregado:</b>
+            ${esc(member.encarregado || "—")}
+        </p>
 
+        <p>
+            <b>Contacto:</b>
+            ${esc(
+                member.contacto_encarregado ||
+                "—"
+            )}
+        </p>
 
-<div class="info">
+        <p>
+            <b>Pai:</b>
+            ${esc(member.pai || "—")}
+        </p>
 
-<small>
-Estado
-</small>
+        <p>
+            <b>Mãe:</b>
+            ${esc(member.mae || "—")}
+        </p>
 
-<b>
-${esc(m.estado||"—")}
-</b>
+        <p>
+            <b>Escola:</b>
+            ${esc(member.escola || "—")}
+        </p>
 
-</div>
+        <p>
+            <b>Classe escolar:</b>
+            ${esc(
+                member.classe_escolar ||
+                "—"
+            )}
+        </p>
 
+    </div>
 
-<div class="info">
 
-<small>
-Nascimento
-</small>
+    <div class="actions">
 
-<b>
-${esc(m.nascimento||"—")}
-</b>
+        ${B(
+            "📄 Imprimir ficha",
+            "primary",
+            `printA4('${member.id}')`
+        )}
 
-</div>
+        ${B(
+            "🖨️ Cartão 58 mm",
+            "secondary",
+            `printThermal('${member.id}')`
+        )}
 
-
-<div class="info">
-
-<small>
-Sexo
-</small>
-
-<b>
-${esc(m.sexo||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Documento
-</small>
-
-<b>
-${esc(m.documento||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Telefone
-</small>
-
-<b>
-${esc(m.telefone||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Endereço
-</small>
-
-<b>
-${esc(m.endereco||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Data de cadastro
-</small>
-
-<b>
-${esc(m.data_cadastro||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Encarregado
-</small>
-
-<b>
-${esc(m.encarregado||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Contacto encarregado
-</small>
-
-<b>
-${esc(m.contacto_encarregado||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Pai
-</small>
-
-<b>
-${esc(m.pai||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Mãe
-</small>
-
-<b>
-${esc(m.mae||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Escola
-</small>
-
-<b>
-${esc(m.escola||"—")}
-</b>
-
-</div>
-
-
-<div class="info">
-
-<small>
-Classe escolar
-</small>
-
-<b>
-${esc(m.classe_escolar||"—")}
-</b>
-
-</div>
-
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-${
-created
-?
-
-`
-<div class="card">
-
-<h3>
-🔐 Credenciais geradas
-</h3>
-
-<div class="notice success">
-
-<b>
-Utilizador:
-</b>
-
-${esc(
-generatedUser ||
-m.utilizador ||
-""
-)}
-
-<br><br>
-
-<b>
-Palavra-passe:
-</b>
-
-${esc(
-generatedPassword ||
-"Foi exibida no cadastro."
-)}
-
-<br><br>
-
-<b>
-Nº de membro:
-</b>
-
-${esc(
-m.numero_membro
-)}
-
-</div>
-
-<p class="muted">
-
-Guarde estas credenciais
-para entregar ao membro.
-
-</p>
-
-</div>
-`
-
-:
-""
+    </div>
+    `;
 
 }
 
 
-<div class="actions">
-
-${B(
-"✏️ Editar",
-"light",
-`editMember('${m.id}')`
-)}
-
-${B(
-"📄 Ficha A4",
-"light",
-`printA4('${m.id}')`
-)}
-
-${B(
-"🖨️ Cartão térmico",
-"light",
-`printThermal('${m.id}')`
-)}
-
-</div>
-
-`;
-
-}
-
-
-
-/* =========================
-   EDITAR MEMBRO
-========================= */
-
-async function editMember(id){
-
-await refresh();
-
-
-let m =
-db.membros.find(
-x=>x.id===id
-);
-
-
-if(!m){
-
-alert(
-"Membro não encontrado."
-);
-
-return;
-
-}
-
-
-content.innerHTML=
-
-T(
-"Editar membro",
-"Alterar os dados do cadastro",
-B(
-"← Voltar",
-"light",
-`profile('${id}')`
-)
-)
-
-+
-
-`
-
-<form id="ef">
-
-
-<div class="card">
-
-<div class="grid">
-
-${field(
-"numero_membro",
-"Nº de membro",
-"text",
-true
-)}
-
-${field(
-"nome",
-"Nome completo",
-"text",
-true
-)}
-
-${field(
-"nascimento",
-"Nascimento",
-"date"
-)}
-
-${select(
-"sexo",
-"Sexo",
-[
-"Masculino",
-"Feminino",
-"Outro"
-]
-)}
-
-${field(
-"documento",
-"Documento"
-)}
-
-${field(
-"telefone",
-"Telefone"
-)}
-
-${field(
-"endereco",
-"Endereço"
-)}
-
-
-<div class="field">
-
-<label>
-Unidade
-</label>
-
-<select name="unidade_id">
-
-<option value="">
-Selecionar
-</option>
-
-${db.unidades.map(u=>`
-
-<option value="${esc(u.id)}">
-${esc(u.nome)}
-</option>
-
-`).join("")}
-
-</select>
-
-</div>
-
-
-${select(
-"funcao",
-"Função",
-[
-"Desbravador",
-"Conselheiro",
-"Vice-conselheiro",
-"Diretor",
-"Secretário",
-"Tesoureiro",
-"Capelão"
-]
-)}
-
-
-${select(
-"classe",
-"Classe",
-[
-"Amigo",
-"Companheiro",
-"Pesquisador",
-"Pioneiro",
-"Excursionista",
-"Guia"
-]
-)}
-
-
-${select(
-"estado",
-"Estado",
-[
-"Ativo",
-"Inativo",
-"Suspenso"
-]
-)}
-
-
-${field(
-"pai",
-"Nome do pai"
-)}
-
-${field(
-"mae",
-"Nome da mãe"
-)}
-
-${field(
-"encarregado",
-"Encarregado"
-)}
-
-${field(
-"contacto_encarregado",
-"Contacto do encarregado"
-)}
-
-${field(
-"escola",
-"Escola"
-)}
-
-${field(
-"classe_escolar",
-"Classe escolar"
-)}
-
-</div>
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Guardar alterações
-
-</button>
-
-</div>
-
-
-</form>
-
-`;
-
-
-[
-"numero_membro",
-"nome",
-"nascimento",
-"sexo",
-"documento",
-"telefone",
-"endereco",
-"unidade_id",
-"funcao",
-"classe",
-"estado",
-"pai",
-"mae",
-"encarregado",
-"contacto_encarregado",
-"escola",
-"classe_escolar"
-]
-.forEach(k=>{
-
-let el =
-$(`[name="${k}"]`);
-
-if(el){
-
-el.value =
-m[k] || "";
-
-}
-
-});
-
-
-$("#ef").onsubmit =
-async e=>{
-
-e.preventDefault();
-
-
-try{
-
-let d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-
-const c =
-await initSupabase();
-
-
-const {error} =
-await c
-.from("membros")
-.update(d)
-.eq("id",id);
-
-
-if(error){
-
-throw error;
-
-}
-
-
-alert(
-"Membro atualizado com sucesso."
-);
-
-
-await profile(id);
-
-
-}catch(err){
-
-console.error(err);
-
-alert(
-"Erro ao guardar:\n\n"+
-err.message
-);
-
-}
-
-};
-
-}
-
-
-
-/* =========================
+/* =================================
    UNIDADES
-========================= */
+================================= */
 
 async function unidades(){
 
-if(!await refresh()){
+    await loadData();
 
-alert(
-"Erro ao carregar unidades."
-);
+    content.innerHTML =
 
-return;
+    top(
+        "Unidades",
+        "Gestão das unidades",
+        B(
+            "+ Nova unidade",
+            "primary",
+            "unitForm()"
+        )
+    )
+
+    +
+
+    `
+    <div class="card">
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Nome</th>
+                        <th>Responsável</th>
+                        <th>Membros</th>
+                        <th>Estado</th>
+                        <th>Ação</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                ${
+                    db.unidades.map(u => {
+
+                        const count =
+                        db.membros.filter(
+                            m =>
+                            m.unidade_id === u.id
+                        ).length;
+
+                        return `
+
+                        <tr>
+
+                            <td>
+                                <b>
+                                    ${esc(u.nome)}
+                                </b>
+                            </td>
+
+                            <td>
+                                ${esc(
+                                    u.responsavel ||
+                                    "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${count}
+                            </td>
+
+                            <td>
+                                ${esc(
+                                    u.estado ||
+                                    "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${B(
+                                    "Editar",
+                                    "secondary",
+                                    `unitForm('${u.id}')`
+                                )}
+                            </td>
+
+                        </tr>
+
+                        `;
+
+                    }).join("")
+
+                    ||
+
+                    `
+                    <tr>
+                        <td colspan="5"
+                            class="muted">
+                            Nenhuma unidade.
+                        </td>
+                    </tr>
+                    `
+                }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+    `;
 
 }
 
 
-content.innerHTML=
-
-T(
-"Unidades",
-"Criar e administrar unidades",
-B(
-"+ Nova unidade",
-"primary",
-"unitForm()"
-)
-)
-
-+
-
-`
-
-<div class="card">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Unidade
-</th>
-
-<th>
-Responsável
-</th>
-
-<th>
-Membros
-</th>
-
-<th>
-Estado
-</th>
-
-<th>
-Ação
-</th>
-
-</tr>
-
-</thead>
-
-
-<tbody>
-
-${db.unidades.map(u=>`
-
-<tr>
-
-<td>
-<b>
-${esc(u.nome)}
-</b>
-</td>
-
-<td>
-${esc(u.responsavel||"—")}
-</td>
-
-<td>
-${
-db.membros.filter(
-m=>m.unidade_id===u.id
-).length
-}
-</td>
-
-<td>
-${esc(u.estado||"")}
-</td>
-
-<td>
-
-${B(
-"Editar",
-"light",
-`unitForm('${u.id}')`
-)}
-
-</td>
-
-</tr>
-
-`).join("")}
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
-
-}
-
-
-
-/* =========================
+/* =================================
    FORM UNIDADE
-========================= */
+================================= */
 
 async function unitForm(id=null){
 
-await refresh();
+    await loadData();
+
+    let unidade =
+    id
+    ?
+    db.unidades.find(
+        u => u.id === id
+    )
+    :
+    {
+        nome:"",
+        responsavel:"",
+        estado:"Ativa"
+    };
 
 
-let u =
-id
-?
-db.unidades.find(
-x=>x.id===id
-)
-:
-{
-nome:"",
-responsavel:"",
-estado:"Ativa"
-};
+    content.innerHTML =
+
+    top(
+        id
+        ? "Editar unidade"
+        : "Nova unidade",
+        "Dados da unidade",
+        B(
+            "← Voltar",
+            "secondary",
+            "page('unidades')"
+        )
+    )
+
+    +
+
+    `
+    <form id="unitForm">
+
+        <div class="card">
+
+            ${field(
+                "nome",
+                "Nome da unidade",
+                "text",
+                true
+            )}
+
+            ${field(
+                "responsavel",
+                "Responsável"
+            )}
+
+            ${selectField(
+                "estado",
+                "Estado",
+                [
+                    "Ativa",
+                    "Inativa"
+                ]
+            )}
+
+        </div>
+
+        <div class="actions">
+
+            <button
+                class="btn primary">
+                Guardar
+            </button>
+
+        </div>
+
+    </form>
+    `;
 
 
-content.innerHTML=
-
-T(
-id
-?
-"Editar unidade"
-:
-"Nova unidade",
-"Formulário de unidade",
-B(
-"← Voltar",
-"light",
-"page('unidades')"
-)
-)
-
-+
-
-`
-
-<form id="uf">
-
-<div class="card">
-
-<div class="grid">
-
-${field(
-"nome",
-"Nome *",
-"text",
-true
-)}
-
-${field(
-"responsavel",
-"Responsável"
-)}
-
-${select(
-"estado",
-"Estado",
-[
-"Ativa",
-"Inativa"
-]
-)}
-
-</div>
-
-</div>
+    document
+    .querySelector('[name="nome"]')
+    .value =
+    unidade.nome || "";
 
 
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Guardar
-
-</button>
-
-</div>
-
-</form>
-
-`;
+    document
+    .querySelector('[name="responsavel"]')
+    .value =
+    unidade.responsavel || "";
 
 
-[
-"nome",
-"responsavel",
-"estado"
-]
-.forEach(k=>{
-
-let el =
-$(`[name="${k}"]`);
-
-if(el){
-
-el.value =
-u[k] || "";
-
-}
-
-});
+    document
+    .querySelector('[name="estado"]')
+    .value =
+    unidade.estado || "Ativa";
 
 
-$("#uf").onsubmit =
-async e=>{
+    document
+    .getElementById("unitForm")
+    .onsubmit =
+    async function(e){
 
-e.preventDefault();
+        e.preventDefault();
 
+        const data =
+        Object.fromEntries(
+            new FormData(e.target)
+        );
 
-let d =
-Object.fromEntries(
-new FormData(e.target)
-);
+        const c =
+        getClient();
 
+        try{
 
-try{
+            let result;
 
-const c =
-await initSupabase();
+            if(id){
 
+                result =
+                await c
+                .from("unidades")
+                .update(data)
+                .eq("id",id);
 
-let result;
+            }else{
 
+                result =
+                await c
+                .from("unidades")
+                .insert([data]);
 
-if(id){
+            }
 
-result =
-await c
-.from("unidades")
-.update(d)
-.eq("id",id);
+            if(result.error){
 
-}else{
+                throw result.error;
 
-result =
-await c
-.from("unidades")
-.insert([d]);
+            }
 
-}
+            await unidades();
 
+        }catch(error){
 
-if(result.error){
+            alert(
+                "Erro ao guardar unidade:\n" +
+                error.message
+            );
 
-throw result.error;
+        }
+
+    };
 
 }
 
 
-page("unidades");
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-err.message
-);
-
-}
-
-};
-
-}
-
-
-
-/* =========================
+/* =================================
    ATIVIDADES
-========================= */
+================================= */
 
 async function atividades(){
 
-await refresh();
+    await loadData();
 
+    content.innerHTML =
 
-content.innerHTML=
+    top(
+        "Atividades",
+        "Gestão das atividades",
+        B(
+            "+ Nova atividade",
+            "primary",
+            "activityForm()"
+        )
+    )
 
-T(
-"Atividades",
-"Registo e gestão das atividades",
-B(
-"+ Nova atividade",
-"primary",
-"activityForm()"
-)
-)
+    +
 
-+
+    `
+    <div class="card">
 
-`
+        <div class="table-wrap">
 
-<div class="card">
+            <table>
 
-<table>
+                <thead>
 
-<thead>
+                    <tr>
+                        <th>Atividade</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th>Local</th>
+                        <th>Responsável</th>
+                    </tr>
 
-<tr>
-<th>Atividade</th>
-<th>Data</th>
-<th>Hora</th>
-<th>Local</th>
-<th>Responsável</th>
-<th>Custo</th>
-</tr>
+                </thead>
 
-</thead>
+                <tbody>
 
-<tbody>
+                ${
+                    db.atividades.map(a => `
 
-${db.atividades.map(a=>`
+                    <tr>
 
-<tr>
+                        <td>
+                            ${esc(a.nome)}
+                        </td>
 
-<td>
-${esc(a.nome)}
-</td>
+                        <td>
+                            ${esc(a.data || "—")}
+                        </td>
 
-<td>
-${esc(a.data||"")}
-</td>
+                        <td>
+                            ${esc(a.hora || "—")}
+                        </td>
 
-<td>
-${esc(a.hora||"")}
-</td>
+                        <td>
+                            ${esc(a.local || "—")}
+                        </td>
 
-<td>
-${esc(a.local||"")}
-</td>
+                        <td>
+                            ${esc(
+                                a.responsavel ||
+                                "—"
+                            )}
+                        </td>
 
-<td>
-${esc(a.responsavel||"")}
-</td>
+                    </tr>
 
-<td>
-${money(a.custo)} Kz
-</td>
+                    `).join("")
 
-</tr>
+                    ||
 
-`).join("")||
+                    `
+                    <tr>
+                        <td colspan="5"
+                            class="muted">
+                            Nenhuma atividade.
+                        </td>
+                    </tr>
+                    `
+                }
 
-`
+                </tbody>
 
-<tr>
-<td
-colspan="6"
-class="muted"
->
-Nenhuma atividade registada.
-</td>
-</tr>
+            </table>
 
-`}
+        </div>
 
-</tbody>
-
-</table>
-
-</div>
-
-`;
+    </div>
+    `;
 
 }
 
 
+/* =================================
+   NOVA ATIVIDADE
+================================= */
 
-/* =========================
-   FORM ATIVIDADE
-========================= */
+function activityForm(){
 
-async function activityForm(){
+    content.innerHTML =
 
-content.innerHTML=
+    top(
+        "Nova atividade",
+        "Registar atividade",
+        B(
+            "← Voltar",
+            "secondary",
+            "page('atividades')"
+        )
+    )
 
-T(
-"Registar atividade",
-"Formulário completo",
-B(
-"← Voltar",
-"light",
-"page('atividades')"
-)
-)
+    +
 
-+
+    `
+    <form id="activityForm">
 
-`
+        <div class="card">
 
-<form id="af">
+            ${field(
+                "nome",
+                "Nome da atividade",
+                "text",
+                true
+            )}
 
-<div class="card">
+            <div class="grid">
 
-<div class="grid">
+                ${field(
+                    "data",
+                    "Data",
+                    "date",
+                    true
+                )}
 
-${field(
-"nome",
-"Nome da atividade *",
-"text",
-true
-)}
+                ${field(
+                    "hora",
+                    "Hora",
+                    "time"
+                )}
 
-${field(
-"data",
-"Data *",
-"date",
-true
-)}
+                ${field(
+                    "local",
+                    "Local"
+                )}
 
-${field(
-"hora",
-"Hora",
-"time"
-)}
+                ${field(
+                    "responsavel",
+                    "Responsável"
+                )}
 
-${field(
-"local",
-"Local"
-)}
+            </div>
 
-${field(
-"responsavel",
-"Responsável"
-)}
+            ${field(
+                "descricao",
+                "Descrição"
+            )}
 
-${field(
-"custo",
-"Custo (Kz)",
-"number"
-)}
+        </div>
 
-</div>
+        <div class="actions">
 
+            <button
+                class="btn primary">
+                Guardar
+            </button>
 
-${field(
-"descricao",
-"Descrição"
-)}
+        </div>
 
-</div>
-
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Guardar atividade
-
-</button>
-
-</div>
-
-</form>
-
-`;
+    </form>
+    `;
 
 
-$('[name=data]')
-.value =
-new Date()
-.toISOString()
-.slice(0,10);
+    document
+    .querySelector('[name="data"]')
+    .value =
+    getToday();
 
 
-$("#af").onsubmit =
-async e=>{
+    document
+    .getElementById("activityForm")
+    .onsubmit =
+    async function(e){
 
-e.preventDefault();
+        e.preventDefault();
 
+        const data =
+        Object.fromEntries(
+            new FormData(e.target)
+        );
 
-let d =
-Object.fromEntries(
-new FormData(e.target)
-);
+        try{
 
+            const result =
+            await getClient()
+            .from("atividades")
+            .insert([data]);
 
-try{
+            if(result.error){
 
-const c =
-await initSupabase();
+                throw result.error;
 
+            }
 
-const {error} =
-await c
-.from("atividades")
-.insert([d]);
+            await atividades();
 
+        }catch(error){
 
-if(error){
+            alert(
+                "Erro ao guardar atividade:\n" +
+                error.message
+            );
 
-throw error;
+        }
+
+    };
 
 }
 
 
-page("atividades");
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-err.message
-);
-
-}
-
-};
-
-}
-
-
-
-/* =========================
+/* =================================
    FINANÇAS
-========================= */
+================================= */
 
 async function financas(){
 
-await refresh();
+    await loadData();
 
+    const receitas =
+    db.financas
+    .filter(x => x.tipo === "Receita")
+    .reduce(
+        (a,x) =>
+        a + Number(x.valor || 0),
+        0
+    );
+
+    const despesas =
+    db.financas
+    .filter(x => x.tipo === "Despesa")
+    .reduce(
+        (a,x) =>
+        a + Number(x.valor || 0),
+        0
+    );
+
+
+    content.innerHTML =
+
+    top(
+        "Finanças",
+        "Receitas e despesas",
+        B(
+            "+ Novo movimento",
+            "primary",
+            "financeForm()"
+        )
+    )
 
-let rec =
-db.financas
-.filter(
-x=>x.tipo==="Receita"
-)
-.reduce(
-(a,x)=>
-a+Number(x.valor||0),
-0
-);
+    +
+
+    `
+    <div class="cards">
+
+        <div class="card stat">
+            Receitas
+            <strong>
+                ${money(receitas)} Kz
+            </strong>
+        </div>
 
+        <div class="card stat">
+            Despesas
+            <strong>
+                ${money(despesas)} Kz
+            </strong>
+        </div>
 
-let desp =
-db.financas
-.filter(
-x=>x.tipo==="Despesa"
-)
-.reduce(
-(a,x)=>
-a+Number(x.valor||0),
-0
-);
+        <div class="card stat">
+            Saldo
+            <strong>
+                ${money(receitas-despesas)} Kz
+            </strong>
+        </div>
 
+        <div class="card stat">
+            Movimentos
+            <strong>
+                ${db.financas.length}
+            </strong>
+        </div>
 
-content.innerHTML=
+    </div>
 
-T(
-"Finanças",
-"Receitas, despesas e pagamentos",
-B(
-"+ Novo movimento",
-"primary",
-"financeForm()"
-)
-)
 
-+
+    <div class="card">
 
-`
+        <div class="table-wrap">
 
-<div class="cards">
+            <table>
 
+                <thead>
 
-<div class="card stat">
+                    <tr>
 
-Receitas
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Membro</th>
+                        <th>Categoria</th>
+                        <th>Valor</th>
 
-<strong>
-${money(rec)} Kz
-</strong>
+                    </tr>
 
-</div>
+                </thead>
 
+                <tbody>
 
-<div class="card stat">
+                ${
+                    db.financas.map(x => `
 
-Despesas
+                    <tr>
 
-<strong>
-${money(desp)} Kz
-</strong>
+                        <td>
+                            ${esc(x.data || "—")}
+                        </td>
 
-</div>
-
-
-<div class="card stat">
-
-Saldo
-
-<strong>
-${money(rec-desp)} Kz
-</strong>
-
-</div>
-
-
-<div class="card stat">
-
-Movimentos
-
-<strong>
-${db.financas.length}
-</strong>
-
-</div>
-
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Histórico financeiro
-</h3>
-
-<div style="overflow:auto">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Data
-</th>
-
-<th>
-Tipo
-</th>
-
-<th>
-Membro
-</th>
-
-<th>
-Nº membro
-</th>
-
-<th>
-Categoria
-</th>
-
-<th>
-Descrição
-</th>
-
-<th>
-Valor
-</th>
-
-</tr>
-
-</thead>
-
-
-<tbody>
-
-${db.financas.map(x=>`
-
-<tr>
-
-<td>
-${esc(x.data||"")}
-</td>
-
-<td>
-${esc(x.tipo||"")}
-</td>
-
-<td>
-<b>
-${esc(x.membro_nome||"—")}
-</b>
-</td>
-
-<td>
-${esc(x.membro_numero||"—")}
-</td>
-
-<td>
-${esc(x.categoria||"")}
-</td>
-
-<td>
-${esc(x.descricao||"")}
-</td>
-
-<td>
-${money(x.valor)} Kz
-</td>
-
-</tr>
-
-`).join("")||
-
-`
-
-<tr>
-
-<td
-colspan="7"
-class="muted"
->
-
-Nenhum movimento registado.
-
-</td>
-
-</tr>
-
-`}
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-`;
+                        <td>
+                            ${esc(x.tipo || "—")}
+                        </td>
+
+                        <td>
+                            ${esc(
+                                x.membro_nome ||
+                                "—"
+                            )}
+                        </td>
+
+                        <td>
+                            ${esc(
+                                x.categoria ||
+                                "—"
+                            )}
+                        </td>
+
+                        <td>
+                            ${money(x.valor)}
+                            Kz
+                        </td>
+
+                    </tr>
+
+                    `).join("")
+
+                    ||
+
+                    `
+                    <tr>
+                        <td colspan="5"
+                            class="muted">
+                            Nenhum movimento.
+                        </td>
+                    </tr>
+                    `
+                }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+    `;
 
 }
 
 
-
-/* =========================
-   FORM FINANCEIRO
-========================= */
+/* =================================
+   FORM FINANÇAS
+================================= */
 
 async function financeForm(){
 
-await refresh();
+    await loadData();
+
+    content.innerHTML =
+
+    top(
+        "Novo movimento",
+        "Registar receita ou despesa",
+        B(
+            "← Voltar",
+            "secondary",
+            "page('financas')"
+        )
+    )
+
+    +
 
+    `
+    <form id="financeForm">
 
-content.innerHTML=
+        <div class="card">
 
-T(
-"Novo movimento financeiro",
-"Registar receita ou despesa",
-B(
-"← Voltar",
-"light",
-"page('financas')"
-)
-)
+            <div class="grid">
 
-+
+                ${selectField(
+                    "tipo",
+                    "Tipo",
+                    [
+                        "Receita",
+                        "Despesa"
+                    ],
+                    true
+                )}
 
-`
+                <div class="field">
 
-<form id="ff">
+                    <label>Membro</label>
 
-<div class="card">
+                    <select name="membro_id">
 
-<div class="grid">
+                        <option value="">
+                            Nenhum
+                        </option>
 
-${select(
-"tipo",
-"Tipo",
-[
-"Receita",
-"Despesa"
-],
-true
-)}
+                        ${
+                            db.membros
+                            .map(m => `
 
+                            <option
+                                value="${esc(m.id)}">
 
-<div class="field">
+                                ${esc(m.nome)}
+                                —
+                                ${esc(m.numero_membro)}
 
-<label>
-Membro
-</label>
+                            </option>
 
-<select name="membro_id">
+                            `).join("")
+                        }
 
-<option value="">
-Nenhum / não aplicável
-</option>
+                    </select>
 
-${db.membros.map(m=>`
+                </div>
 
-<option value="${esc(m.id)}">
+                ${field(
+                    "categoria",
+                    "Categoria",
+                    "text",
+                    true
+                )}
 
-${esc(m.nome)}
-—
-${esc(m.numero_membro)}
+                ${field(
+                    "valor",
+                    "Valor (Kz)",
+                    "number",
+                    true
+                )}
 
-</option>
+                ${field(
+                    "data",
+                    "Data",
+                    "date",
+                    true
+                )}
 
-`).join("")}
+                ${selectField(
+                    "forma",
+                    "Forma de pagamento",
+                    [
+                        "Dinheiro",
+                        "Transferência",
+                        "Depósito",
+                        "Multicaixa Express",
+                        "Outro"
+                    ]
+                )}
 
-</select>
+            </div>
 
-</div>
+            ${field(
+                "descricao",
+                "Descrição"
+            )}
 
+        </div>
 
-${field(
-"categoria",
-"Categoria *",
-"text",
-true
-)}
+        <div class="actions">
 
-${field(
-"valor",
-"Valor (Kz) *",
-"number",
-true
-)}
+            <button
+                class="btn primary">
+                Guardar
+            </button>
 
-${field(
-"data",
-"Data *",
-"date",
-true
-)}
+        </div>
 
-${field(
-"descricao",
-"Descrição"
-)}
+    </form>
+    `;
 
 
-${select(
-"forma",
-"Forma de pagamento",
-[
-"Dinheiro",
-"Transferência",
-"Depósito",
-"Multicaixa Express",
-"Outro"
-]
-)}
+    document
+    .querySelector('[name="data"]')
+    .value =
+    getToday();
 
-</div>
 
-</div>
+    document
+    .getElementById("financeForm")
+    .onsubmit =
+    async function(e){
 
+        e.preventDefault();
 
-<div class="actions">
+        const form =
+        new FormData(e.target);
 
-<button
-class="btn primary"
-type="submit"
->
+        const data =
+        Object.fromEntries(form);
 
-Guardar movimento
 
-</button>
+        const member =
+        db.membros.find(
+            m =>
+            m.id ===
+            data.membro_id
+        );
 
-</div>
 
-</form>
+        data.membro_nome =
+        member?.nome || "";
 
-`;
+        data.membro_numero =
+        member?.numero_membro || "";
 
 
-$('[name=data]')
-.value =
-new Date()
-.toISOString()
-.slice(0,10);
+        try{
 
+            const result =
+            await getClient()
+            .from("financas")
+            .insert([data]);
 
-$("#ff").onsubmit =
-async e=>{
 
-e.preventDefault();
+            if(result.error){
 
+                throw result.error;
 
-let d =
-Object.fromEntries(
-new FormData(e.target)
-);
+            }
 
 
-let m =
-db.membros.find(
-x=>x.id===d.membro_id
-);
+            await financas();
 
+        }catch(error){
 
-d.membro_nome =
-m?.nome || "";
-
-d.membro_numero =
-m?.numero_membro || "";
-
-
-delete d.membro_id;
-
-
-try{
-
-const c =
-await initSupabase();
-
-
-const {error} =
-await c
-.from("financas")
-.insert([d]);
-
-
-if(error){
-
-throw error;
-
-}
-
-
-page("financas");
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-err.message
-);
-
-}
-
-};
-
-}
-
-
-
-/* =========================
-   RELATÓRIOS
-========================= */
-
-function relatorios(){
-
-content.innerHTML=
-
-T(
-"Relatórios",
-"Principais relatórios do clube"
-)
-
-+
-
-`
-
-<div class="cards">
-
-
-<div class="card">
-
-<h3>
-Lista geral dos membros
-</h3>
-
-<p class="muted">
-Todos os membros cadastrados.
-</p>
-
-${B(
-"Abrir",
-"light",
-"page('membros')"
-)}
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Membros por unidade
-</h3>
-
-<p class="muted">
-Quantidade por unidade.
-</p>
-
-${B(
-"Abrir",
-"light",
-"unitReport()"
-)}
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Atividades
-</h3>
-
-<p class="muted">
-Histórico das atividades.
-</p>
-
-${B(
-"Abrir",
-"light",
-"page('atividades')"
-)}
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Financeiro
-</h3>
-
-<p class="muted">
-Receitas, despesas e saldo.
-</p>
-
-${B(
-"Abrir",
-"light",
-"page('financas')"
-)}
-
-</div>
-
-
-</div>
-
-`;
-
-}
-
-
-
-/* =========================
-   RELATÓRIO UNIDADES
-========================= */
-
-async function unitReport(){
-
-await refresh();
-
-
-content.innerHTML=
-
-T(
-"Membros por unidade",
-"Relatório geral",
-B(
-"← Voltar",
-"light",
-"page('relatorios')"
-)
-)
-
-+
-
-`
-
-<div class="card">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Unidade
-</th>
-
-<th>
-Membros
-</th>
-
-</tr>
-
-</thead>
-
-
-<tbody>
-
-${db.unidades.map(u=>`
-
-<tr>
-
-<td>
-${esc(u.nome)}
-</td>
-
-<td>
-
-${
-db.membros.filter(
-m=>m.unidade_id===u.id
-).length
-}
-
-</td>
-
-</tr>
-
-`).join("")}
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
-
-}
-
-
-
-/* =========================
-   DEFINIÇÕES
-========================= */
-
-async function definicoes(){
-
-await refresh();
-
-
-content.innerHTML=
-
-T(
-"Definições gerais",
-"Configurações do clube e impressão"
-)
-
-+
-
-`
-
-<form id="cf">
-
-
-<div class="card">
-
-<h3>
-Dados do clube
-</h3>
-
-<div class="grid">
-
-${field(
-"nome_clube",
-"Nome do clube"
-)}
-
-${field(
-"diretor",
-"Diretor"
-)}
-
-${field(
-"telefone",
-"Telefone"
-)}
-
-${field(
-"email",
-"E-mail"
-)}
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Impressão
-</h3>
-
-<div class="grid">
-
-${select(
-"papel",
-"Papel térmico",
-[
-"58 mm",
-"80 mm"
-]
-)}
-
-${select(
-"ficha",
-"Ficha principal",
-[
-"A4"
-]
-)}
-
-</div>
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Guardar definições
-
-</button>
-
-</div>
-
-</form>
-
-`;
-
-
-[
-"nome_clube",
-"diretor",
-"telefone",
-"email",
-"papel",
-"ficha"
-]
-.forEach(k=>{
-
-let el =
-$(`[name="${k}"]`);
-
-if(el){
-
-el.value =
-db.config[k] || "";
-
-}
-
-});
-
-
-$("#cf").onsubmit =
-async e=>{
-
-e.preventDefault();
-
-
-let d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-
-try{
-
-const c =
-await initSupabase();
-
-
-if(db.config.id){
-
-const {error} =
-await c
-.from("configuracoes")
-.update(d)
-.eq("id",db.config.id);
-
-
-if(error){
-
-throw error;
-
-}
-
-}else{
-
-const {error} =
-await c
-.from("configuracoes")
-.insert([d]);
-
-
-if(error){
-
-throw error;
-
-}
-
-}
-
-
-alert(
-"Definições guardadas."
-);
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-err.message
-);
-
-}
-
-};
-
-}
-
-
-
-/* =========================
-   MINHA CONTA
-========================= */
-
-async function conta(){
-
-try{
-
-const c =
-await initSupabase();
-
-
-const {data,error} =
-await c.auth.getUser();
-
-
-if(error){
-
-throw error;
-
-}
-
-
-let email =
-data.user?.email || "";
-
-
-content.innerHTML=
-
-T(
-"Minha conta",
-"Gerencie as suas credenciais"
-)
-
-+
-
-`
-
-<div class="card">
-
-<h3>
-Conta atual
-</h3>
-
-<p>
-
-<b>
-E-mail:
-</b>
-
-${esc(email)}
-
-</p>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Alterar palavra-passe
-</h3>
-
-<form id="passwordForm">
-
-${field(
-"novaSenha",
-"Nova palavra-passe",
-"password",
-true
-)}
-
-${field(
-"confirmarSenha",
-"Confirmar palavra-passe",
-"password",
-true
-)}
-
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Alterar palavra-passe
-
-</button>
-
-</div>
-
-</form>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Alterar e-mail
-</h3>
-
-<p class="muted">
-
-O Supabase poderá pedir confirmação
-do novo e-mail.
-
-</p>
-
-
-<form id="emailForm">
-
-${field(
-"novoEmail",
-"Novo e-mail",
-"email",
-true
-)}
-
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Alterar e-mail
-
-</button>
-
-</div>
-
-</form>
-
-</div>
-
-`;
-
-
-$("#passwordForm").onsubmit =
-async e=>{
-
-e.preventDefault();
-
-
-let d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-
-if(
-d.novaSenha !==
-d.confirmarSenha
-){
-
-alert(
-"As palavras-passe não coincidem."
-);
-
-return;
-
-}
-
-
-if(
-d.novaSenha.length < 6
-){
-
-alert(
-"A palavra-passe deve ter pelo menos 6 caracteres."
-);
-
-return;
-
-}
-
-
-try{
-
-const {error} =
-await c.auth.updateUser({
-password:d.novaSenha
-});
-
-
-if(error){
-
-throw error;
-
-}
-
-
-alert(
-"Palavra-passe alterada com sucesso."
-);
-
-
-e.target.reset();
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-err.message
-);
-
-}
-
-};
-
-
-$("#emailForm").onsubmit =
-async e=>{
-
-e.preventDefault();
-
-
-let d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-
-try{
-
-const {error} =
-await c.auth.updateUser({
-email:d.novoEmail
-});
-
-
-if(error){
-
-throw error;
-
-}
-
-
-alert(
-"Pedido de alteração enviado. Verifique o novo e-mail."
-);
-
-
-e.target.reset();
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-err.message
-);
-
-}
-
-};
-
-
-}catch(err){
-
-alert(
-"Erro ao abrir a conta:\n\n"+
-err.message
-);
-
-}
-
-}
-
-
-
-/* =========================
-   IMPRESSÃO A4
-========================= */
-
-async function printA4(id){
-
-await refresh();
-
-
-let m =
-db.membros.find(
-x=>x.id===id
-);
-
-
-if(!m){
-
-return;
-
-}
-
-
-let unidade =
-db.unidades.find(
-u=>u.id===m.unidade_id
-);
-
-
-let w =
-window.open(
-"",
-"_blank"
-);
-
-
-w.document.write(`
-
-<html>
-
-<head>
-
-<title>
-Ficha A4
-</title>
-
-<style>
-
-body{
-font-family:Arial;
-margin:25mm;
-}
-
-h1{
-text-align:center;
-}
-
-.row{
-padding:9px 0;
-border-bottom:1px solid #ddd;
-}
-
-img{
-width:120px;
-height:120px;
-object-fit:cover;
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<h1>
-FICHA DE CADASTRO
-</h1>
-
-
-<h2>
-${esc(
-db.config.nome_clube ||
-"Clube de Desbravadores"
-)}
-</h2>
-
-
-${
-m.foto_url
-?
-
-`
-<div style="text-align:center">
-<img src="${esc(m.foto_url)}">
-</div>
-`
-
-:
-""
-}
-
-
-${[
-[
-"Número",
-m.numero_membro
-],
-[
-"Utilizador",
-m.utilizador
-],
-[
-"Nome completo",
-m.nome
-],
-[
-"Nascimento",
-m.nascimento
-],
-[
-"Sexo",
-m.sexo
-],
-[
-"Documento",
-m.documento
-],
-[
-"Unidade",
-unidade?.nome
-],
-[
-"Função",
-m.funcao
-],
-[
-"Classe",
-m.classe
-],
-[
-"Estado",
-m.estado
-],
-[
-"Telefone",
-m.telefone
-],
-[
-"Endereço",
-m.endereco
-],
-[
-"Encarregado",
-m.encarregado
-],
-[
-"Contacto do encarregado",
-m.contacto_encarregado
-],
-[
-"Pai",
-m.pai
-],
-[
-"Mãe",
-m.mae
-],
-[
-"Escola",
-m.escola
-],
-[
-"Classe escolar",
-m.classe_escolar
-],
-[
-"Data de cadastro",
-m.data_cadastro
-]
-]
-.map(x=>`
-
-<div class="row">
-
-<b>
-${esc(x[0])}:
-</b>
-
-${esc(x[1]||"—")}
-
-</div>
-
-`).join("")}
-
-
-<script>
-
-setTimeout(
-()=>print(),
-500
-);
-
-<\/script>
-
-
-</body>
-
-</html>
-
-`);
-
-
-w.document.close();
-
-}
-
-
-
-/* =========================
-   IMPRESSÃO TÉRMICA
-========================= */
-
-async function printThermal(id){
-
-await refresh();
-
-
-let m =
-db.membros.find(
-x=>x.id===id
-);
-
-
-if(!m){
-
-return;
-
-}
-
-
-let unidade =
-db.unidades.find(
-u=>u.id===m.unidade_id
-);
-
-
-let w =
-window.open(
-"",
-"_blank",
-"width=420,height=650"
-);
-
-
-w.document.write(`
-
-<html>
-
-<head>
-
-<style>
-
-@page{
-size:58mm auto;
-margin:0;
-}
-
-body{
-width:58mm;
-font:11px Arial;
-padding:4mm;
-}
-
-h2{
-font-size:14px;
-text-align:center;
-}
-
-p{
-margin:6px 0;
-}
-
-img{
-width:30mm;
-height:30mm;
-object-fit:cover;
-display:block;
-margin:auto;
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<h2>
-
-SGD
-
-<br>
-
-FICHA DO MEMBRO
-
-</h2>
-
-
-${
-m.foto_url
-?
-
-`
-<img
-src="${esc(m.foto_url)}"
->
-`
-
-:
-""
-}
-
-
-<hr>
-
-
-<p>
-<b>Nome:</b>
-${esc(m.nome)}
-</p>
-
-
-<p>
-<b>Nº:</b>
-${esc(m.numero_membro)}
-</p>
-
-
-<p>
-<b>Utilizador:</b>
-${esc(m.utilizador||"")}
-</p>
-
-
-<p>
-<b>Unidade:</b>
-${esc(unidade?.nome||"—")}
-</p>
-
-
-<p>
-<b>Função:</b>
-${esc(m.funcao||"—")}
-</p>
-
-
-<p>
-<b>Classe:</b>
-${esc(m.classe||"—")}
-</p>
-
-
-<p>
-<b>Estado:</b>
-${esc(m.estado||"—")}
-</p>
-
-
-<p>
-<b>Cadastro:</b>
-${esc(m.data_cadastro||"—")}
-</p>
-
-
-<hr>
-
-
-<script>
-
-setTimeout(
-()=>print(),
-500
-);
-
-<\/script>
-
-
-</body>
-
-</html>
-
-`);
-
-
-w.document.close();
-
-}
-
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-async function logout(){
-
-try{
-
-const c =
-await initSupabase();
-
-await c.auth.signOut();
-
-}catch(e){
-
-console.error(e);
-
-}
-
-
-location.reload();
-
-}
-
-
-
-/* =========================
-   PÁGINAS
-========================= */
-
-const pages={
-
-dashboard,
-membros,
-membroForm,
-profile,
-editMember,
-unidades,
-unitForm,
-atividades,
-activityForm,
-financas,
-financeForm,
-relatorios,
-unitReport,
-definicoes,
-conta
-
-};
-
-
-
-/* =========================
-   NAVEGAÇÃO
-========================= */
-
-document
-.querySelectorAll("nav button")
-.forEach(b=>{
-
-b.onclick =
-()=>page(b.dataset.page);
-
-});
-
-
-
-/* =========================
-   LOGIN
-========================= */
-
-$("#loginForm").onsubmit =
-async e=>{
-
-e.preventDefault();
-
-
-const d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-
-const email =
-d.user.trim();
-
-
-const password =
-d.pass;
-
-
-const errorBox =
-$("#loginError");
-
-
-const button =
-$("#loginButton");
-
-
-errorBox.classList.add(
-"hidden"
-);
-
-
-button.disabled=true;
-
-button.textContent=
-"A entrar...";
-
-
-try{
-
-const c =
-await initSupabase();
-
-
-/*
- * AUTENTICAÇÃO
- */
-
-const {
-data,
-error
-} =
-await c.auth.signInWithPassword({
-
-email:email,
-
-password:password
-
-});
-
-
-if(error){
-
-throw error;
-
-}
-
-
-if(
-!data ||
-!data.session
-){
-
-throw new Error(
-"A autenticação não criou uma sessão."
-);
-
-}
-
-
-/*
- * LOGIN CONFIRMADO
- *
- * Mostra o sistema ANTES
- * de carregar as tabelas.
- */
-
-$("#login")
-.classList
-.add("hidden");
-
-
-$("#app")
-.classList
-.remove("hidden");
-
-
-if(d.remember){
-
-localStorage.setItem(
-"sgd_remember",
-"1"
-);
-
-}else{
-
-localStorage.removeItem(
-"sgd_remember"
-);
-
-}
-
-
-/*
- * Abrir dashboard.
- */
-
-content.innerHTML=`
-
-<div class="card">
-
-<h2>
-Bem-vindo ao SGD 👋
-</h2>
-
-<p>
-<b>
-Sessão iniciada com sucesso.
-</b>
-</p>
-
-<p class="muted">
-A carregar os dados do clube...
-</p>
-
-</div>
-
-`;
-
-
-try{
-
-await dashboard();
-
-}catch(dbError){
-
-console.error(
-"Erro ao carregar dashboard:",
-dbError
-);
-
-
-content.innerHTML=
-
-T(
-"SGD",
-"Sessão iniciada"
-)
-
-+
-
-`
-
-<div class="card">
-
-<div class="notice success">
-
-<b>
-Login realizado com sucesso.
-</b>
-
-</div>
-
-
-<div class="notice error">
-
-Ocorreu um erro ao carregar
-os dados do sistema.
-
-</div>
-
-
-<p>
-<b>
-Erro técnico:
-</b>
-</p>
-
-
-<pre
-style="
-white-space:pre-wrap;
-background:#f4f6f8;
-padding:12px;
-border-radius:8px;
-font-size:12px;
-"
->
-${esc(
-dbError.message ||
-dbError
-)}
-</pre>
-
-
-<div class="actions">
-
-${B(
-"👥 Membros",
-"light",
-"page('membros')"
-)}
-
-${B(
-"🏕️ Unidades",
-"light",
-"page('unidades')"
-)}
-
-${B(
-"🔄 Tentar novamente",
-"primary",
-"dashboard()"
-)}
-
-</div>
-
-</div>
-
-`;
-
-}
-
-
-}catch(err){
-
-console.error(
-"ERRO LOGIN:",
-err
-);
-
-
-errorBox.textContent =
-err.message ||
-"E-mail ou palavra-passe incorretos.";
-
-
-errorBox.classList.remove(
-"hidden"
-);
-
-
-}else{
-
-}
-
-
-}finally{
-
-button.disabled=false;
-
-button.textContent=
-"Entrar";
-
-}
-
-};
-
-
-
-/* =========================
-   SESSÃO AUTOMÁTICA
-========================= */
-
-(async()=>{
-
-try{
-
-const c =
-await initSupabase();
-
-
-const {
-data,
-error
-} =
-await c.auth.getSession();
-
-
-if(error){
-
-console.error(
-"Erro sessão:",
-error
-);
-
-return;
-
-}
-
-
-if(
-data &&
-data.session
-){
-
-$("#login")
-.classList
-.add("hidden");
-
-
-$("#app")
-.classList
-.remove("hidden");
-
-
-await dashboard();
-
-}
-
-}catch(e){
-
-console.error(
-"Erro inicial:",
-e
-);
-
-}
-
-})();
-
-
-</script>
-
-</body>
-  </html>
+            alert(
+                "Erro ao guardar
