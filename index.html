@@ -1,377 +1,5450 @@
 <!doctype html>
 <html lang="pt">
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1"
+>
+
 <title>SGD — Sistema de Gestão do Clube</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f4f7fb;color:#172033}
-button,input,select,textarea{font:inherit}.hidden{display:none!important}
-.btn{border:0;border-radius:9px;padding:10px 15px;font-weight:bold;cursor:pointer}
-.primary{background:#1769e0;color:white}.light{background:#eef4ff;color:#1769e0}
-.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#1769e0,#0d4da8)}
-.login-card{width:min(420px,100%);background:white;border-radius:20px;padding:30px;box-shadow:0 15px 40px #0003;text-align:center}
-.logo{width:85px;height:85px;background:#1769e0;color:white;border-radius:18px;display:grid;place-items:center;font-weight:900;font-size:25px;margin:auto auto 18px}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:13px;text-align:left}
-.field label{font-size:13px;font-weight:bold}.field input,.field select,.field textarea{padding:11px;border:1px solid #d5ddea;border-radius:9px}
-header{height:68px;background:white;border-bottom:1px solid #e4e9f1;display:flex;align-items:center;padding:0 20px;gap:12px}
-.mini{width:42px;height:42px;background:#1769e0;color:white;border-radius:10px;display:grid;place-items:center;font-weight:bold}
-.layout{display:flex;min-height:calc(100vh - 68px)}aside{width:230px;background:#1769e0;color:white;padding:18px 12px}
-nav button{width:100%;background:transparent;border:0;color:white;text-align:left;padding:11px;border-radius:8px;cursor:pointer}
-nav button:hover,nav button.active{background:#fff2}.section{font-size:11px;opacity:.7;margin:12px}
-main{flex:1;padding:25px;max-width:1450px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.top h1{margin:0}.muted{color:#6d788a}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.card{background:white;border:1px solid #e4e9f1;border-radius:14px;padding:18px;margin-bottom:15px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}
-.toolbar{display:flex;gap:10px;margin-bottom:14px}.toolbar input{padding:11px;border:1px solid #d5ddea;border-radius:9px;min-width:260px}
-table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px}
-th{color:#6d788a;font-size:12px}.badge{padding:5px 8px;border-radius:20px;background:#eaf8ef;color:#176b36;font-size:11px;font-weight:bold}
-.member-photo{width:48px;height:48px;border-radius:50%;object-fit:cover;background:#e8edf5}
-.profile-photo{width:130px;height:130px;border-radius:15px;object-fit:cover;background:#e8edf5}
-@media(max-width:850px){aside{width:65px}.section{display:none}nav button{font-size:0;text-align:center}
-nav button:first-letter{font-size:20px}.cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}main{padding:15px}.top{align-items:flex-start;gap:10px;flex-direction:column}}
-@media print{header,aside,.actions,.no-print{display:none!important}main{padding:0}}
+
+:root{
+--blue:#1769e0;
+--blue-dark:#0d4da8;
+--bg:#f4f7fb;
+--text:#172033;
+--muted:#6d788a;
+--line:#e4e9f1;
+--green:#16794a;
+--red:#b42318;
+--white:#fff;
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+button,
+input,
+select,
+textarea{
+font:inherit;
+}
+
+button{
+cursor:pointer;
+}
+
+.hidden{
+display:none!important;
+}
+
+.btn{
+border:0;
+border-radius:9px;
+padding:10px 15px;
+font-weight:700;
+cursor:pointer;
+}
+
+.primary{
+background:var(--blue);
+color:#fff;
+}
+
+.light{
+background:#eef4ff;
+color:var(--blue);
+}
+
+.danger{
+background:#fff0f0;
+color:var(--red);
+}
+
+.full{
+width:100%;
+}
+
+.login{
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:20px;
+background:
+linear-gradient(
+135deg,
+#1769e0,
+#0d4da8
+);
+}
+
+.login-card{
+width:min(430px,100%);
+background:#fff;
+border-radius:20px;
+padding:32px;
+box-shadow:0 18px 50px #001b4433;
+text-align:center;
+}
+
+.club-logo,
+.mini-logo{
+background:var(--blue);
+color:#fff;
+display:grid;
+place-items:center;
+font-weight:900;
+}
+
+.club-logo{
+width:92px;
+height:92px;
+border-radius:20px;
+margin:0 auto 18px;
+font-size:24px;
+}
+
+.mini-logo{
+width:42px;
+height:42px;
+border-radius:10px;
+font-size:11px;
+}
+
+.login-card h1{
+margin:0 0 5px;
+}
+
+.login-card p,
+.muted{
+color:var(--muted);
+}
+
+.field{
+display:flex;
+flex-direction:column;
+gap:7px;
+text-align:left;
+margin-bottom:14px;
+}
+
+.field label{
+font-size:13px;
+font-weight:700;
+}
+
+.field input,
+.field select,
+.field textarea{
+padding:11px;
+border:1px solid #d5ddea;
+border-radius:9px;
+background:#fff;
+width:100%;
+}
+
+.field textarea{
+min-height:90px;
+resize:vertical;
+}
+
+.notice{
+padding:11px;
+border-radius:9px;
+margin-bottom:14px;
+background:#eaf8ef;
+color:var(--green);
+}
+
+.error{
+background:#fff0f0;
+color:var(--red);
+}
+
+.success{
+background:#eaf8ef;
+color:var(--green);
+}
+
+header{
+height:68px;
+background:#fff;
+border-bottom:1px solid var(--line);
+display:flex;
+align-items:center;
+padding:0 22px;
+gap:12px;
+}
+
+.brand b{
+display:block;
+font-size:18px;
+}
+
+.brand small{
+color:var(--muted);
+}
+
+.layout{
+display:flex;
+min-height:calc(100vh - 68px);
+}
+
+aside{
+width:240px;
+background:var(--blue);
+color:#fff;
+padding:18px 12px;
+flex-shrink:0;
+}
+
+.section{
+font-size:11px;
+opacity:.7;
+margin:10px 12px 7px;
+font-weight:700;
+}
+
+nav button{
+width:100%;
+border:0;
+background:transparent;
+color:#fff;
+text-align:left;
+padding:11px 12px;
+border-radius:8px;
+margin:2px 0;
+cursor:pointer;
+}
+
+nav button:hover,
+nav button.active{
+background:#ffffff24;
+}
+
+main{
+flex:1;
+padding:28px;
+max-width:1450px;
+overflow:auto;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+margin-bottom:20px;
+}
+
+.top h1{
+margin:0;
+font-size:26px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:14px;
+}
+
+.card{
+background:#fff;
+border:1px solid var(--line);
+border-radius:14px;
+padding:19px;
+margin-bottom:16px;
+box-shadow:0 5px 18px #17203308;
+}
+
+.stat strong{
+display:block;
+font-size:27px;
+margin-top:8px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:
+repeat(2,minmax(0,1fr));
+gap:15px;
+}
+
+.actions{
+display:flex;
+gap:9px;
+justify-content:flex-end;
+flex-wrap:wrap;
+margin-top:14px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,
+td{
+padding:10px;
+border-bottom:1px solid #edf0f4;
+text-align:left;
+font-size:13px;
+vertical-align:middle;
+}
+
+th{
+font-size:12px;
+color:var(--muted);
+}
+
+.badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:99px;
+background:#eaf8ef;
+color:#176b36;
+font-size:11px;
+font-weight:700;
+}
+
+.toolbar{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-bottom:14px;
+}
+
+.toolbar input{
+padding:10px;
+border:1px solid #d5ddea;
+border-radius:9px;
+min-width:240px;
+}
+
+.member-photo{
+width:70px;
+height:70px;
+object-fit:cover;
+border-radius:12px;
+border:1px solid var(--line);
+}
+
+.profile-photo{
+width:140px;
+height:140px;
+object-fit:cover;
+border-radius:15px;
+border:1px solid var(--line);
+}
+
+.empty-photo{
+width:70px;
+height:70px;
+border-radius:12px;
+background:#eef2f7;
+display:grid;
+place-items:center;
+font-size:28px;
+}
+
+.profile-layout{
+display:grid;
+grid-template-columns:160px 1fr;
+gap:25px;
+align-items:start;
+}
+
+.info-grid{
+display:grid;
+grid-template-columns:
+repeat(2,minmax(0,1fr));
+gap:12px;
+}
+
+.info{
+background:#f8fafc;
+border-radius:9px;
+padding:12px;
+}
+
+.info small{
+display:block;
+color:var(--muted);
+font-size:11px;
+margin-bottom:5px;
+}
+
+.info b{
+font-size:14px;
+}
+
+.loading{
+text-align:center;
+padding:40px;
+color:var(--muted);
+}
+
+@media(max-width:850px){
+
+aside{
+width:72px;
+}
+
+.section{
+display:none;
+}
+
+nav button{
+font-size:0;
+text-align:center;
+}
+
+nav button::first-letter{
+font-size:20px;
+}
+
+.cards{
+grid-template-columns:1fr 1fr;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.info-grid{
+grid-template-columns:1fr;
+}
+
+.profile-layout{
+grid-template-columns:1fr;
+}
+
+main{
+padding:16px;
+}
+
+.top{
+align-items:flex-start;
+flex-direction:column;
+}
+
+}
+
+@media(max-width:500px){
+
+.cards{
+grid-template-columns:1fr;
+}
+
+header{
+padding:0 12px;
+}
+
+.brand small{
+display:none;
+}
+
+header .btn{
+padding:8px;
+font-size:12px;
+}
+
+}
+
+@media print{
+
+aside,
+header,
+.actions,
+.no-print{
+display:none!important;
+}
+
+main{
+padding:0;
+}
+
+.card{
+box-shadow:none;
+border:0;
+}
+
+}
+
 </style>
 
+
 <script>
-window.SGD_SUPABASE_URL="https://edttbjysaqdounpghsdn.supabase.co";
-window.SGD_SUPABASE_ANON_KEY="sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
+
+window.SGD_SUPABASE_URL =
+"https://edttbjysaqdounpghsdn.supabase.co";
+
+window.SGD_SUPABASE_ANON_KEY =
+"sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
+
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
 </head>
+
 
 <body>
 
+
+<!-- =========================
+     LOGIN
+========================= -->
+
 <div id="login" class="login">
+
 <div class="login-card">
-<div class="logo">SGD</div>
-<h1>SGD</h1>
-<p class="muted">Sistema de Gestão do Clube</p>
-<div id="loginError" class="hidden" style="color:#b42318;margin:10px"></div>
-<form id="loginForm">
-<div class="field"><label>E-mail</label><input name="email" type="email" required></div>
-<div class="field"><label>Palavra-passe</label><input name="password" type="password" required></div>
-<button class="btn primary" style="width:100%">Entrar</button>
-</form>
-</div>
+
+<div class="club-logo">
+SGD
 </div>
 
-<div id="app" class="hidden">
-<header>
-<div class="mini">SGD</div>
-<div><b>Sistema de Gestão do Clube</b><br><small class="muted">Secretaria / Direção</small></div>
-<div style="margin-left:auto;display:flex;gap:8px">
-<button class="btn light" onclick="page('conta')">👤 Conta</button>
-<button class="btn light" onclick="logout()">Sair</button>
+<h1>SGD</h1>
+
+<p>
+Sistema de Gestão do Clube
+</p>
+
+<div
+id="loginError"
+class="notice error hidden">
 </div>
+
+<form id="loginForm">
+
+<div class="field">
+
+<label>
+E-mail
+</label>
+
+<input
+name="user"
+type="email"
+autocomplete="email"
+required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Palavra-passe
+</label>
+
+<input
+name="pass"
+type="password"
+autocomplete="current-password"
+required
+>
+
+</div>
+
+
+<label
+style="
+display:flex;
+gap:8px;
+align-items:center;
+text-align:left;
+font-size:13px;
+margin-bottom:14px;
+">
+
+<input
+name="remember"
+type="checkbox"
+>
+
+Lembrar sessão
+
+</label>
+
+
+<button
+class="btn primary full"
+type="submit"
+id="loginButton"
+>
+
+Entrar
+
+</button>
+
+</form>
+
+
+<p
+style="font-size:12px"
+class="muted"
+>
+
+Use o e-mail e a palavra-passe
+da sua conta do SGD.
+
+</p>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================
+     APLICAÇÃO
+========================= -->
+
+<div
+id="app"
+class="hidden"
+>
+
+
+<header>
+
+<div class="mini-logo">
+SGD
+</div>
+
+<div class="brand">
+
+<b>
+Sistema de Gestão do Clube
+</b>
+
+<small>
+Secretaria / Direção
+</small>
+
+</div>
+
+
+<div
+style="
+margin-left:auto;
+display:flex;
+gap:8px;
+"
+>
+
+<button
+class="btn light"
+onclick="page('conta')"
+>
+👤 Minha conta
+</button>
+
+<button
+class="btn light"
+onclick="logout()"
+>
+Sair
+</button>
+
+</div>
+
 </header>
 
+
+
 <div class="layout">
+
+
 <aside>
-<div class="section">PRINCIPAL</div>
+
+<div class="section">
+PRINCIPAL
+</div>
+
 <nav>
-<button data-page="dashboard">🏠 Dashboard</button>
-<button data-page="membros">👥 Membros</button>
-<button data-page="unidades">🏕️ Unidades</button>
+
+<button data-page="dashboard">
+🏠 Dashboard
+</button>
+
+<button data-page="membros">
+👥 Membros
+</button>
+
+<button data-page="unidades">
+🏕️ Unidades
+</button>
+
 </nav>
-<div class="section">GESTÃO</div>
+
+
+<div class="section">
+GESTÃO
+</div>
+
 <nav>
-<button data-page="atividades">📅 Atividades</button>
-<button data-page="financas">💰 Finanças</button>
+
+<button data-page="atividades">
+📅 Atividades
+</button>
+
+<button data-page="financas">
+💰 Finanças
+</button>
+
 </nav>
-<div class="section">ADMINISTRAÇÃO</div>
+
+
+<div class="section">
+ADMINISTRAÇÃO
+</div>
+
 <nav>
-<button data-page="relatorios">📄 Relatórios</button>
-<button data-page="definicoes">⚙️ Definições</button>
+
+<button data-page="relatorios">
+📄 Relatórios
+</button>
+
+<button data-page="definicoes">
+⚙️ Definições
+</button>
+
 </nav>
+
 </aside>
-<main id="content"></main>
+
+
+<main id="content">
+
+<div class="loading">
+A carregar...
 </div>
+
+</main>
+
+
 </div>
+
+</div>
+
+
 
 <script>
-let client;
-let db={membros:[],unidades:[],atividades:[],financas:[],config:{}};
-const $=s=>document.querySelector(s);
 
-async function supa(){
-if(!client)client=supabase.createClient(window.SGD_SUPABASE_URL,window.SGD_SUPABASE_ANON_KEY);
+
+/* =========================
+   VARIÁVEIS
+========================= */
+
+let client = null;
+
+let db = {
+
+membros:[],
+unidades:[],
+atividades:[],
+financas:[],
+config:{}
+
+};
+
+const $ = s =>
+document.querySelector(s);
+
+const content =
+document.querySelector("#content");
+
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+async function initSupabase(){
+
+if(!window.supabase){
+
+throw new Error(
+"Supabase não carregou."
+);
+
+}
+
+if(!client){
+
+client =
+window.supabase.createClient(
+window.SGD_SUPABASE_URL,
+window.SGD_SUPABASE_ANON_KEY
+);
+
+}
+
 return client;
+
 }
 
-function esc(v){return String(v??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[x]))}
-function money(v){return Number(v||0).toLocaleString("pt-AO",{minimumFractionDigits:2})}
-function btn(t,c="primary",f=""){return `<button class="btn ${c}" onclick="${f}">${t}</button>`}
-function top(h,s,b=""){return `<div class="top"><div><h1>${h}</h1><p class="muted">${s}</p></div>${b}</div>`}
-function field(n,l,t="text",r=false){return `<div class="field"><label>${l}</label><input name="${n}" type="${t}" ${r?"required":""}></div>`}
-function select(n,l,a,r=false){return `<div class="field"><label>${l}</label><select name="${n}" ${r?"required":""}><option value="">Selecionar</option>${a.map(x=>`<option value="${esc(x.value??x)}">${esc(x.label??x)}</option>`).join("")}</select></div>`}
 
-async function load(){
-const c=await supa();
-const results=await Promise.all([
-c.from("membros").select("*").order("created_at",{ascending:true}),
-c.from("unidades").select("*").order("nome"),
-c.from("atividades").select("*").order("data",{ascending:false}),
-c.from("financas").select("*").order("data",{ascending:false})
-]);
-db.membros=results[0].error?[]:results[0].data||[];
-db.unidades=results[1].error?[]:results[1].data||[];
-db.atividades=results[2].error?[]:results[2].data||[];
-db.financas=results[3].error?[]:results[3].data||[];
+
+/* =========================
+   ESCAPE
+========================= */
+
+function esc(x){
+
+return String(x ?? "")
+.replace(/[&<>"']/g,m=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+
+}[m]));
+
+}
+
+
+
+/* =========================
+   DINHEIRO
+========================= */
+
+function money(v){
+
+return Number(v || 0)
+.toLocaleString(
+"pt-AO",
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
+
+}
+
+
+
+/* =========================
+   BOTÃO
+========================= */
+
+function B(t,c="primary",fn=""){
+
+return `
+<button
+class="btn ${c}"
+onclick="${fn}"
+>
+${t}
+</button>
+`;
+
+}
+
+
+
+/* =========================
+   TOPO
+========================= */
+
+function T(h,s,b=""){
+
+return `
+<div class="top">
+
+<div>
+
+<h1>
+${h}
+</h1>
+
+<p class="muted">
+${s}
+</p>
+
+</div>
+
+${b}
+
+</div>
+`;
+
+}
+
+
+
+/* =========================
+   FIELD
+========================= */
+
+function field(
+n,
+l,
+t="text",
+req=false
+){
+
+return `
+<div class="field">
+
+<label>
+${l}
+</label>
+
+<input
+name="${n}"
+type="${t}"
+${req ? "required" : ""}
+>
+
+</div>
+`;
+
+}
+
+
+
+/* =========================
+   SELECT
+========================= */
+
+function select(
+n,
+l,
+arr,
+req=false
+){
+
+return `
+<div class="field">
+
+<label>
+${l}
+</label>
+
+<select
+name="${n}"
+${req ? "required" : ""}
+>
+
+<option value="">
+Selecionar
+</option>
+
+${arr.map(x=>`
+
+<option value="${esc(x)}">
+${esc(x)}
+</option>
+
+`).join("")}
+
+</select>
+
+</div>
+`;
+
+}
+
+
+
+/* =========================
+   CARREGAR BANCO
+========================= */
+
+async function loadDB(){
+
+const c =
+await initSupabase();
+
+
+/*
+ * Cada consulta é independente.
+ * Assim, se uma tabela der erro,
+ * conseguimos saber exatamente qual.
+ */
+
+
+const membros =
+await c
+.from("membros")
+.select("*")
+.order(
+"created_at",
+{ascending:false}
+);
+
+
+if(membros.error){
+
+throw new Error(
+"Erro na tabela membros: "+
+membros.error.message
+);
+
+}
+
+
+const unidades =
+await c
+.from("unidades")
+.select("*")
+.order("nome");
+
+
+if(unidades.error){
+
+throw new Error(
+"Erro na tabela unidades: "+
+unidades.error.message
+);
+
+}
+
+
+let atividades =
+await c
+.from("atividades")
+.select("*")
+.order(
+"data",
+{ascending:false}
+);
+
+
+if(atividades.error){
+
+/*
+ * Atividades não impede o sistema
+ * de abrir.
+ */
+
+console.warn(
+"Atividades:",
+atividades.error.message
+);
+
+atividades.data=[];
+
+}
+
+
+let financas =
+await c
+.from("financas")
+.select("*")
+.order(
+"data",
+{ascending:false}
+);
+
+
+if(financas.error){
+
+console.warn(
+"Finanças:",
+financas.error.message
+);
+
+financas.data=[];
+
+}
+
+
+let configuracoes =
+await c
+.from("configuracoes")
+.select("*")
+.limit(1);
+
+
+if(configuracoes.error){
+
+console.warn(
+"Configurações:",
+configuracoes.error.message
+);
+
+configuracoes.data=[];
+
+}
+
+
+db.membros =
+membros.data || [];
+
+db.unidades =
+unidades.data || [];
+
+db.atividades =
+atividades.data || [];
+
+db.financas =
+financas.data || [];
+
+db.config =
+configuracoes.data?.[0] || {
+
+nome_clube:
+"Clube de Desbravadores",
+
+papel:"58 mm",
+
+ficha:"A4"
+
+};
+
+
 return db;
+
 }
+
+
+
+/* =========================
+   REFRESH
+========================= */
 
 async function refresh(){
-try{return await load()}catch(e){console.error(e);return db}
+
+try{
+
+await loadDB();
+
+return true;
+
+}catch(e){
+
+console.error(e);
+
+return false;
+
 }
+
+}
+
+
+
+/* =========================
+   NÚMERO AUTOMÁTICO
+========================= */
+
+function nextNumber(){
+
+let year =
+new Date()
+.getFullYear();
+
+let max=0;
+
+db.membros.forEach(m=>{
+
+let n =
+String(
+m.numero_membro || ""
+);
+
+let match =
+n.match(
+/DBV-\d{4}-(\d+)/
+);
+
+if(match){
+
+max =
+Math.max(
+max,
+Number(match[1])
+);
+
+}
+
+});
+
+return `
+DBV-${year}-${
+String(max+1).padStart(4,"0")
+}
+`;
+
+}
+
+
+
+/* =========================
+   UTILIZADOR AUTOMÁTICO
+========================= */
+
+function nextUsername(){
+
+let max=0;
+
+db.membros.forEach(m=>{
+
+let u =
+String(
+m.utilizador || ""
+);
+
+let match =
+u.match(/^m(\d+)$/i);
+
+if(match){
+
+max =
+Math.max(
+max,
+Number(match[1])
+);
+
+}
+
+});
+
+return `
+m${String(max+1).padStart(4,"0")}
+`;
+
+}
+
+
+
+/* =========================
+   PASSWORD AUTOMÁTICA
+========================= */
+
+function generatePassword(){
+
+const chars =
+"ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+let password="";
+
+for(
+let i=0;
+i<8;
+i++
+){
+
+password +=
+chars[
+Math.floor(
+Math.random()*chars.length
+)
+];
+
+}
+
+return password;
+
+}
+
+
+
+/* =========================
+   NAVEGAÇÃO
+========================= */
 
 function page(p){
-document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
-if(pages[p])pages[p]();
+
+document
+.querySelectorAll("nav button")
+.forEach(b=>{
+
+b.classList.toggle(
+"active",
+b.dataset.page===p
+);
+
+});
+
+
+if(pages[p]){
+
+pages[p]();
+
 }
+
+}
+
+
+
+/* =========================
+   DASHBOARD
+========================= */
 
 async function dashboard(){
-await refresh();
-let r=db.financas.filter(x=>x.tipo==="Receita").reduce((a,x)=>a+Number(x.valor||0),0);
-let d=db.financas.filter(x=>x.tipo==="Despesa").reduce((a,x)=>a+Number(x.valor||0),0);
-$("#content").innerHTML=top("Dashboard","Visão geral do clube",btn("+ Cadastrar membro","primary","page('membroForm')"))+
-`<div class="cards">
-<div class="card"><b>👥 Membros</b><h2>${db.membros.length}</h2></div>
-<div class="card"><b>🏕️ Unidades</b><h2>${db.unidades.length}</h2></div>
-<div class="card"><b>📅 Atividades</b><h2>${db.atividades.length}</h2></div>
-<div class="card"><b>💰 Saldo</b><h2>${money(r-d)} Kz</h2></div>
+
+content.innerHTML=`
+
+<div class="loading">
+A carregar o dashboard...
 </div>
-<div class="card"><h3>Acesso rápido</h3>${btn("Membros","light","page('membros')")} ${btn("Unidades","light","page('unidades')")} ${btn("Finanças","light","page('financas')")}</div>`;
+
+`;
+
+
+const ok =
+await refresh();
+
+
+if(!ok){
+
+content.innerHTML=`
+
+${T(
+"Dashboard",
+"Não foi possível carregar todos os dados."
+)}
+
+<div class="card">
+
+<div class="notice error">
+
+A sessão está ativa, mas ocorreu
+um problema ao consultar o banco de dados.
+
+</div>
+
+<p class="muted">
+Verifique o erro apresentado no console
+ou tente novamente.
+</p>
+
+${B(
+"🔄 Tentar novamente",
+"primary",
+"dashboard()"
+)}
+
+</div>
+
+`;
+
+return;
+
 }
+
+
+let rec =
+db.financas
+.filter(
+x=>x.tipo==="Receita"
+)
+.reduce(
+(a,x)=>
+a+Number(x.valor||0),
+0
+);
+
+
+let desp =
+db.financas
+.filter(
+x=>x.tipo==="Despesa"
+)
+.reduce(
+(a,x)=>
+a+Number(x.valor||0),
+0
+);
+
+
+content.innerHTML=
+
+T(
+"Dashboard",
+"Visão geral do clube",
+B(
+"+ Cadastrar membro",
+"primary",
+"page('membroForm')"
+)
+)
+
++
+
+`
+
+<div class="cards">
+
+
+<div class="card stat">
+
+👥 Membros
+
+<strong>
+${db.membros.length}
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+🏕️ Unidades
+
+<strong>
+${
+db.unidades.filter(
+x=>x.estado==="Ativa"
+).length
+}
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+📅 Atividades
+
+<strong>
+${db.atividades.length}
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+💰 Saldo
+
+<strong>
+${money(rec-desp)} Kz
+</strong>
+
+</div>
+
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Acesso rápido
+</h3>
+
+<div
+class="actions"
+style="justify-content:flex-start"
+>
+
+${B(
+"Lista geral",
+"light",
+"page('membros')"
+)}
+
+${B(
+"Unidades",
+"light",
+"page('unidades')"
+)}
+
+${B(
+"Atividades",
+"light",
+"page('atividades')"
+)}
+
+${B(
+"Finanças",
+"light",
+"page('financas')"
+)}
+
+${B(
+"Relatórios",
+"light",
+"page('relatorios')"
+)}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+
+/* =========================
+   MEMBROS
+========================= */
 
 async function membros(){
-await refresh();
-$("#content").innerHTML=top("Membros","Pesquisa e cadastro dos desbravadores",btn("+ Cadastrar membro","primary","page('membroForm')"))+
-`<div class="card"><div class="toolbar"><input id="search" placeholder="Pesquisar nome ou Nº..." oninput="renderMembers()"></div>
-<div style="overflow:auto"><table><thead><tr><th>Foto</th><th>Nº</th><th>Nome</th><th>Unidade</th><th>Função</th><th>Classe</th><th>Estado</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></div>`;
-renderMembers();
+
+content.innerHTML=`
+
+<div class="loading">
+A carregar membros...
+</div>
+
+`;
+
+
+if(
+!await refresh()
+){
+
+content.innerHTML=`
+
+${T(
+"Membros",
+"Erro ao carregar membros"
+)}
+
+<div class="card">
+
+<div class="notice error">
+
+Não foi possível carregar a tabela
+membros.
+
+</div>
+
+${B(
+"Tentar novamente",
+"primary",
+"membros()"
+)}
+
+</div>
+
+`;
+
+return;
+
 }
 
-function renderMembers(){
-let q=($("#search")?.value||"").toLowerCase();
-let arr=db.membros.filter(m=>`${m.nome||""} ${m.numero_membro||""}`.toLowerCase().includes(q));
-$("#rows").innerHTML=arr.map(m=>{
-let u=db.unidades.find(x=>x.id===m.unidade_id);
-return `<tr>
-<td>${m.foto_url?`<img class="member-photo" src="${esc(m.foto_url)}">`:`<div class="member-photo"></div>`}</td>
-<td><b>${esc(m.numero_membro)}</b></td>
-<td>${esc(m.nome)}</td>
-<td>${esc(u?.nome||"—")}</td>
-<td>${esc(m.funcao||"—")}</td>
-<td>${esc(m.classe||"—")}</td>
-<td><span class="badge">${esc(m.estado||"Ativo")}</span></td>
-<td>${btn("Ver","light",`profile('${m.id}')`)}</td>
-</tr>`}).join("")||`<tr><td colspan="8">Nenhum membro encontrado.</td></tr>`;
+
+content.innerHTML=
+
+T(
+"Lista geral dos membros",
+"Todos os membros e os seus dados",
+B(
+"+ Cadastrar membro",
+"primary",
+"page('membroForm')"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<div class="toolbar">
+
+<input
+id="search"
+placeholder="Pesquisar por nome, número ou utilizador..."
+oninput="renderMemberTable()"
+>
+
+</div>
+
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Foto</th>
+<th>Nº</th>
+<th>Nome completo</th>
+<th>Unidade</th>
+<th>Função</th>
+<th>Classe</th>
+<th>Telefone</th>
+<th>Estado</th>
+<th>Ação</th>
+
+</tr>
+
+</thead>
+
+
+<tbody
+id="memberRows">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+renderMemberTable();
+
 }
 
-function gerarNumero(){
-let ano=new Date().getFullYear(),maior=0;
-db.membros.forEach(m=>{let x=String(m.numero_membro||"").match(/(\d+)$/);if(x)maior=Math.max(maior,Number(x[1]))});
-return `DBV-${ano}-${String(maior+1).padStart(4,"0")}`;
+
+
+/* =========================
+   TABELA MEMBROS
+========================= */
+
+function renderMemberTable(){
+
+let q =
+(
+$("#search")?.value || ""
+)
+.toLowerCase();
+
+
+let arr =
+db.membros.filter(m=>{
+
+let text = `
+
+${m.nome||""}
+${m.numero_membro||""}
+${m.utilizador||""}
+${m.telefone||""}
+
+`.toLowerCase();
+
+return text.includes(q);
+
+});
+
+
+const rows =
+$("#memberRows");
+
+
+if(!rows){
+
+return;
+
 }
-function gerarUtilizador(){return "m"+Date.now().toString().slice(-6)}
-function gerarSenha(){return Math.random().toString(36).slice(-8).toUpperCase()}
+
+
+rows.innerHTML =
+
+arr.map(m=>{
+
+let unidade =
+db.unidades.find(
+u=>u.id===m.unidade_id
+);
+
+
+let photo =
+m.foto_url
+?
+
+`
+<img
+src="${esc(m.foto_url)}"
+class="member-photo"
+alt="Foto"
+>
+`
+
+:
+
+`
+
+<div class="empty-photo">
+👤
+</div>
+
+`;
+
+
+return `
+
+<tr>
+
+<td>
+${photo}
+</td>
+
+<td>
+
+<b>
+${esc(m.numero_membro)}
+</b>
+
+</td>
+
+<td>
+
+<b>
+${esc(m.nome)}
+</b>
+
+<br>
+
+<small class="muted">
+${esc(m.utilizador||"")}
+</small>
+
+</td>
+
+<td>
+${esc(unidade?.nome||"—")}
+</td>
+
+<td>
+${esc(m.funcao||"—")}
+</td>
+
+<td>
+${esc(m.classe||"—")}
+</td>
+
+<td>
+${esc(m.telefone||"—")}
+</td>
+
+<td>
+
+<span class="badge">
+${esc(m.estado||"Ativo")}
+</span>
+
+</td>
+
+<td>
+
+${B(
+"Abrir",
+"light",
+`profile('${m.id}')`
+)}
+
+</td>
+
+</tr>
+
+`;
+
+}).join("")
+
+||
+
+`
+
+<tr>
+
+<td
+colspan="9"
+class="muted"
+>
+
+Nenhum membro encontrado.
+
+</td>
+
+</tr>
+
+`;
+
+}
+
+
+
+/* =========================
+   FORM MEMBRO
+========================= */
 
 async function membroForm(){
-await refresh();
-let unidades=db.unidades.filter(u=>u.estado!=="Inativa");
-$("#content").innerHTML=top("Cadastrar membro","Novo desbravador",btn("← Voltar","light","page('membros')"))+
-`<form id="mf">
-<div class="card"><h3>Dados pessoais</h3><div class="grid">
-${field("nome","Nome completo *","text",true)}
-${field("nascimento","Data de nascimento","date")}
-${select("sexo","Sexo",["Masculino","Feminino","Outro"])}
-${field("documento","Nº do documento")}
-${field("telefone","Telefone")}
-${field("endereco","Endereço")}
-${field("data_cadastro","Data de cadastro","date",true)}
-</div></div>
-<div class="card"><h3>Dados do clube</h3><div class="grid">
-${select("unidade_id","Unidade",unidades.map(u=>({value:u.id,label:u.nome})))}
-${select("funcao","Função",["Desbravador","Conselheiro","Vice-conselheiro","Diretor","Secretário","Tesoureiro","Capelão"])}
-${select("classe","Classe",["Amigo","Companheiro","Pesquisador","Pioneiro","Excursionista","Guia"])}
-${select("estado","Estado",["Ativo","Inativo","Suspenso"])}
-</div></div>
-<div class="card"><h3>Família e escola</h3><div class="grid">
-${field("pai","Nome do pai")}${field("mae","Nome da mãe")}
-${field("encarregado","Nome do encarregado")}${field("contacto_encarregado","Contacto do encarregado")}
-${field("escola","Escola")}${field("classe_escolar","Classe escolar")}
-</div></div>
-<div class="card"><h3>Fotografia</h3><div class="field"><label>Foto do membro</label><input name="foto" type="file" accept="image/*"></div></div>
-<div class="actions"><button class="btn primary">Cadastrar membro</button></div>
-</form>`;
-$('[name=data_cadastro]').value=new Date().toISOString().slice(0,10);
 
-$("#mf").onsubmit=async e=>{
-e.preventDefault();
-let d=Object.fromEntries(new FormData(e.target)),foto=e.target.foto.files[0];
-delete d.foto;
-d.numero_membro=gerarNumero();
-d.utilizador=gerarUtilizador();
-try{
-const c=await supa();
-if(foto){
-let ext=foto.name.split(".").pop().toLowerCase();
-let path=`${d.numero_membro}-${Date.now()}.${ext}`;
-let up=await c.storage.from("fotos_membros").upload(path,foto,{upsert:true,contentType:foto.type});
-if(up.error)throw up.error;
-let pub=c.storage.from("fotos_membros").getPublicUrl(path);
-d.foto_url=pub.data.publicUrl;
-}
-let res=await c.from("membros").insert([d]).select().single();
-if(res.error)throw res.error;
-alert(`Membro cadastrado!\nNº: ${d.numero_membro}\nUtilizador: ${d.utilizador}`);
-await profile(res.data.id,true);
-}catch(err){console.error(err);alert("Erro ao cadastrar membro: "+err.message)}
-};
-}
-
-async function profile(id,created=false){
 await refresh();
-let m=db.membros.find(x=>x.id===id);if(!m)return alert("Membro não encontrado.");
-let u=db.unidades.find(x=>x.id===m.unidade_id);
-$("#content").innerHTML=top("Perfil do membro",created?"Cadastro realizado com sucesso.":"Ficha individual",btn("← Lista","light","page('membros')"))+
-`<div class="card">
-<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
-${m.foto_url?`<img class="profile-photo" src="${esc(m.foto_url)}">`:`<div class="profile-photo"></div>`}
-<div><h2>${esc(m.nome)}</h2><p><b>Nº:</b> ${esc(m.numero_membro)}</p><p><b>Utilizador:</b> ${esc(m.utilizador||"—")}</p></div>
-</div><hr>
+
+
+content.innerHTML=
+
+T(
+"Cadastrar membro",
+"Preencha os dados do membro",
+B(
+"← Lista geral",
+"light",
+"page('membros')"
+)
+)
+
++
+
+`
+
+<form id="mf">
+
+
+<div class="card">
+
+<h3>
+Dados pessoais
+</h3>
+
 <div class="grid">
-<p><b>Unidade:</b> ${esc(u?.nome||"—")}</p><p><b>Função:</b> ${esc(m.funcao||"—")}</p>
-<p><b>Classe:</b> ${esc(m.classe||"—")}</p><p><b>Estado:</b> ${esc(m.estado||"—")}</p>
-<p><b>Nascimento:</b> ${esc(m.nascimento||"—")}</p><p><b>Sexo:</b> ${esc(m.sexo||"—")}</p>
-<p><b>Telefone:</b> ${esc(m.telefone||"—")}</p><p><b>Documento:</b> ${esc(m.documento||"—")}</p>
-<p><b>Endereço:</b> ${esc(m.endereco||"—")}</p><p><b>Escola:</b> ${esc(m.escola||"—")}</p>
-<p><b>Classe escolar:</b> ${esc(m.classe_escolar||"—")}</p><p><b>Encarregado:</b> ${esc(m.encarregado||"—")}</p>
-<p><b>Contacto:</b> ${esc(m.contacto_encarregado||"—")}</p><p><b>Pai:</b> ${esc(m.pai||"—")}</p>
-<p><b>Mãe:</b> ${esc(m.mae||"—")}</p>
-</div></div>
-<div class="actions">${btn("✏️ Editar","light",`editMember('${m.id}')`)}${btn("📄 Imprimir A4","light",`printA4('${m.id}')`)}${btn("🖨️ Térmica","light",`printThermal('${m.id}')`)}</div>`;
+
+${field(
+"nome",
+"Nome completo *",
+"text",
+true
+)}
+
+${field(
+"nascimento",
+"Data de nascimento",
+"date"
+)}
+
+${select(
+"sexo",
+"Sexo",
+[
+"Masculino",
+"Feminino",
+"Outro"
+]
+)}
+
+${field(
+"documento",
+"Nº do documento"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${field(
+"endereco",
+"Endereço"
+)}
+
+${field(
+"data_cadastro",
+"Data de cadastro",
+"date",
+true
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Dados do clube
+</h3>
+
+<div class="grid">
+
+<div class="field">
+
+<label>
+Unidade
+</label>
+
+<select
+name="unidade_id"
+>
+
+<option value="">
+Selecionar
+</option>
+
+${db.unidades
+.filter(
+u=>u.estado==="Ativa"
+)
+.map(u=>`
+
+<option
+value="${esc(u.id)}"
+>
+
+${esc(u.nome)}
+
+</option>
+
+`).join("")}
+
+</select>
+
+</div>
+
+
+${select(
+"funcao",
+"Função/Cargo",
+[
+"Desbravador",
+"Conselheiro",
+"Vice-conselheiro",
+"Diretor",
+"Secretário",
+"Tesoureiro",
+"Capelão"
+]
+)}
+
+
+${select(
+"classe",
+"Classe",
+[
+"Amigo",
+"Companheiro",
+"Pesquisador",
+"Pioneiro",
+"Excursionista",
+"Guia"
+]
+)}
+
+
+${select(
+"estado",
+"Estado",
+[
+"Ativo",
+"Inativo",
+"Suspenso"
+]
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Família e escola
+</h3>
+
+<div class="grid">
+
+${field(
+"encarregado",
+"Nome do encarregado"
+)}
+
+${field(
+"contacto_encarregado",
+"Contacto do encarregado"
+)}
+
+${field(
+"pai",
+"Nome do pai"
+)}
+
+${field(
+"mae",
+"Nome da mãe"
+)}
+
+${field(
+"escola",
+"Escola"
+)}
+
+${field(
+"classe_escolar",
+"Classe escolar"
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Fotografia
+</h3>
+
+<div class="field">
+
+<label>
+Foto do membro
+</label>
+
+<input
+name="foto"
+type="file"
+accept="image/*"
+>
+
+<small class="muted">
+
+A fotografia será guardada
+no bucket fotos_membros.
+
+</small>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Credenciais do membro
+</h3>
+
+<p class="muted">
+
+O sistema irá gerar automaticamente
+o número de membro e o utilizador.
+
+A palavra-passe também será gerada
+automaticamente.
+
+</p>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Cadastrar membro
+
+</button>
+
+</div>
+
+
+</form>
+
+`;
+
+
+$('[name=data_cadastro]')
+.value =
+new Date()
+.toISOString()
+.slice(0,10);
+
+
+$('[name=estado]')
+.value="Ativo";
+
+
+$("#mf").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+
+const button =
+e.target.querySelector(
+'button[type="submit"]'
+);
+
+button.disabled=true;
+
+button.textContent=
+"Cadastrando...";
+
+
+try{
+
+let form =
+new FormData(e.target);
+
+
+let d =
+Object.fromEntries(form);
+
+
+/*
+ * Foto
+ */
+
+let file =
+e.target.querySelector(
+'[name="foto"]'
+).files[0];
+
+
+delete d.foto;
+
+
+/*
+ * GERAR CREDENCIAIS
+ */
+
+d.numero_membro =
+nextNumber();
+
+d.utilizador =
+nextUsername();
+
+
+let senha =
+generatePassword();
+
+
+/*
+ * Se a coluna senha existir,
+ * guarda a senha.
+ */
+
+d.palavra_passe =
+senha;
+
+
+/*
+ * FOTO
+ */
+
+if(file){
+
+const c =
+await initSupabase();
+
+
+let ext =
+file.name
+.split(".")
+.pop()
+.toLowerCase();
+
+
+let path =
+`${d.numero_membro}-${Date.now()}.${ext}`;
+
+
+const upload =
+await c.storage
+.from("fotos_membros")
+.upload(
+path,
+file,
+{
+upsert:false
 }
+);
+
+
+if(upload.error){
+
+throw new Error(
+"Erro ao enviar fotografia: "+
+upload.error.message
+);
+
+}
+
+
+const publicUrl =
+c.storage
+.from("fotos_membros")
+.getPublicUrl(path);
+
+
+d.foto_url =
+publicUrl.data.publicUrl;
+
+}
+
+
+const c =
+await initSupabase();
+
+
+/*
+ * IMPORTANTE:
+ * unidade_id é UUID.
+ * Não enviamos unidade como texto.
+ */
+
+const insert =
+await c
+.from("membros")
+.insert([d])
+.select()
+.single();
+
+
+if(insert.error){
+
+throw insert.error;
+
+}
+
+
+db.membros.push(
+insert.data
+);
+
+
+alert(
+
+"Membro cadastrado com sucesso!\n\n"+
+"Nº: "+d.numero_membro+
+"\nUtilizador: "+d.utilizador+
+"\nPalavra-passe: "+senha
+
+);
+
+
+profile(
+insert.data.id,
+true,
+d.utilizador,
+senha
+);
+
+
+}catch(err){
+
+console.error(err);
+
+alert(
+"Erro ao cadastrar membro:\n\n"+
+err.message
+);
+
+}finally{
+
+button.disabled=false;
+
+button.textContent=
+"Cadastrar membro";
+
+}
+
+};
+
+}
+
+
+
+/* =========================
+   PERFIL
+========================= */
+
+async function profile(
+id,
+created=false,
+generatedUser="",
+generatedPassword=""
+){
+
+await refresh();
+
+
+let m =
+db.membros.find(
+x=>x.id===id
+);
+
+
+if(!m){
+
+alert(
+"Membro não encontrado."
+);
+
+return;
+
+}
+
+
+let unidade =
+db.unidades.find(
+u=>u.id===m.unidade_id
+);
+
+
+let photo =
+m.foto_url
+?
+
+`
+<img
+src="${esc(m.foto_url)}"
+class="profile-photo"
+alt="Foto do membro"
+>
+`
+
+:
+
+`
+
+<div class="empty-photo"
+style="
+width:140px;
+height:140px;
+font-size:50px;
+">
+
+👤
+
+</div>
+
+`;
+
+
+content.innerHTML=
+
+T(
+"Perfil do membro",
+created
+?
+"Membro cadastrado com sucesso."
+:
+"Ficha individual",
+B(
+"← Lista geral",
+"light",
+"page('membros')"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<div class="profile-layout">
+
+<div>
+
+${photo}
+
+</div>
+
+
+<div>
+
+<h2>
+${esc(m.nome)}
+</h2>
+
+
+<div class="info-grid">
+
+
+<div class="info">
+
+<small>
+Nº de membro
+</small>
+
+<b>
+${esc(m.numero_membro||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Utilizador
+</small>
+
+<b>
+${esc(m.utilizador||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Unidade
+</small>
+
+<b>
+${esc(unidade?.nome||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Função
+</small>
+
+<b>
+${esc(m.funcao||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Classe
+</small>
+
+<b>
+${esc(m.classe||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Estado
+</small>
+
+<b>
+${esc(m.estado||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Nascimento
+</small>
+
+<b>
+${esc(m.nascimento||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Sexo
+</small>
+
+<b>
+${esc(m.sexo||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Documento
+</small>
+
+<b>
+${esc(m.documento||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Telefone
+</small>
+
+<b>
+${esc(m.telefone||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Endereço
+</small>
+
+<b>
+${esc(m.endereco||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Data de cadastro
+</small>
+
+<b>
+${esc(m.data_cadastro||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Encarregado
+</small>
+
+<b>
+${esc(m.encarregado||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Contacto encarregado
+</small>
+
+<b>
+${esc(m.contacto_encarregado||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Pai
+</small>
+
+<b>
+${esc(m.pai||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Mãe
+</small>
+
+<b>
+${esc(m.mae||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Escola
+</small>
+
+<b>
+${esc(m.escola||"—")}
+</b>
+
+</div>
+
+
+<div class="info">
+
+<small>
+Classe escolar
+</small>
+
+<b>
+${esc(m.classe_escolar||"—")}
+</b>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+${
+created
+?
+
+`
+<div class="card">
+
+<h3>
+🔐 Credenciais geradas
+</h3>
+
+<div class="notice success">
+
+<b>
+Utilizador:
+</b>
+
+${esc(
+generatedUser ||
+m.utilizador ||
+""
+)}
+
+<br><br>
+
+<b>
+Palavra-passe:
+</b>
+
+${esc(
+generatedPassword ||
+"Foi exibida no cadastro."
+)}
+
+<br><br>
+
+<b>
+Nº de membro:
+</b>
+
+${esc(
+m.numero_membro
+)}
+
+</div>
+
+<p class="muted">
+
+Guarde estas credenciais
+para entregar ao membro.
+
+</p>
+
+</div>
+`
+
+:
+""
+
+}
+
+
+<div class="actions">
+
+${B(
+"✏️ Editar",
+"light",
+`editMember('${m.id}')`
+)}
+
+${B(
+"📄 Ficha A4",
+"light",
+`printA4('${m.id}')`
+)}
+
+${B(
+"🖨️ Cartão térmico",
+"light",
+`printThermal('${m.id}')`
+)}
+
+</div>
+
+`;
+
+}
+
+
+
+/* =========================
+   EDITAR MEMBRO
+========================= */
 
 async function editMember(id){
-await refresh();let m=db.membros.find(x=>x.id===id);
-$("#content").innerHTML=top("Editar membro","Alterar cadastro",btn("← Voltar","light",`profile('${id}')`))+
-`<form id="ef"><div class="card"><div class="grid">
-${field("numero_membro","Nº do membro", "text",true)}
-${field("nome","Nome completo","text",true)}
-${field("nascimento","Nascimento","date")}${field("telefone","Telefone")}
-${select("unidade_id","Unidade",db.unidades.map(u=>({value:u.id,label:u.nome})))}
-${select("funcao","Função",["Desbravador","Conselheiro","Vice-conselheiro","Diretor","Secretário","Tesoureiro","Capelão"])}
-${select("classe","Classe",["Amigo","Companheiro","Pesquisador","Pioneiro","Excursionista","Guia"])}
-${select("estado","Estado",["Ativo","Inativo","Suspenso"])}
-</div></div><div class="actions"><button class="btn primary">Guardar</button></div></form>`;
-["numero_membro","nome","nascimento","telefone","unidade_id","funcao","classe","estado"].forEach(k=>{$(`[name=${k}]`).value=m[k]||""});
-$("#ef").onsubmit=async e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));try{let c=await supa(),r=await c.from("membros").update(d).eq("id",id);if(r.error)throw r.error;await profile(id)}catch(x){alert("Erro ao guardar: "+x.message)}};
-}
 
-async function unidades(){
 await refresh();
-$("#content").innerHTML=top("Unidades","Gestão das unidades",btn("+ Nova unidade","primary","unitForm()"))+
-`<div class="card"><table><thead><tr><th>Unidade</th><th>Responsável</th><th>Membros</th><th>Estado</th><th></th></tr></thead><tbody>
-${db.unidades.map(u=>`<tr><td>${esc(u.nome)}</td><td>${esc(u.responsavel||"—")}</td><td>${db.membros.filter(m=>m.unidade_id===u.id).length}</td><td>${esc(u.estado||"")}</td><td>${btn("Editar","light",`unitForm('${u.id}')`)}</td></tr>`).join("")}</tbody></table></div>`;
+
+
+let m =
+db.membros.find(
+x=>x.id===id
+);
+
+
+if(!m){
+
+alert(
+"Membro não encontrado."
+);
+
+return;
+
 }
 
-async function unitForm(id=null){
-await refresh();let u=id?db.unidades.find(x=>x.id===id):{};
-$("#content").innerHTML=top(id?"Editar unidade":"Nova unidade","Dados da unidade",btn("← Voltar","light","page('unidades')"))+
-`<form id="uf"><div class="card"><div class="grid">${field("nome","Nome *","text",true)}${field("responsavel","Responsável")}${select("estado","Estado",["Ativa","Inativa"])}</div></div><div class="actions"><button class="btn primary">Guardar</button></div></form>`;
-["nome","responsavel","estado"].forEach(k=>{$(`[name=${k}]`).value=u[k]||""});
-$("#uf").onsubmit=async e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));try{let c=await supa(),r=id?await c.from("unidades").update(d).eq("id",id):await c.from("unidades").insert([d]);if(r.error)throw r.error;page("unidades")}catch(x){alert("Erro: "+x.message)}};
+
+content.innerHTML=
+
+T(
+"Editar membro",
+"Alterar os dados do cadastro",
+B(
+"← Voltar",
+"light",
+`profile('${id}')`
+)
+)
+
++
+
+`
+
+<form id="ef">
+
+
+<div class="card">
+
+<div class="grid">
+
+${field(
+"numero_membro",
+"Nº de membro",
+"text",
+true
+)}
+
+${field(
+"nome",
+"Nome completo",
+"text",
+true
+)}
+
+${field(
+"nascimento",
+"Nascimento",
+"date"
+)}
+
+${select(
+"sexo",
+"Sexo",
+[
+"Masculino",
+"Feminino",
+"Outro"
+]
+)}
+
+${field(
+"documento",
+"Documento"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${field(
+"endereco",
+"Endereço"
+)}
+
+
+<div class="field">
+
+<label>
+Unidade
+</label>
+
+<select name="unidade_id">
+
+<option value="">
+Selecionar
+</option>
+
+${db.unidades.map(u=>`
+
+<option value="${esc(u.id)}">
+${esc(u.nome)}
+</option>
+
+`).join("")}
+
+</select>
+
+</div>
+
+
+${select(
+"funcao",
+"Função",
+[
+"Desbravador",
+"Conselheiro",
+"Vice-conselheiro",
+"Diretor",
+"Secretário",
+"Tesoureiro",
+"Capelão"
+]
+)}
+
+
+${select(
+"classe",
+"Classe",
+[
+"Amigo",
+"Companheiro",
+"Pesquisador",
+"Pioneiro",
+"Excursionista",
+"Guia"
+]
+)}
+
+
+${select(
+"estado",
+"Estado",
+[
+"Ativo",
+"Inativo",
+"Suspenso"
+]
+)}
+
+
+${field(
+"pai",
+"Nome do pai"
+)}
+
+${field(
+"mae",
+"Nome da mãe"
+)}
+
+${field(
+"encarregado",
+"Encarregado"
+)}
+
+${field(
+"contacto_encarregado",
+"Contacto do encarregado"
+)}
+
+${field(
+"escola",
+"Escola"
+)}
+
+${field(
+"classe_escolar",
+"Classe escolar"
+)}
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar alterações
+
+</button>
+
+</div>
+
+
+</form>
+
+`;
+
+
+[
+"numero_membro",
+"nome",
+"nascimento",
+"sexo",
+"documento",
+"telefone",
+"endereco",
+"unidade_id",
+"funcao",
+"classe",
+"estado",
+"pai",
+"mae",
+"encarregado",
+"contacto_encarregado",
+"escola",
+"classe_escolar"
+]
+.forEach(k=>{
+
+let el =
+$(`[name="${k}"]`);
+
+if(el){
+
+el.value =
+m[k] || "";
+
 }
 
-async function atividades(){
-await refresh();
-$("#content").innerHTML=top("Atividades","Gestão de atividades",btn("+ Nova atividade","primary","activityForm()"))+
-`<div class="card"><table><thead><tr><th>Nome</th><th>Data</th><th>Hora</th><th>Local</th><th>Responsável</th><th>Custo</th></tr></thead><tbody>
-${db.atividades.map(a=>`<tr><td>${esc(a.nome)}</td><td>${esc(a.data)}</td><td>${esc(a.hora||"")}</td><td>${esc(a.local||"")}</td><td>${esc(a.responsavel||"")}</td><td>${money(a.custo)} Kz</td></tr>`).join("")||"<tr><td colspan=6>Nenhuma atividade.</td></tr>"}</tbody></table></div>`;
-}
+});
 
-async function activityForm(){
-$("#content").innerHTML=top("Nova atividade","Registar atividade",btn("← Voltar","light","page('atividades')"))+
-`<form id="af"><div class="card"><div class="grid">${field("nome","Nome *","text",true)}${field("data","Data *","date",true)}${field("hora","Hora","time")}${field("local","Local")}${field("responsavel","Responsável")}${field("custo","Custo","number")}</div>${field("descricao","Descrição")}</div><div class="actions"><button class="btn primary">Guardar</button></div></form>`;
-$('[name=data]').value=new Date().toISOString().slice(0,10);
-$("#af").onsubmit=async e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));try{let r=await (await supa()).from("atividades").insert([d]);if(r.error)throw r.error;page("atividades")}catch(x){alert("Erro: "+x.message)}};
-}
 
-async function financas(){
-await refresh();let r=db.financas.filter(x=>x.tipo==="Receita").reduce((a,x)=>a+Number(x.valor||0),0),d=db.financas.filter(x=>x.tipo==="Despesa").reduce((a,x)=>a+Number(x.valor||0),0);
-$("#content").innerHTML=top("Finanças","Receitas e despesas",btn("+ Movimento","primary","financeForm()"))+
-`<div class="cards"><div class="card">Receitas<h2>${money(r)} Kz</h2></div><div class="card">Despesas<h2>${money(d)} Kz</h2></div><div class="card">Saldo<h2>${money(r-d)} Kz</h2></div></div>
-<div class="card"><table><thead><tr><th>Data</th><th>Tipo</th><th>Membro</th><th>Categoria</th><th>Valor</th></tr></thead><tbody>
-${db.financas.map(x=>`<tr><td>${esc(x.data)}</td><td>${esc(x.tipo)}</td><td>${esc(x.membro_nome||"—")}</td><td>${esc(x.categoria||"")}</td><td>${money(x.valor)} Kz</td></tr>`).join("")||"<tr><td colspan=5>Nenhum movimento.</td></tr>"}</tbody></table></div>`;
-}
+$("#ef").onsubmit =
+async e=>{
 
-async function financeForm(){
-await refresh();
-$("#content").innerHTML=top("Novo movimento","Registo financeiro",btn("← Voltar","light","page('financas')"))+
-`<form id="ff"><div class="card"><div class="grid">${select("tipo","Tipo",["Receita","Despesa"],true)}
-<div class="field"><label>Membro</label><select name="membro_id"><option value="">Nenhum</option>${db.membros.map(m=>`<option value="${m.id}">${esc(m.nome)} — ${esc(m.numero_membro)}</option>`).join("")}</select></div>
-${field("categoria","Categoria","text",true)}${field("valor","Valor Kz","number",true)}${field("data","Data","date",true)}${field("descricao","Descrição")}${select("forma","Forma",["Dinheiro","Transferência","Depósito","Multicaixa Express","Outro"])}</div></div><div class="actions"><button class="btn primary">Guardar</button></div></form>`;
-$('[name=data]').value=new Date().toISOString().slice(0,10);
-$("#ff").onsubmit=async e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target)),m=db.membros.find(x=>x.id===d.membro_id);d.membro_nome=m?.nome||"";d.membro_numero=m?.numero_membro||"";try{let r=await (await supa()).from("financas").insert([d]);if(r.error)throw r.error;page("financas")}catch(x){alert("Erro: "+x.message)}};
-}
-
-async function relatorios(){
-await refresh();
-$("#content").innerHTML=top("Relatórios","Relatórios do clube")+`<div class="cards">
-<div class="card"><h3>Membros</h3><p>${db.membros.length} membros</p>${btn("Abrir","light","page('membros')")}</div>
-<div class="card"><h3>Unidades</h3><p>${db.unidades.length} unidades</p>${btn("Abrir","light","page('unidades')")}</div>
-<div class="card"><h3>Atividades</h3><p>${db.atividades.length} atividades</p>${btn("Abrir","light","page('atividades')")}</div>
-<div class="card"><h3>Finanças</h3><p>${db.financas.length} movimentos</p>${btn("Abrir","light","page('financas')")}</div>
-</div>`;
-}
-
-async function definicoes(){
-$("#content").innerHTML=top("Definições","Configurações do sistema")+`<div class="card"><p>As configurações gerais podem ser adicionadas aqui.</p></div>`;
-}
-
-async function conta(){
-let c=await supa(),r=await c.auth.getUser(),email=r.data?.user?.email||"";
-$("#content").innerHTML=top("Minha conta","Credenciais de acesso")+`<div class="card"><h3>Conta atual</h3><p><b>E-mail:</b> ${esc(email)}</p></div>
-<div class="card"><h3>Alterar palavra-passe</h3><form id="pw">${field("senha","Nova palavra-passe","password",true)}${field("conf","Confirmar","password",true)}<button class="btn primary">Alterar</button></form></div>`;
-$("#pw").onsubmit=async e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));if(d.senha!==d.conf)return alert("As palavras-passe não coincidem.");let x=await c.auth.updateUser({password:d.senha});if(x.error)alert(x.error.message);else alert("Palavra-passe alterada com sucesso.")};
-}
-
-function printA4(id){
-let m=db.membros.find(x=>x.id===id),u=db.unidades.find(x=>x.id===m.unidade_id),w=open("","_blank");
-w.document.write(`<html><body style="font-family:Arial;margin:25mm"><h1 style="text-align:center">FICHA DE CADASTRO</h1>${m.foto_url?`<img src="${m.foto_url}" style="width:120px;height:120px;object-fit:cover">`:""}<hr>${Object.entries({"Nº":m.numero_membro,"Nome":m.nome,"Nascimento":m.nascimento,"Unidade":u?.nome,"Função":m.funcao,"Classe":m.classe,"Estado":m.estado,"Telefone":m.telefone,"Documento":m.documento,"Endereço":m.endereco,"Encarregado":m.encarregado,"Contacto":m.contacto_encarregado,"Escola":m.escola,"Data":m.data_cadastro}).map(x=>`<p><b>${x[0]}:</b> ${esc(x[1]||"—")}</p>`).join("")}<script>setTimeout(()=>print(),400)<\/script></body></html>`);
-w.document.close();
-}
-
-function printThermal(id){
-let m=db.membros.find(x=>x.id===id),u=db.unidades.find(x=>x.id===m.unidade_id),w=open("","_blank");
-w.document.write(`<html><head><style>@page{size:58mm auto;margin:0}body{width:58mm;font:11px Arial;padding:4mm}</style></head><body><h3 style="text-align:center">SGD<br>FICHA DO MEMBRO</h3><hr><b>Nome:</b> ${esc(m.nome)}<p><b>Nº:</b> ${esc(m.numero_membro)}</p><p><b>Unidade:</b> ${esc(u?.nome||"—")}</p><p><b>Função:</b> ${esc(m.funcao||"—")}</p><p><b>Classe:</b> ${esc(m.classe||"—")}</p><p><b>Estado:</b> ${esc(m.estado||"—")}</p><script>setTimeout(()=>print(),400)<\/script></body></html>`);
-w.document.close();
-}
-
-async function logout(){try{await (await supa()).auth.signOut()}catch(e){}location.reload()}
-
-const pages={dashboard,membros,membroForm,profile,editMember,unidades,unitForm,atividades,activityForm,financas,financeForm,relatorios,definicoes,conta};
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
-
-$("#loginForm").onsubmit=async e=>{
 e.preventDefault();
-let d=Object.fromEntries(new FormData(e.target)),er=$("#loginError");
-er.classList.add("hidden");
+
+
 try{
-let r=await (await supa()).auth.signInWithPassword({email:d.email.trim(),password:d.password});
-if(r.error)throw r.error;
-$("#login").classList.add("hidden");$("#app").classList.remove("hidden");await page("dashboard");
-}catch(x){console.error(x);er.textContent="Erro ao iniciar sessão: "+x.message;er.classList.remove("hidden")}
+
+let d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+const c =
+await initSupabase();
+
+
+const {error} =
+await c
+.from("membros")
+.update(d)
+.eq("id",id);
+
+
+if(error){
+
+throw error;
+
+}
+
+
+alert(
+"Membro atualizado com sucesso."
+);
+
+
+await profile(id);
+
+
+}catch(err){
+
+console.error(err);
+
+alert(
+"Erro ao guardar:\n\n"+
+err.message
+);
+
+}
+
 };
 
-(async()=>{
+}
+
+
+
+/* =========================
+   UNIDADES
+========================= */
+
+async function unidades(){
+
+if(!await refresh()){
+
+alert(
+"Erro ao carregar unidades."
+);
+
+return;
+
+}
+
+
+content.innerHTML=
+
+T(
+"Unidades",
+"Criar e administrar unidades",
+B(
+"+ Nova unidade",
+"primary",
+"unitForm()"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Unidade
+</th>
+
+<th>
+Responsável
+</th>
+
+<th>
+Membros
+</th>
+
+<th>
+Estado
+</th>
+
+<th>
+Ação
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+${db.unidades.map(u=>`
+
+<tr>
+
+<td>
+<b>
+${esc(u.nome)}
+</b>
+</td>
+
+<td>
+${esc(u.responsavel||"—")}
+</td>
+
+<td>
+${
+db.membros.filter(
+m=>m.unidade_id===u.id
+).length
+}
+</td>
+
+<td>
+${esc(u.estado||"")}
+</td>
+
+<td>
+
+${B(
+"Editar",
+"light",
+`unitForm('${u.id}')`
+)}
+
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+
+/* =========================
+   FORM UNIDADE
+========================= */
+
+async function unitForm(id=null){
+
+await refresh();
+
+
+let u =
+id
+?
+db.unidades.find(
+x=>x.id===id
+)
+:
+{
+nome:"",
+responsavel:"",
+estado:"Ativa"
+};
+
+
+content.innerHTML=
+
+T(
+id
+?
+"Editar unidade"
+:
+"Nova unidade",
+"Formulário de unidade",
+B(
+"← Voltar",
+"light",
+"page('unidades')"
+)
+)
+
++
+
+`
+
+<form id="uf">
+
+<div class="card">
+
+<div class="grid">
+
+${field(
+"nome",
+"Nome *",
+"text",
+true
+)}
+
+${field(
+"responsavel",
+"Responsável"
+)}
+
+${select(
+"estado",
+"Estado",
+[
+"Ativa",
+"Inativa"
+]
+)}
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+[
+"nome",
+"responsavel",
+"estado"
+]
+.forEach(k=>{
+
+let el =
+$(`[name="${k}"]`);
+
+if(el){
+
+el.value =
+u[k] || "";
+
+}
+
+});
+
+
+$("#uf").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+
+let d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
 try{
-let c=await supa(),r=await c.auth.getSession();
-if(r.data.session){$("#login").classList.add("hidden");$("#app").classList.remove("hidden");await page("dashboard")}
-}catch(e){console.error(e)}
-})();
-</script>
+
+const c =
+await initSupabase();
+
+
+let result;
+
+
+if(id){
+
+result =
+await c
+.from("unidades")
+.update(d)
+.eq("id",id);
+
+}else{
+
+result =
+await c
+.from("unidades")
+.insert([d]);
+
+}
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+page("unidades");
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+err.message
+);
+
+}
+
+};
+
+}
+
+
+
+/* =========================
+   ATIVIDADES
+========================= */
+
+async function atividades(){
+
+await refresh();
+
+
+content.innerHTML=
+
+T(
+"Atividades",
+"Registo e gestão das atividades",
+B(
+"+ Nova atividade",
+"primary",
+"activityForm()"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Atividade</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Local</th>
+<th>Responsável</th>
+<th>Custo</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+${db.atividades.map(a=>`
+
+<tr>
+
+<td>
+${esc(a.nome)}
+</td>
+
+<td>
+${esc(a.data||"")}
+</td>
+
+<td>
+${esc(a.hora||"")}
+</td>
+
+<td>
+${esc(a.local||"")}
+</td>
+
+<td>
+${esc(a.responsavel||"")}
+</td>
+
+<td>
+${money(a.custo)} Kz
+</td>
+
+</tr>
+
+`).join("")||
+
+`
+
+<tr>
+<td
+colspan="6"
+class="muted"
+>
+Nenhuma atividade registada.
+</td>
+</tr>
+
+`}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+
+/* =========================
+   FORM ATIVIDADE
+========================= */
+
+async function activityForm(){
+
+content.innerHTML=
+
+T(
+"Registar atividade",
+"Formulário completo",
+B(
+"← Voltar",
+"light",
+"page('atividades')"
+)
+)
+
++
+
+`
+
+<form id="af">
+
+<div class="card">
+
+<div class="grid">
+
+${field(
+"nome",
+"Nome da atividade *",
+"text",
+true
+)}
+
+${field(
+"data",
+"Data *",
+"date",
+true
+)}
+
+${field(
+"hora",
+"Hora",
+"time"
+)}
+
+${field(
+"local",
+"Local"
+)}
+
+${field(
+"responsavel",
+"Responsável"
+)}
+
+${field(
+"custo",
+"Custo (Kz)",
+"number"
+)}
+
+</div>
+
+
+${field(
+"descricao",
+"Descrição"
+)}
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar atividade
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+$('[name=data]')
+.value =
+new Date()
+.toISOString()
+.slice(0,10);
+
+
+$("#af").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+
+let d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+try{
+
+const c =
+await initSupabase();
+
+
+const {error} =
+await c
+.from("atividades")
+.insert([d]);
+
+
+if(error){
+
+throw error;
+
+}
+
+
+page("atividades");
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+err.message
+);
+
+}
+
+};
+
+}
+
+
+
+/* =========================
+   FINANÇAS
+========================= */
+
+async function financas(){
+
+await refresh();
+
+
+let rec =
+db.financas
+.filter(
+x=>x.tipo==="Receita"
+)
+.reduce(
+(a,x)=>
+a+Number(x.valor||0),
+0
+);
+
+
+let desp =
+db.financas
+.filter(
+x=>x.tipo==="Despesa"
+)
+.reduce(
+(a,x)=>
+a+Number(x.valor||0),
+0
+);
+
+
+content.innerHTML=
+
+T(
+"Finanças",
+"Receitas, despesas e pagamentos",
+B(
+"+ Novo movimento",
+"primary",
+"financeForm()"
+)
+)
+
++
+
+`
+
+<div class="cards">
+
+
+<div class="card stat">
+
+Receitas
+
+<strong>
+${money(rec)} Kz
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+Despesas
+
+<strong>
+${money(desp)} Kz
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+Saldo
+
+<strong>
+${money(rec-desp)} Kz
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+Movimentos
+
+<strong>
+${db.financas.length}
+</strong>
+
+</div>
+
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Histórico financeiro
+</h3>
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Data
+</th>
+
+<th>
+Tipo
+</th>
+
+<th>
+Membro
+</th>
+
+<th>
+Nº membro
+</th>
+
+<th>
+Categoria
+</th>
+
+<th>
+Descrição
+</th>
+
+<th>
+Valor
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+${db.financas.map(x=>`
+
+<tr>
+
+<td>
+${esc(x.data||"")}
+</td>
+
+<td>
+${esc(x.tipo||"")}
+</td>
+
+<td>
+<b>
+${esc(x.membro_nome||"—")}
+</b>
+</td>
+
+<td>
+${esc(x.membro_numero||"—")}
+</td>
+
+<td>
+${esc(x.categoria||"")}
+</td>
+
+<td>
+${esc(x.descricao||"")}
+</td>
+
+<td>
+${money(x.valor)} Kz
+</td>
+
+</tr>
+
+`).join("")||
+
+`
+
+<tr>
+
+<td
+colspan="7"
+class="muted"
+>
+
+Nenhum movimento registado.
+
+</td>
+
+</tr>
+
+`}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+
+/* =========================
+   FORM FINANCEIRO
+========================= */
+
+async function financeForm(){
+
+await refresh();
+
+
+content.innerHTML=
+
+T(
+"Novo movimento financeiro",
+"Registar receita ou despesa",
+B(
+"← Voltar",
+"light",
+"page('financas')"
+)
+)
+
++
+
+`
+
+<form id="ff">
+
+<div class="card">
+
+<div class="grid">
+
+${select(
+"tipo",
+"Tipo",
+[
+"Receita",
+"Despesa"
+],
+true
+)}
+
+
+<div class="field">
+
+<label>
+Membro
+</label>
+
+<select name="membro_id">
+
+<option value="">
+Nenhum / não aplicável
+</option>
+
+${db.membros.map(m=>`
+
+<option value="${esc(m.id)}">
+
+${esc(m.nome)}
+—
+${esc(m.numero_membro)}
+
+</option>
+
+`).join("")}
+
+</select>
+
+</div>
+
+
+${field(
+"categoria",
+"Categoria *",
+"text",
+true
+)}
+
+${field(
+"valor",
+"Valor (Kz) *",
+"number",
+true
+)}
+
+${field(
+"data",
+"Data *",
+"date",
+true
+)}
+
+${field(
+"descricao",
+"Descrição"
+)}
+
+
+${select(
+"forma",
+"Forma de pagamento",
+[
+"Dinheiro",
+"Transferência",
+"Depósito",
+"Multicaixa Express",
+"Outro"
+]
+)}
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar movimento
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+$('[name=data]')
+.value =
+new Date()
+.toISOString()
+.slice(0,10);
+
+
+$("#ff").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+
+let d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+let m =
+db.membros.find(
+x=>x.id===d.membro_id
+);
+
+
+d.membro_nome =
+m?.nome || "";
+
+d.membro_numero =
+m?.numero_membro || "";
+
+
+delete d.membro_id;
+
+
+try{
+
+const c =
+await initSupabase();
+
+
+const {error} =
+await c
+.from("financas")
+.insert([d]);
+
+
+if(error){
+
+throw error;
+
+}
+
+
+page("financas");
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+err.message
+);
+
+}
+
+};
+
+}
+
+
+
+/* =========================
+   RELATÓRIOS
+========================= */
+
+function relatorios(){
+
+content.innerHTML=
+
+T(
+"Relatórios",
+"Principais relatórios do clube"
+)
+
++
+
+`
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>
+Lista geral dos membros
+</h3>
+
+<p class="muted">
+Todos os membros cadastrados.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('membros')"
+)}
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Membros por unidade
+</h3>
+
+<p class="muted">
+Quantidade por unidade.
+</p>
+
+${B(
+"Abrir",
+"light",
+"unitReport()"
+)}
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Atividades
+</h3>
+
+<p class="muted">
+Histórico das atividades.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('atividades')"
+)}
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Financeiro
+</h3>
+
+<p class="muted">
+Receitas, despesas e saldo.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('financas')"
+)}
+
+</div>
+
+
+</div>
+
+`;
+
+}
+
+
+
+/* =========================
+   RELATÓRIO UNIDADES
+========================= */
+
+async function unitReport(){
+
+await refresh();
+
+
+content.innerHTML=
+
+T(
+"Membros por unidade",
+"Relatório geral",
+B(
+"← Voltar",
+"light",
+"page('relatorios')"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Unidade
+</th>
+
+<th>
+Membros
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+${db.unidades.map(u=>`
+
+<tr>
+
+<td>
+${esc(u.nome)}
+</td>
+
+<td>
+
+${
+db.membros.filter(
+m=>m.unidade_id===u.id
+).length
+}
+
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+
+/* =========================
+   DEFINIÇÕES
+========================= */
+
+async function definicoes(){
+
+await refresh();
+
+
+content.innerHTML=
+
+T(
+"Definições gerais",
+"Configurações do clube e impressão"
+)
+
++
+
+`
+
+<form id="cf">
+
+
+<div class="card">
+
+<h3>
+Dados do clube
+</h3>
+
+<div class="grid">
+
+${field(
+"nome_clube",
+"Nome do clube"
+)}
+
+${field(
+"diretor",
+"Diretor"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${field(
+"email",
+"E-mail"
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Impressão
+</h3>
+
+<div class="grid">
+
+${select(
+"papel",
+"Papel térmico",
+[
+"58 mm",
+"80 mm"
+]
+)}
+
+${select(
+"ficha",
+"Ficha principal",
+[
+"A4"
+]
+)}
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar definições
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+[
+"nome_clube",
+"diretor",
+"telefone",
+"email",
+"papel",
+"ficha"
+]
+.forEach(k=>{
+
+let el =
+$(`[name="${k}"]`);
+
+if(el){
+
+el.value =
+db.config[k] || "";
+
+}
+
+});
+
+
+$("#cf").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+
+let d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+try{
+
+const c =
+await initSupabase();
+
+
+if(db.config.id){
+
+const {error} =
+await c
+.from("configuracoes")
+.update(d)
+.eq("id",db.config.id);
+
+
+if(error){
+
+throw error;
+
+}
+
+}else{
+
+const {error} =
+await c
+.from("configuracoes")
+.insert([d]);
+
+
+if(error){
+
+throw error;
+
+}
+
+}
+
+
+alert(
+"Definições guardadas."
+);
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+err.message
+);
+
+}
+
+};
+
+}
+
+
+
+/* =========================
+   MINHA CONTA
+========================= */
+
+async function conta(){
+
+try{
+
+const c =
+await initSupabase();
+
+
+const {data,error} =
+await c.auth.getUser();
+
+
+if(error){
+
+throw error;
+
+}
+
+
+let email =
+data.user?.email || "";
+
+
+content.innerHTML=
+
+T(
+"Minha conta",
+"Gerencie as suas credenciais"
+)
+
++
+
+`
+
+<div class="card">
+
+<h3>
+Conta atual
+</h3>
+
+<p>
+
+<b>
+E-mail:
+</b>
+
+${esc(email)}
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Alterar palavra-passe
+</h3>
+
+<form id="passwordForm">
+
+${field(
+"novaSenha",
+"Nova palavra-passe",
+"password",
+true
+)}
+
+${field(
+"confirmarSenha",
+"Confirmar palavra-passe",
+"password",
+true
+)}
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Alterar palavra-passe
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Alterar e-mail
+</h3>
+
+<p class="muted">
+
+O Supabase poderá pedir confirmação
+do novo e-mail.
+
+</p>
+
+
+<form id="emailForm">
+
+${field(
+"novoEmail",
+"Novo e-mail",
+"email",
+true
+)}
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Alterar e-mail
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+`;
+
+
+$("#passwordForm").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+
+let d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+if(
+d.novaSenha !==
+d.confirmarSenha
+){
+
+alert(
+"As palavras-passe não coincidem."
+);
+
+return;
+
+}
+
+
+if(
+d.novaSenha.length < 6
+){
+
+alert(
+"A palavra-passe deve ter pelo menos 6 caracteres."
+);
+
+return;
+
+}
+
+
+try{
+
+const {error} =
+await c.auth.updateUser({
+password:d.novaSenha
+});
+
+
+if(error){
+
+throw error;
+
+}
+
+
+alert(
+"Palavra-passe alterada com sucesso."
+);
+
+
+e.target.reset();
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+err.message
+);
+
+}
+
+};
+
+
+$("#emailForm").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+
+let d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+try{
+
+const {error} =
+await c.auth.updateUser({
+email:d.novoEmail
+});
+
+
+if(error){
+
+throw error;
+
+}
+
+
+alert(
+"Pedido de alteração enviado. Verifique o novo e-mail."
+);
+
+
+e.target.reset();
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+err.message
+);
+
+}
+
+};
+
+
+}catch(err){
+
+alert(
+"Erro ao abrir a conta:\n\n"+
+err.message
+);
+
+}
+
+}
+
+
+
+/* =========================
+   IMPRESSÃO A4
+========================= */
+
+async function printA4(id){
+
+await refresh();
+
+
+let m =
+db.membros.find(
+x=>x.id===id
+);
+
+
+if(!m){
+
+return;
+
+}
+
+
+let unidade =
+db.unidades.find(
+u=>u.id===m.unidade_id
+);
+
+
+let w =
+window.open(
+"",
+"_blank"
+);
+
+
+w.document.write(`
+
+<html>
+
+<head>
+
+<title>
+Ficha A4
+</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:25mm;
+}
+
+h1{
+text-align:center;
+}
+
+.row{
+padding:9px 0;
+border-bottom:1px solid #ddd;
+}
+
+img{
+width:120px;
+height:120px;
+object-fit:cover;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>
+FICHA DE CADASTRO
+</h1>
+
+
+<h2>
+${esc(
+db.config.nome_clube ||
+"Clube de Desbravadores"
+)}
+</h2>
+
+
+${
+m.foto_url
+?
+
+`
+<div style="text-align:center">
+<img src="${esc(m.foto_url)}">
+</div>
+`
+
+:
+""
+}
+
+
+${[
+[
+"Número",
+m.numero_membro
+],
+[
+"Utilizador",
+m.utilizador
+],
+[
+"Nome completo",
+m.nome
+],
+[
+"Nascimento",
+m.nascimento
+],
+[
+"Sexo",
+m.sexo
+],
+[
+"Documento",
+m.documento
+],
+[
+"Unidade",
+unidade?.nome
+],
+[
+"Função",
+m.funcao
+],
+[
+"Classe",
+m.classe
+],
+[
+"Estado",
+m.estado
+],
+[
+"Telefone",
+m.telefone
+],
+[
+"Endereço",
+m.endereco
+],
+[
+"Encarregado",
+m.encarregado
+],
+[
+"Contacto do encarregado",
+m.contacto_encarregado
+],
+[
+"Pai",
+m.pai
+],
+[
+"Mãe",
+m.mae
+],
+[
+"Escola",
+m.escola
+],
+[
+"Classe escolar",
+m.classe_escolar
+],
+[
+"Data de cadastro",
+m.data_cadastro
+]
+]
+.map(x=>`
+
+<div class="row">
+
+<b>
+${esc(x[0])}:
+</b>
+
+${esc(x[1]||"—")}
+
+</div>
+
+`).join("")}
+
+
+<script>
+
+setTimeout(
+()=>print(),
+500
+);
+
+<\/script>
+
+
 </body>
+
 </html>
+
+`);
+
+
+w.document.close();
+
+}
+
+
+
+/* =========================
+   IMPRESSÃO TÉRMICA
+========================= */
+
+async function printThermal(id){
+
+await refresh();
+
+
+let m =
+db.membros.find(
+x=>x.id===id
+);
+
+
+if(!m){
+
+return;
+
+}
+
+
+let unidade =
+db.unidades.find(
+u=>u.id===m.unidade_id
+);
+
+
+let w =
+window.open(
+"",
+"_blank",
+"width=420,height=650"
+);
+
+
+w.document.write(`
+
+<html>
+
+<head>
+
+<style>
+
+@page{
+size:58mm auto;
+margin:0;
+}
+
+body{
+width:58mm;
+font:11px Arial;
+padding:4mm;
+}
+
+h2{
+font-size:14px;
+text-align:center;
+}
+
+p{
+margin:6px 0;
+}
+
+img{
+width:30mm;
+height:30mm;
+object-fit:cover;
+display:block;
+margin:auto;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h2>
+
+SGD
+
+<br>
+
+FICHA DO MEMBRO
+
+</h2>
+
+
+${
+m.foto_url
+?
+
+`
+<img
+src="${esc(m.foto_url)}"
+>
+`
+
+:
+""
+}
+
+
+<hr>
+
+
+<p>
+<b>Nome:</b>
+${esc(m.nome)}
+</p>
+
+
+<p>
+<b>Nº:</b>
+${esc(m.numero_membro)}
+</p>
+
+
+<p>
+<b>Utilizador:</b>
+${esc(m.utilizador||"")}
+</p>
+
+
+<p>
+<b>Unidade:</b>
+${esc(unidade?.nome||"—")}
+</p>
+
+
+<p>
+<b>Função:</b>
+${esc(m.funcao||"—")}
+</p>
+
+
+<p>
+<b>Classe:</b>
+${esc(m.classe||"—")}
+</p>
+
+
+<p>
+<b>Estado:</b>
+${esc(m.estado||"—")}
+</p>
+
+
+<p>
+<b>Cadastro:</b>
+${esc(m.data_cadastro||"—")}
+</p>
+
+
+<hr>
+
+
+<script>
+
+setTimeout(
+()=>print(),
+500
+);
+
+<\/script>
+
+
+</body>
+
+</html>
+
+`);
+
+
+w.document.close();
+
+}
+
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+try{
+
+const c =
+await initSupabase();
+
+await c.auth.signOut();
+
+}catch(e){
+
+console.error(e);
+
+}
+
+
+location.reload();
+
+}
+
+
+
+/* =========================
+   PÁGINAS
+========================= */
+
+const pages={
+
+dashboard,
+membros,
+membroForm,
+profile,
+editMember,
+unidades,
+unitForm,
+atividades,
+activityForm,
+financas,
+financeForm,
+relatorios,
+unitReport,
+definicoes,
+conta
+
+};
+
+
+
+/* =========================
+   NAVEGAÇÃO
+========================= */
+
+document
+.querySelectorAll("nav button")
+.forEach(b=>{
+
+b.onclick =
+()=>page(b.dataset.page);
+
+});
+
+
+
+/* =========================
+   LOGIN
+========================= */
+
+$("#loginForm").onsubmit =
+async e=>{
+
+e.preventDefault();
+
+
+const d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+const email =
+d.user.trim();
+
+
+const password =
+d.pass;
+
+
+const errorBox =
+$("#loginError");
+
+
+const button =
+$("#loginButton");
+
+
+errorBox.classList.add(
+"hidden"
+);
+
+
+button.disabled=true;
+
+button.textContent=
+"A entrar...";
+
+
+try{
+
+const c =
+await initSupabase();
+
+
+/*
+ * AUTENTICAÇÃO
+ */
+
+const {
+data,
+error
+} =
+await c.auth.signInWithPassword({
+
+email:email,
+
+password:password
+
+});
+
+
+if(error){
+
+throw error;
+
+}
+
+
+if(
+!data ||
+!data.session
+){
+
+throw new Error(
+"A autenticação não criou uma sessão."
+);
+
+}
+
+
+/*
+ * LOGIN CONFIRMADO
+ *
+ * Mostra o sistema ANTES
+ * de carregar as tabelas.
+ */
+
+$("#login")
+.classList
+.add("hidden");
+
+
+$("#app")
+.classList
+.remove("hidden");
+
+
+if(d.remember){
+
+localStorage.setItem(
+"sgd_remember",
+"1"
+);
+
+}else{
+
+localStorage.removeItem(
+"sgd_remember"
+);
+
+}
+
+
+/*
+ * Abrir dashboard.
+ */
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>
+Bem-vindo ao SGD 👋
+</h2>
+
+<p>
+<b>
+Sessão iniciada com sucesso.
+</b>
+</p>
+
+<p class="muted">
+A carregar os dados do clube...
+</p>
+
+</div>
+
+`;
+
+
+try{
+
+await dashboard();
+
+}catch(dbError){
+
+console.error(
+"Erro ao carregar dashboard:",
+dbError
+);
+
+
+content.innerHTML=
+
+T(
+"SGD",
+"Sessão iniciada"
+)
+
++
+
+`
+
+<div class="card">
+
+<div class="notice success">
+
+<b>
+Login realizado com sucesso.
+</b>
+
+</div>
+
+
+<div class="notice error">
+
+Ocorreu um erro ao carregar
+os dados do sistema.
+
+</div>
+
+
+<p>
+<b>
+Erro técnico:
+</b>
+</p>
+
+
+<pre
+style="
+white-space:pre-wrap;
+background:#f4f6f8;
+padding:12px;
+border-radius:8px;
+font-size:12px;
+"
+>
+${esc(
+dbError.message ||
+dbError
+)}
+</pre>
+
+
+<div class="actions">
+
+${B(
+"👥 Membros",
+"light",
+"page('membros')"
+)}
+
+${B(
+"🏕️ Unidades",
+"light",
+"page('unidades')"
+)}
+
+${B(
+"🔄 Tentar novamente",
+"primary",
+"dashboard()"
+)}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+}catch(err){
+
+console.error(
+"ERRO LOGIN:",
+err
+);
+
+
+errorBox.textContent =
+err.message ||
+"E-mail ou palavra-passe incorretos.";
+
+
+errorBox.classList.remove(
+"hidden"
+);
+
+
+}else{
+
+}
+
+
+}finally{
+
+button.disabled=false;
+
+button.textContent=
+"Entrar";
+
+}
+
+};
+
+
+
+/* =========================
+   SESSÃO AUTOMÁTICA
+========================= */
+
+(async()=>{
+
+try{
+
+const c =
+await initSupabase();
+
+
+const {
+data,
+error
+} =
+await c.auth.getSession();
+
+
+if(error){
+
+console.error(
+"Erro sessão:",
+error
+);
+
+return;
+
+}
+
+
+if(
+data &&
+data.session
+){
+
+$("#login")
+.classList
+.add("hidden");
+
+
+$("#app")
+.classList
+.remove("hidden");
+
+
+await dashboard();
+
+}
+
+}catch(e){
+
+console.error(
+"Erro inicial:",
+e
+);
+
+}
+
+})();
+
+
+</script>
+
+</body>
+  </html>
