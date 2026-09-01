@@ -1,640 +1,4537 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SGD - Login</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>SGD — Sistema de Gestão do Clube</title>
 
 <style>
+
+:root{
+--blue:#1769e0;
+--bg:#f4f7fb;
+--text:#172033;
+--muted:#6d788a;
+--line:#e4e9f1;
+--green:#16794a;
+--red:#b42318;
+}
+
 *{
-    box-sizing:border-box;
+box-sizing:border-box;
 }
 
 body{
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#f1f5f9;
-    font-family:Arial,sans-serif;
+margin:0;
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+button,input,select,textarea{
+font:inherit;
+}
+
+.hidden{
+display:none!important;
+}
+
+.btn{
+border:0;
+border-radius:9px;
+padding:10px 15px;
+font-weight:700;
+cursor:pointer;
+}
+
+.btn:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+
+.primary{
+background:var(--blue);
+color:white;
+}
+
+.light{
+background:#eef4ff;
+color:var(--blue);
+}
+
+.danger{
+background:#fff0f0;
+color:var(--red);
+}
+
+.full{
+width:100%;
 }
 
 .login{
-    width:100%;
-    max-width:420px;
-    background:white;
-    padding:30px;
-    border-radius:18px;
-    box-shadow:0 10px 35px rgba(0,0,0,.12);
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:20px;
+background:linear-gradient(135deg,#1769e0,#0d4da8);
 }
 
-.logo{
-    width:80px;
-    height:80px;
-    margin:0 auto 15px;
-    background:#1769e0;
-    color:white;
-    border-radius:18px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:24px;
-    font-weight:bold;
+.login-card{
+width:min(430px,100%);
+background:white;
+border-radius:20px;
+padding:32px;
+box-shadow:0 18px 50px #001b4433;
+text-align:center;
 }
 
-h1{
-    text-align:center;
-    margin:5px 0;
+.club-logo,
+.mini-logo{
+background:var(--blue);
+color:white;
+display:grid;
+place-items:center;
+font-weight:900;
 }
 
-.sub{
-    text-align:center;
-    color:#64748b;
-    margin-bottom:25px;
+.club-logo{
+width:92px;
+height:92px;
+border-radius:20px;
+margin:0 auto 18px;
+font-size:25px;
 }
 
-label{
-    display:block;
-    font-weight:bold;
-    font-size:14px;
-    margin-bottom:7px;
+.mini-logo{
+width:42px;
+height:42px;
+border-radius:10px;
+font-size:11px;
 }
 
-input{
-    width:100%;
-    padding:13px;
-    border:1px solid #cbd5e1;
-    border-radius:9px;
-    margin-bottom:16px;
-    font-size:16px;
+.login-card h1{
+margin:0 0 5px;
 }
 
-button{
-    width:100%;
-    padding:13px;
-    border:0;
-    border-radius:9px;
-    background:#1769e0;
-    color:white;
-    font-weight:bold;
-    font-size:16px;
-    cursor:pointer;
+.login-card p,
+.muted{
+color:var(--muted);
 }
 
-button:disabled{
-    opacity:.6;
+.field{
+display:flex;
+flex-direction:column;
+gap:7px;
+text-align:left;
+margin-bottom:14px;
 }
 
-.mensagem{
-    display:none;
-    margin-bottom:15px;
-    padding:12px;
-    border-radius:9px;
-    font-size:14px;
-    white-space:pre-wrap;
+.field label{
+font-size:13px;
+font-weight:700;
 }
 
-.erro{
-    display:block;
-    background:#fff0f0;
-    color:#b42318;
+.field input,
+.field select,
+.field textarea{
+padding:11px;
+border:1px solid #d5ddea;
+border-radius:9px;
+background:white;
+width:100%;
 }
 
-.sucesso{
-    display:block;
-    background:#eaf8ef;
-    color:#16794a;
+.field textarea{
+min-height:90px;
+resize:vertical;
 }
 
-#sistema{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:#f1f5f9;
+.notice{
+padding:11px;
+border-radius:9px;
+margin-bottom:14px;
+background:#eaf8ef;
+color:var(--green);
 }
 
-.topo{
-    height:65px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    display:flex;
-    align-items:center;
-    padding:0 20px;
+.error{
+background:#fff0f0;
+color:var(--red);
 }
 
-.topo strong{
-    font-size:18px;
+header{
+min-height:68px;
+background:white;
+border-bottom:1px solid var(--line);
+display:flex;
+align-items:center;
+padding:0 22px;
+gap:12px;
 }
 
-.sair{
-    width:auto;
-    margin-left:auto;
-    padding:9px 15px;
+.brand b{
+display:block;
+font-size:18px;
 }
 
-.conteudo{
-    padding:30px;
+.brand small{
+color:var(--muted);
+}
+
+.layout{
+display:flex;
+min-height:calc(100vh - 68px);
+}
+
+aside{
+width:240px;
+background:var(--blue);
+color:white;
+padding:18px 12px;
+flex-shrink:0;
+}
+
+.section{
+font-size:11px;
+opacity:.7;
+margin:10px 12px 7px;
+font-weight:700;
+}
+
+nav button{
+width:100%;
+border:0;
+background:transparent;
+color:white;
+text-align:left;
+padding:11px 12px;
+border-radius:8px;
+margin:2px 0;
+cursor:pointer;
+}
+
+nav button:hover,
+nav button.active{
+background:#ffffff24;
+}
+
+main{
+flex:1;
+padding:28px;
+max-width:1450px;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+margin-bottom:20px;
+}
+
+.top h1{
+margin:0;
+font-size:26px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:14px;
 }
 
 .card{
-    background:white;
-    padding:25px;
-    border-radius:15px;
-    max-width:800px;
+background:white;
+border:1px solid var(--line);
+border-radius:14px;
+padding:19px;
+margin-bottom:16px;
+box-shadow:0 5px 18px #17203308;
 }
+
+.stat strong{
+display:block;
+font-size:27px;
+margin-top:8px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:15px;
+}
+
+.actions{
+display:flex;
+gap:9px;
+justify-content:flex-end;
+flex-wrap:wrap;
+margin-top:14px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,
+td{
+padding:10px;
+border-bottom:1px solid #edf0f4;
+text-align:left;
+font-size:13px;
+vertical-align:middle;
+}
+
+th{
+font-size:12px;
+color:var(--muted);
+}
+
+.badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:99px;
+background:#eaf8ef;
+color:#176b36;
+font-size:11px;
+font-weight:700;
+}
+
+.toolbar{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-bottom:14px;
+}
+
+.toolbar input{
+padding:10px;
+border:1px solid #d5ddea;
+border-radius:9px;
+min-width:240px;
+}
+
+.member-photo{
+width:52px;
+height:52px;
+border-radius:10px;
+object-fit:cover;
+background:#eef2f7;
+}
+
+.photo-large{
+width:130px;
+height:130px;
+border-radius:14px;
+object-fit:cover;
+background:#eef2f7;
+}
+
+.profile-head{
+display:flex;
+gap:18px;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.credential{
+background:#eef4ff;
+border:1px solid #cfe0ff;
+padding:15px;
+border-radius:10px;
+margin-top:15px;
+}
+
+.credential strong{
+font-size:18px;
+}
+
+@media(max-width:850px){
+
+aside{
+width:72px;
+}
+
+.section{
+display:none;
+}
+
+nav button{
+font-size:0;
+text-align:center;
+}
+
+nav button::first-letter{
+font-size:20px;
+}
+
+.cards{
+grid-template-columns:1fr 1fr;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+main{
+padding:16px;
+}
+
+.top{
+align-items:flex-start;
+flex-direction:column;
+}
+
+}
+
+@media print{
+
+aside,
+header,
+.actions,
+.no-print{
+display:none!important;
+}
+
+main{
+padding:0;
+}
+
+.card{
+box-shadow:none;
+border:0;
+}
+
+}
+
 </style>
+
+<script>
+
+window.SGD_SUPABASE_URL =
+"https://edttbjysaqdounpghsdn.supabase.co";
+
+window.SGD_SUPABASE_ANON_KEY =
+"sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 
 <body>
 
+<!-- LOGIN -->
+
 <div id="login" class="login">
 
-    <div class="logo">SGD</div>
+<div class="login-card">
 
-    <h1>SGD</h1>
+<div class="club-logo">
+SGD
+</div>
 
-    <div class="sub">
-        Sistema de Gestão do Clube
-    </div>
+<h1>SGD</h1>
 
-    <div id="mensagem" class="mensagem"></div>
+<p>
+Sistema de Gestão do Clube
+</p>
 
-    <form id="loginForm">
+<div id="loginError" class="notice error hidden"></div>
 
-        <label for="email">
-            E-mail
-        </label>
+<form id="loginForm">
 
-        <input
-            id="email"
-            type="email"
-            autocomplete="username"
-            placeholder="Digite o seu e-mail"
-            required
-        >
+<div class="field">
 
-        <label for="senha">
-            Palavra-passe
-        </label>
+<label>E-mail</label>
 
-        <input
-            id="senha"
-            type="password"
-            autocomplete="current-password"
-            placeholder="Digite a sua palavra-passe"
-            required
-        >
+<input
+name="user"
+type="email"
+autocomplete="username"
+required
+>
 
-        <button id="btnEntrar" type="submit">
-            Entrar
-        </button>
+</div>
 
-    </form>
+<div class="field">
+
+<label>Palavra-passe</label>
+
+<input
+name="pass"
+type="password"
+autocomplete="current-password"
+required
+>
+
+</div>
+
+<label
+style="display:flex;gap:8px;align-items:center;text-align:left;font-size:13px;margin-bottom:14px"
+>
+
+<input
+name="remember"
+type="checkbox"
+>
+
+Lembrar sessão
+
+</label>
+
+<button
+id="loginBtn"
+class="btn primary full"
+type="submit"
+>
+
+Entrar
+
+</button>
+
+</form>
+
+<p style="font-size:12px" class="muted">
+
+Use o e-mail e a palavra-passe da conta autorizada no Supabase.
+
+</p>
+
+</div>
 
 </div>
 
 
-<div id="sistema">
+<!-- SISTEMA -->
 
-    <div class="topo">
+<div id="app" class="hidden">
 
-        <strong>
-            SGD — Sistema de Gestão do Clube
-        </strong>
+<header>
 
-        <button
-            class="sair"
-            onclick="sair()"
-        >
-            Sair
-        </button>
+<div class="mini-logo">
+SGD
+</div>
 
-    </div>
+<div class="brand">
 
-    <div class="conteudo">
+<b>
+Sistema de Gestão do Clube
+</b>
 
-        <div class="card">
+<small>
+Secretaria / Direção
+</small>
 
-            <h2>Dashboard</h2>
+</div>
 
-            <p>
-                Sessão iniciada com sucesso.
-            </p>
+<div
+style="margin-left:auto;display:flex;gap:8px"
+>
 
-            <p>
-                <strong>Utilizador:</strong>
-                <span id="usuarioLogado"></span>
-            </p>
+<button
+class="btn light"
+onclick="page('conta')"
+>
+👤 Minha conta
+</button>
 
-            <hr>
+<button
+class="btn light"
+onclick="logout()"
+>
+Sair
+</button>
 
-            <p>
-                Agora podemos ligar novamente todas as funções
-                de membros, unidades, atividades e finanças.
-            </p>
+</div>
 
-        </div>
+</header>
 
-    </div>
+
+<div class="layout">
+
+<aside>
+
+<div class="section">
+PRINCIPAL
+</div>
+
+<nav>
+
+<button data-page="dashboard">
+🏠 Dashboard
+</button>
+
+<button data-page="membros">
+👥 Membros
+</button>
+
+<button data-page="unidades">
+🏕️ Unidades
+</button>
+
+</nav>
+
+
+<div class="section">
+GESTÃO
+</div>
+
+<nav>
+
+<button data-page="atividades">
+📅 Atividades
+</button>
+
+<button data-page="financas">
+💰 Finanças
+</button>
+
+</nav>
+
+
+<div class="section">
+ADMINISTRAÇÃO
+</div>
+
+<nav>
+
+<button data-page="relatorios">
+📄 Relatórios
+</button>
+
+<button data-page="definicoes">
+⚙️ Definições
+</button>
+
+</nav>
+
+</aside>
+
+
+<main id="content"></main>
+
+</div>
 
 </div>
 
 
 <script>
 
-/* =====================================================
-   CONFIGURAÇÃO SUPABASE
-===================================================== */
+let client = null;
 
-const SUPABASE_URL =
-"https://edttbjysaqdounpghsdn.supabase.co";
+let db = {
+membros:[],
+unidades:[],
+atividades:[],
+financas:[],
+config:{}
+};
 
-const SUPABASE_KEY =
-"sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
+const $ = s => document.querySelector(s);
+
+const content = document.getElementById("content");
 
 
-/* =====================================================
-   CRIAR CLIENTE
-===================================================== */
+/* SUPABASE */
 
-let supabaseClient;
+async function initSupabase(){
+
+if(!window.supabase){
+
+throw new Error(
+"Supabase não carregou. Verifique a ligação à internet."
+);
+
+}
+
+if(!client){
+
+client =
+window.supabase.createClient(
+window.SGD_SUPABASE_URL,
+window.SGD_SUPABASE_ANON_KEY
+);
+
+}
+
+return client;
+
+}
+
+
+/* UTILITÁRIOS */
+
+function esc(x){
+
+return String(x ?? "")
+.replace(/[&<>"']/g,m=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+
+}[m]));
+
+}
+
+
+function money(v){
+
+return Number(v || 0).toLocaleString(
+"pt-AO",
+{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}
+);
+
+}
+
+
+function today(){
+
+return new Date()
+.toISOString()
+.slice(0,10);
+
+}
+
+
+function B(text,cls="primary",fn=""){
+
+return `
+<button
+class="btn ${cls}"
+onclick="${fn}"
+>
+${text}
+</button>
+`;
+
+}
+
+
+function T(title,subtitle,button=""){
+
+return `
+<div class="top">
+
+<div>
+
+<h1>
+${title}
+</h1>
+
+<p class="muted">
+${subtitle}
+</p>
+
+</div>
+
+${button}
+
+</div>
+`;
+
+}
+
+
+function field(name,label,type="text",required=false){
+
+return `
+<div class="field">
+
+<label>
+${label}
+</label>
+
+<input
+name="${name}"
+type="${type}"
+${required?"required":""}
+>
+
+</div>
+`;
+
+}
+
+
+function select(name,label,options,required=false){
+
+return `
+<div class="field">
+
+<label>
+${label}
+</label>
+
+<select
+name="${name}"
+${required?"required":""}
+>
+
+<option value="">
+Selecionar
+</option>
+
+${options.map(x=>{
+
+let value =
+typeof x === "object"
+? x.value
+: x;
+
+let label =
+typeof x === "object"
+? x.label
+: x;
+
+return `
+<option value="${esc(value)}">
+${esc(label)}
+</option>
+`;
+
+}).join("")}
+
+</select>
+
+</div>
+`;
+
+}
+
+
+function errorMessage(e){
+
+return e?.message ||
+e?.error_description ||
+"Ocorreu um erro desconhecido.";
+
+}
+
+
+/* CARREGAR BANCO */
+
+async function loadDB(){
+
+const c =
+await initSupabase();
+
+const [
+m,
+u,
+a,
+f,
+conf
+] =
+await Promise.all([
+
+c
+.from("membros")
+.select("*")
+.order("created_at",{ascending:true}),
+
+c
+.from("unidades")
+.select("*")
+.order("nome"),
+
+c
+.from("atividades")
+.select("*")
+.order("data",{ascending:false}),
+
+c
+.from("financas")
+.select("*")
+.order("data",{ascending:false}),
+
+c
+.from("configuracoes")
+.select("*")
+.limit(1)
+
+]);
+
+
+if(m.error) throw m.error;
+if(u.error) throw u.error;
+if(a.error) throw a.error;
+if(f.error) throw f.error;
+if(conf.error) throw conf.error;
+
+
+db.membros = m.data || [];
+
+db.unidades = u.data || [];
+
+db.atividades = a.data || [];
+
+db.financas = f.data || [];
+
+db.config =
+conf.data?.[0] || {
+
+nome_clube:"Clube de Desbravadores",
+papel:"58 mm",
+ficha:"A4"
+
+};
+
+return db;
+
+}
+
+
+async function refresh(){
 
 try{
 
-    if(!window.supabase){
+return await loadDB();
 
-        throw new Error(
-            "A biblioteca do Supabase não carregou."
-        );
+}catch(e){
 
-    }
+console.error(e);
 
-    supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        );
+alert(
+"Erro ao carregar os dados:\n\n"+
+errorMessage(e)
+);
+
+return null;
+
+}
+
+}
+
+
+/* NAVEGAÇÃO */
+
+function page(p){
+
+document
+.querySelectorAll("nav button")
+.forEach(b=>{
+
+b.classList.toggle(
+"active",
+b.dataset.page === p
+);
+
+});
+
+if(pages[p]){
+
+pages[p]();
+
+}
+
+}
+
+
+/* UNIDADE */
+
+function unitName(id){
+
+const u =
+db.unidades.find(
+x=>String(x.id) === String(id)
+);
+
+return u?.nome || "—";
+
+}
+
+
+/* Nº AUTOMÁTICO */
+
+function nextNumber(){
+
+const year =
+new Date().getFullYear();
+
+let max = 0;
+
+db.membros.forEach(m=>{
+
+const number =
+String(m.numero_membro || "");
+
+const match =
+number.match(/-(\d{4})$/);
+
+if(match){
+
+max =
+Math.max(max,Number(match[1]));
+
+}
+
+});
+
+return `
+DBV-${year}-${String(max+1).padStart(4,"0")}
+`;
+
+}
+
+
+/* UTILIZADOR AUTOMÁTICO */
+
+function nextUser(){
+
+let n = 1;
+
+while(
+db.membros.some(
+m =>
+m.utilizador ===
+`m${String(n).padStart(4,"0")}`
+)
+){
+
+n++;
+
+}
+
+return `m${String(n).padStart(4,"0")}`;
+
+}
+
+
+/* PALAVRA-PASSE */
+
+function generatePassword(){
+
+const chars =
+"ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+let result = "";
+
+const array =
+new Uint32Array(10);
+
+crypto.getRandomValues(array);
+
+array.forEach(n=>{
+
+result +=
+chars[n % chars.length];
+
+});
+
+return result;
+
+}
+
+
+/* DASHBOARD */
+
+async function dashboard(){
+
+if(!await refresh()) return;
+
+const receitas =
+db.financas
+.filter(x=>x.tipo==="Receita")
+.reduce(
+(a,x)=>a+Number(x.valor||0),
+0
+);
+
+const despesas =
+db.financas
+.filter(x=>x.tipo==="Despesa")
+.reduce(
+(a,x)=>a+Number(x.valor||0),
+0
+);
+
+content.innerHTML =
+
+T(
+"Dashboard",
+"Visão geral do clube",
+B(
+"+ Cadastrar membro",
+"primary",
+"page('membroForm')"
+)
+)
+
++
+
+`
+
+<div class="cards">
+
+<div class="card stat">
+
+👥 Membros
+
+<strong>
+${db.membros.length}
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+🏕️ Unidades
+
+<strong>
+${db.unidades.filter(
+x=>x.estado==="Ativa"
+).length}
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+📅 Atividades
+
+<strong>
+${db.atividades.length}
+</strong>
+
+</div>
+
+
+<div class="card stat">
+
+💰 Saldo
+
+<strong>
+${money(receitas-despesas)} Kz
+</strong>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Acesso rápido
+</h3>
+
+<div class="actions"
+style="justify-content:flex-start">
+
+${B(
+"Lista de membros",
+"light",
+"page('membros')"
+)}
+
+${B(
+"Unidades",
+"light",
+"page('unidades')"
+)}
+
+${B(
+"Atividades",
+"light",
+"page('atividades')"
+)}
+
+${B(
+"Finanças",
+"light",
+"page('financas')"
+)}
+
+${B(
+"Relatórios",
+"light",
+"page('relatorios')"
+)}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* MEMBROS */
+
+async function membros(){
+
+if(!await refresh()) return;
+
+content.innerHTML =
+
+T(
+"Lista geral dos membros",
+"Pesquisar e consultar os cadastros",
+B(
+"+ Cadastrar membro",
+"primary",
+"page('membroForm')"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<div class="toolbar">
+
+<input
+id="search"
+placeholder="Pesquisar por nome, Nº ou utilizador..."
+oninput="renderMembers()"
+>
+
+</div>
+
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Foto</th>
+<th>Nº</th>
+<th>Nome</th>
+<th>Unidade</th>
+<th>Função</th>
+<th>Classe</th>
+<th>Telefone</th>
+<th>Estado</th>
+<th>Ação</th>
+
+</tr>
+
+</thead>
+
+<tbody id="memberRows">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+renderMembers();
+
+}
+
+
+function renderMembers(){
+
+const q =
+(
+document.getElementById("search")?.value ||
+""
+).toLowerCase();
+
+
+const list =
+db.membros.filter(m=>{
+
+const text = `
+
+${m.nome || ""}
+
+${m.numero_membro || ""}
+
+${m.utilizador || ""}
+
+`.toLowerCase();
+
+return text.includes(q);
+
+});
+
+
+const rows =
+document.getElementById("memberRows");
+
+
+rows.innerHTML =
+
+list.map(m=>`
+
+<tr>
+
+<td>
+
+${
+m.foto_url
+
+?
+
+`<img
+class="member-photo"
+src="${esc(m.foto_url)}"
+alt="Foto"
+>`
+
+:
+
+"—"
+
+}
+
+</td>
+
+<td>
+<b>
+${esc(m.numero_membro)}
+</b>
+</td>
+
+<td>
+${esc(m.nome)}
+</td>
+
+<td>
+${esc(unitName(m.unidade_id))}
+</td>
+
+<td>
+${esc(m.funcao || "—")}
+</td>
+
+<td>
+${esc(m.classe || "—")}
+</td>
+
+<td>
+${esc(m.telefone || "—")}
+</td>
+
+<td>
+
+<span class="badge">
+${esc(m.estado || "Ativo")}
+</span>
+
+</td>
+
+<td>
+
+${B(
+"Abrir",
+"light",
+`profile('${m.id}')`
+)}
+
+</td>
+
+</tr>
+
+`).join("")
+
+||
+
+`
+
+<tr>
+
+<td
+colspan="9"
+class="muted"
+>
+
+Nenhum membro encontrado.
+
+</td>
+
+</tr>
+
+`;
+
+}
+
+
+/* UPLOAD FOTO */
+
+async function uploadPhoto(file,id){
+
+if(!file || !file.name){
+
+return null;
+
+}
+
+const c =
+await initSupabase();
+
+
+const ext =
+(
+file.name
+.split(".")
+.pop() ||
+"jpg"
+)
+.toLowerCase();
+
+
+const path =
+`membros/${id}-${Date.now()}.${ext}`;
+
+
+const {error} =
+await c.storage
+.from("fotos_membros")
+.upload(
+path,
+file,
+{
+upsert:true,
+contentType:
+file.type || "image/jpeg"
+}
+);
+
+
+if(error){
+
+throw error;
+
+}
+
+
+const {data} =
+c.storage
+.from("fotos_membros")
+.getPublicUrl(path);
+
+
+return data.publicUrl;
+
+}
+
+
+/* FORMULÁRIO MEMBRO */
+
+async function membroForm(){
+
+if(!await refresh()) return;
+
+const units =
+db.unidades
+.filter(u=>u.estado==="Ativa")
+.map(u=>({
+
+value:u.id,
+label:u.nome
+
+}));
+
+
+content.innerHTML =
+
+T(
+"Cadastrar membro",
+"O Nº e o utilizador serão gerados automaticamente",
+B(
+"← Lista geral",
+"light",
+"page('membros')"
+)
+)
+
++
+
+`
+
+<form id="memberForm">
+
+<div class="card">
+
+<h3>
+Dados pessoais
+</h3>
+
+<div class="grid">
+
+${field(
+"nome",
+"Nome completo *",
+"text",
+true
+)}
+
+${field(
+"nascimento",
+"Data de nascimento",
+"date"
+)}
+
+${select(
+"sexo",
+"Sexo",
+[
+"Masculino",
+"Feminino",
+"Outro"
+]
+)}
+
+${field(
+"documento",
+"Nº do documento"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${field(
+"endereco",
+"Endereço"
+)}
+
+${field(
+"data_cadastro",
+"Data de cadastro",
+"date",
+true
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Dados do clube
+</h3>
+
+<div class="grid">
+
+${select(
+"unidade_id",
+"Unidade",
+units
+)}
+
+${select(
+"funcao",
+"Função/Cargo",
+[
+"Desbravador",
+"Conselheiro",
+"Vice-conselheiro",
+"Diretor",
+"Secretário",
+"Tesoureiro",
+"Capelão"
+]
+)}
+
+${select(
+"classe",
+"Classe",
+[
+"Amigo",
+"Companheiro",
+"Pesquisador",
+"Pioneiro",
+"Excursionista",
+"Guia"
+]
+)}
+
+${select(
+"estado",
+"Estado",
+[
+"Ativo",
+"Inativo",
+"Suspenso"
+]
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Família e escola
+</h3>
+
+<div class="grid">
+
+${field(
+"encarregado",
+"Nome do encarregado"
+)}
+
+${field(
+"contacto_encarregado",
+"Contacto do encarregado"
+)}
+
+${field(
+"pai",
+"Nome do pai"
+)}
+
+${field(
+"mae",
+"Nome da mãe"
+)}
+
+${field(
+"escola",
+"Escola"
+)}
+
+${field(
+"classe_escolar",
+"Classe escolar"
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Fotografia
+</h3>
+
+<div class="field">
+
+<label>
+Foto do membro
+</label>
+
+<input
+name="foto"
+type="file"
+accept="image/*"
+>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Credenciais
+</h3>
+
+<p class="muted">
+
+O sistema gera automaticamente o Nº de membro,
+o utilizador e uma palavra-passe inicial.
+
+</p>
+
+</div>
+
+
+<div class="actions">
+
+<button
+id="saveMember"
+class="btn primary"
+type="submit"
+>
+
+Cadastrar membro
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+document
+.querySelector('[name="data_cadastro"]')
+.value =
+today();
+
+
+document
+.querySelector('[name="estado"]')
+.value =
+"Ativo";
+
+
+document
+.getElementById("memberForm")
+.onsubmit =
+saveMember;
+
+}
+
+
+/* GUARDAR MEMBRO */
+
+async function saveMember(e){
+
+e.preventDefault();
+
+const btn =
+document.getElementById("saveMember");
+
+btn.disabled = true;
+
+btn.textContent =
+"A cadastrar...";
+
+
+try{
+
+const c =
+await initSupabase();
+
+const form =
+new FormData(e.target);
+
+const d = {};
+
+
+const fields = [
+
+"nome",
+"nascimento",
+"sexo",
+"documento",
+"telefone",
+"endereco",
+"unidade_id",
+"funcao",
+"classe",
+"estado",
+"pai",
+"contacto_encarregado",
+"encarregado",
+"classe_escolar",
+"escola",
+"mae",
+"data_cadastro"
+
+];
+
+
+fields.forEach(k=>{
+
+const value =
+form.get(k);
+
+if(value !== null && value !== ""){
+
+d[k] = value;
+
+}
+
+});
+
+
+d.numero_membro =
+nextNumber();
+
+d.utilizador =
+nextUser();
+
+
+const password =
+generatePassword();
+
+
+const result =
+await c
+.from("membros")
+.insert([d])
+.select()
+.single();
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+let member =
+result.data;
+
+
+const photo =
+form.get("foto");
+
+
+if(
+photo &&
+photo.size > 0
+){
+
+const url =
+await uploadPhoto(
+photo,
+member.id
+);
+
+
+const update =
+await c
+.from("membros")
+.update({
+foto_url:url
+})
+.eq(
+"id",
+member.id
+);
+
+
+if(update.error){
+
+throw update.error;
+
+}
+
+
+member.foto_url =
+url;
+
+}
+
+
+db.membros.push(member);
+
+
+alert(
+
+"Membro cadastrado com sucesso!\n\n"+
+
+"Nº: "+
+member.numero_membro+
+
+"\nUtilizador: "+
+member.utilizador+
+
+"\nPalavra-passe inicial: "+
+password+
+
+"\n\nAnote estas credenciais."
+
+);
+
+
+await profile(
+member.id,
+true
+);
+
+
+}catch(err){
+
+console.error(err);
+
+alert(
+"Erro ao cadastrar membro:\n\n"+
+errorMessage(err)
+);
+
+}finally{
+
+btn.disabled = false;
+
+btn.textContent =
+"Cadastrar membro";
+
+}
+
+}
+
+
+/* PERFIL */
+
+async function profile(id,created=false){
+
+if(!await refresh()) return;
+
+const m =
+db.membros.find(
+x=>String(x.id) === String(id)
+);
+
+
+if(!m){
+
+alert(
+"Membro não encontrado."
+);
+
+return;
+
+}
+
+
+content.innerHTML =
+
+T(
+"Perfil do membro",
+created
+?"Membro cadastrado com sucesso."
+:"Ficha individual",
+B(
+"← Lista geral",
+"light",
+"page('membros')"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<div class="profile-head">
+
+${
+m.foto_url
+
+?
+
+`<img
+class="photo-large"
+src="${esc(m.foto_url)}"
+alt="Foto do membro"
+>`
+
+:
+
+`<div
+class="photo-large"
+style="display:grid;place-items:center"
+>
+Sem foto
+</div>`
+
+}
+
+
+<div>
+
+<h2>
+${esc(m.nome)}
+</h2>
+
+<p>
+
+<b>Nº:</b>
+${esc(m.numero_membro)}
+
+<br>
+
+<b>Utilizador:</b>
+${esc(m.utilizador || "—")}
+
+</p>
+
+<p>
+
+<b>Unidade:</b>
+${esc(unitName(m.unidade_id))}
+
+<br>
+
+<b>Função:</b>
+${esc(m.funcao || "—")}
+
+<br>
+
+<b>Classe:</b>
+${esc(m.classe || "—")}
+
+</p>
+
+</div>
+
+</div>
+
+<hr>
+
+<p>
+
+<b>Nascimento:</b>
+${esc(m.nascimento || "—")}
+
+&nbsp;
+
+<b>Sexo:</b>
+${esc(m.sexo || "—")}
+
+</p>
+
+<p>
+
+<b>Documento:</b>
+${esc(m.documento || "—")}
+
+&nbsp;
+
+<b>Telefone:</b>
+${esc(m.telefone || "—")}
+
+</p>
+
+<p>
+
+<b>Estado:</b>
+${esc(m.estado || "—")}
+
+</p>
+
+<p>
+
+<b>Endereço:</b>
+${esc(m.endereco || "—")}
+
+</p>
+
+<p>
+
+<b>Encarregado:</b>
+${esc(m.encarregado || "—")}
+
+<br>
+
+<b>Contacto:</b>
+${esc(m.contacto_encarregado || "—")}
+
+</p>
+
+<p>
+
+<b>Pai:</b>
+${esc(m.pai || "—")}
+
+&nbsp;
+
+<b>Mãe:</b>
+${esc(m.mae || "—")}
+
+</p>
+
+<p>
+
+<b>Escola:</b>
+${esc(m.escola || "—")}
+
+&nbsp;
+
+<b>Classe escolar:</b>
+${esc(m.classe_escolar || "—")}
+
+</p>
+
+<p>
+
+<b>Data de cadastro:</b>
+${esc(m.data_cadastro || "—")}
+
+</p>
+
+</div>
+
+
+<div class="actions">
+
+${B(
+"✏️ Editar",
+"light",
+`editMember('${m.id}')`
+)}
+
+${B(
+"📄 Ficha A4",
+"light",
+`printA4('${m.id}')`
+)}
+
+${B(
+"🖨️ Cartão térmico",
+"light",
+`printThermal('${m.id}')`
+)}
+
+</div>
+
+`;
+
+}
+
+
+/* EDITAR */
+
+async function editMember(id){
+
+if(!await refresh()) return;
+
+const m =
+db.membros.find(
+x=>String(x.id) === String(id)
+);
+
+
+if(!m){
+
+return;
+
+}
+
+
+const units =
+db.unidades.map(u=>({
+
+value:u.id,
+label:u.nome
+
+}));
+
+
+content.innerHTML =
+
+T(
+"Editar membro",
+"Alterar os dados do cadastro",
+B(
+"← Voltar",
+"light",
+`profile('${id}')`
+)
+)
+
++
+
+`
+
+<form id="editForm">
+
+<div class="card">
+
+<div class="grid">
+
+${field(
+"numero_membro",
+"Nº de membro",
+"text",
+true
+)}
+
+${field(
+"nome",
+"Nome completo",
+"text",
+true
+)}
+
+${field(
+"nascimento",
+"Nascimento",
+"date"
+)}
+
+${select(
+"sexo",
+"Sexo",
+[
+"Masculino",
+"Feminino",
+"Outro"
+]
+)}
+
+${field(
+"documento",
+"Nº do documento"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${field(
+"endereco",
+"Endereço"
+)}
+
+${select(
+"unidade_id",
+"Unidade",
+units
+)}
+
+${select(
+"funcao",
+"Função",
+[
+"Desbravador",
+"Conselheiro",
+"Vice-conselheiro",
+"Diretor",
+"Secretário",
+"Tesoureiro",
+"Capelão"
+]
+)}
+
+${select(
+"classe",
+"Classe",
+[
+"Amigo",
+"Companheiro",
+"Pesquisador",
+"Pioneiro",
+"Excursionista",
+"Guia"
+]
+)}
+
+${select(
+"estado",
+"Estado",
+[
+"Ativo",
+"Inativo",
+"Suspenso"
+]
+)}
+
+${field(
+"encarregado",
+"Encarregado"
+)}
+
+${field(
+"contacto_encarregado",
+"Contacto do encarregado"
+)}
+
+${field(
+"pai",
+"Pai"
+)}
+
+${field(
+"mae",
+"Mãe"
+)}
+
+${field(
+"escola",
+"Escola"
+)}
+
+${field(
+"classe_escolar",
+"Classe escolar"
+)}
+
+${field(
+"data_cadastro",
+"Data de cadastro",
+"date"
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="field">
+
+<label>
+Nova fotografia
+</label>
+
+<input
+name="foto"
+type="file"
+accept="image/*"
+>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+id="editSave"
+class="btn primary"
+type="submit"
+>
+
+Guardar alterações
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+const fields = [
+
+"numero_membro",
+"nome",
+"nascimento",
+"sexo",
+"documento",
+"telefone",
+"endereco",
+"unidade_id",
+"funcao",
+"classe",
+"estado",
+"encarregado",
+"contacto_encarregado",
+"pai",
+"mae",
+"escola",
+"classe_escolar",
+"data_cadastro"
+
+];
+
+
+fields.forEach(k=>{
+
+const el =
+document.querySelector(
+`[name="${k}"]`
+);
+
+if(el){
+
+el.value =
+m[k] ?? "";
+
+}
+
+});
+
+
+document
+.getElementById("editForm")
+.onsubmit =
+async function(e){
+
+e.preventDefault();
+
+const btn =
+document.getElementById("editSave");
+
+btn.disabled = true;
+
+try{
+
+const c =
+await initSupabase();
+
+const form =
+new FormData(e.target);
+
+const d = {};
+
+
+fields.forEach(k=>{
+
+d[k] =
+form.get(k) ?? "";
+
+});
+
+
+const photo =
+form.get("foto");
+
+
+if(
+photo &&
+photo.size > 0
+){
+
+d.foto_url =
+await uploadPhoto(
+photo,
+id
+);
+
+}
+
+
+const result =
+await c
+.from("membros")
+.update(d)
+.eq("id",id);
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+await profile(id);
+
+
+}catch(err){
+
+alert(
+"Erro ao guardar:\n\n"+
+errorMessage(err)
+);
+
+}finally{
+
+btn.disabled = false;
+
+}
+
+};
+
+}
+
+
+/* UNIDADES */
+
+async function unidades(){
+
+if(!await refresh()) return;
+
+content.innerHTML =
+
+T(
+"Unidades",
+"Criar e administrar unidades",
+B(
+"+ Nova unidade",
+"primary",
+"unitForm()"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Unidade</th>
+<th>Responsável</th>
+<th>Membros</th>
+<th>Estado</th>
+<th>Ação</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${
+db.unidades.map(u=>`
+
+<tr>
+
+<td>
+<b>
+${esc(u.nome)}
+</b>
+</td>
+
+<td>
+${esc(u.responsavel || "—")}
+</td>
+
+<td>
+${
+db.membros.filter(
+m=>String(m.unidade_id) === String(u.id)
+).length
+}
+</td>
+
+<td>
+${esc(u.estado || "—")}
+</td>
+
+<td>
+
+${B(
+"Editar",
+"light",
+`unitForm('${u.id}')`
+)}
+
+</td>
+
+</tr>
+
+`).join("")
+
+||
+
+`<tr>
+<td colspan="5">
+Nenhuma unidade registada.
+</td>
+</tr>`
+
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+async function unitForm(id=null){
+
+if(!await refresh()) return;
+
+let u =
+id
+
+?
+
+db.unidades.find(
+x=>String(x.id) === String(id)
+)
+
+:
+
+{
+nome:"",
+responsavel:"",
+estado:"Ativa"
+};
+
+
+content.innerHTML =
+
+T(
+id
+?"Editar unidade"
+:"Nova unidade",
+"Formulário de unidade",
+B(
+"← Voltar",
+"light",
+"page('unidades')"
+)
+)
+
++
+
+`
+
+<form id="unitForm">
+
+<div class="card">
+
+<div class="grid">
+
+${field(
+"nome",
+"Nome *",
+"text",
+true
+)}
+
+${field(
+"responsavel",
+"Responsável"
+)}
+
+${select(
+"estado",
+"Estado",
+[
+"Ativa",
+"Inativa"
+]
+)}
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+["nome","responsavel","estado"]
+.forEach(k=>{
+
+const el =
+document.querySelector(
+`[name="${k}"]`
+);
+
+if(el){
+
+el.value =
+u[k] || "";
+
+}
+
+});
+
+
+document
+.getElementById("unitForm")
+.onsubmit =
+async e=>{
+
+e.preventDefault();
+
+try{
+
+const c =
+await initSupabase();
+
+const d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+let result;
+
+if(id){
+
+result =
+await c
+.from("unidades")
+.update(d)
+.eq("id",id);
+
+}else{
+
+result =
+await c
+.from("unidades")
+.insert([d]);
+
+}
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+page("unidades");
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+errorMessage(err)
+);
+
+}
+
+};
+
+}
+
+
+/* ATIVIDADES */
+
+async function atividades(){
+
+if(!await refresh()) return;
+
+content.innerHTML =
+
+T(
+"Atividades",
+"Registo e gestão das atividades",
+B(
+"+ Nova atividade",
+"primary",
+"activityForm()"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Atividade</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Local</th>
+<th>Responsável</th>
+<th>Custo</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${
+db.atividades.map(a=>`
+
+<tr>
+
+<td>
+${esc(a.nome)}
+</td>
+
+<td>
+${esc(a.data || "")}
+</td>
+
+<td>
+${esc(a.hora || "")}
+</td>
+
+<td>
+${esc(a.local || "")}
+</td>
+
+<td>
+${esc(a.responsavel || "")}
+</td>
+
+<td>
+${money(a.custo)} Kz
+</td>
+
+</tr>
+
+`).join("")
+
+||
+
+`<tr>
+<td colspan="6">
+Nenhuma atividade registada.
+</td>
+</tr>`
+
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+async function activityForm(){
+
+content.innerHTML =
+
+T(
+"Registar atividade",
+"Nova atividade",
+B(
+"← Voltar",
+"light",
+"page('atividades')"
+)
+)
+
++
+
+`
+
+<form id="activityForm">
+
+<div class="card">
+
+<div class="grid">
+
+${field(
+"nome",
+"Nome da atividade *",
+"text",
+true
+)}
+
+${field(
+"data",
+"Data *",
+"date",
+true
+)}
+
+${field(
+"hora",
+"Hora",
+"time"
+)}
+
+${field(
+"local",
+"Local"
+)}
+
+${field(
+"responsavel",
+"Responsável"
+)}
+
+${field(
+"custo",
+"Custo (Kz)",
+"number"
+)}
+
+</div>
+
+${field(
+"descricao",
+"Descrição"
+)}
+
+</div>
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar atividade
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+document
+.querySelector('[name="data"]')
+.value =
+today();
+
+
+document
+.getElementById("activityForm")
+.onsubmit =
+async e=>{
+
+e.preventDefault();
+
+try{
+
+const c =
+await initSupabase();
+
+const d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+if(!d.custo){
+
+d.custo = 0;
+
+}
+
+const result =
+await c
+.from("atividades")
+.insert([d]);
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+page("atividades");
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+errorMessage(err)
+);
+
+}
+
+};
+
+}
+
+
+/* FINANÇAS */
+
+async function financas(){
+
+if(!await refresh()) return;
+
+const receitas =
+db.financas
+.filter(x=>x.tipo==="Receita")
+.reduce(
+(a,x)=>a+Number(x.valor||0),
+0
+);
+
+const despesas =
+db.financas
+.filter(x=>x.tipo==="Despesa")
+.reduce(
+(a,x)=>a+Number(x.valor||0),
+0
+);
+
+
+content.innerHTML =
+
+T(
+"Finanças",
+"Receitas, despesas e pagamentos",
+B(
+"+ Novo movimento",
+"primary",
+"financeForm()"
+)
+)
+
++
+
+`
+
+<div class="cards">
+
+<div class="card">
+
+Receitas
+
+<strong>
+${money(receitas)} Kz
+</strong>
+
+</div>
+
+
+<div class="card">
+
+Despesas
+
+<strong>
+${money(despesas)} Kz
+</strong>
+
+</div>
+
+
+<div class="card">
+
+Saldo
+
+<strong>
+${money(receitas-despesas)} Kz
+</strong>
+
+</div>
+
+
+<div class="card">
+
+Movimentos
+
+<strong>
+${db.financas.length}
+</strong>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Data</th>
+<th>Tipo</th>
+<th>Membro</th>
+<th>Nº</th>
+<th>Categoria</th>
+<th>Descrição</th>
+<th>Valor</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${
+db.financas.map(x=>`
+
+<tr>
+
+<td>
+${esc(x.data || "")}
+</td>
+
+<td>
+${esc(x.tipo || "")}
+</td>
+
+<td>
+${esc(x.membro_nome || "—")}
+</td>
+
+<td>
+${esc(x.membro_numero || "—")}
+</td>
+
+<td>
+${esc(x.categoria || "")}
+</td>
+
+<td>
+${esc(x.descricao || "")}
+</td>
+
+<td>
+${money(x.valor)} Kz
+</td>
+
+</tr>
+
+`).join("")
+
+||
+
+`<tr>
+<td colspan="7">
+Nenhum movimento registado.
+</td>
+</tr>`
+
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+async function financeForm(){
+
+if(!await refresh()) return;
+
+content.innerHTML =
+
+T(
+"Novo movimento financeiro",
+"Registar receita ou despesa",
+B(
+"← Voltar",
+"light",
+"page('financas')"
+)
+)
+
++
+
+`
+
+<form id="financeForm">
+
+<div class="card">
+
+<div class="grid">
+
+${select(
+"tipo",
+"Tipo",
+[
+"Receita",
+"Despesa"
+],
+true
+)}
+
+
+<div class="field">
+
+<label>
+Membro
+</label>
+
+<select name="membro_id">
+
+<option value="">
+Nenhum / não aplicável
+</option>
+
+${
+db.membros.map(m=>`
+
+<option value="${esc(m.id)}">
+
+${esc(m.nome)}
+—
+${esc(m.numero_membro)}
+
+</option>
+
+`).join("")
+}
+
+</select>
+
+</div>
+
+
+${field(
+"categoria",
+"Categoria *",
+"text",
+true
+)}
+
+${field(
+"valor",
+"Valor (Kz) *",
+"number",
+true
+)}
+
+${field(
+"data",
+"Data *",
+"date",
+true
+)}
+
+${field(
+"descricao",
+"Descrição"
+)}
+
+${select(
+"forma",
+"Forma de pagamento",
+[
+"Dinheiro",
+"Transferência",
+"Depósito",
+"Multicaixa Express",
+"Outro"
+]
+)}
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar movimento
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+document
+.querySelector('[name="data"]')
+.value =
+today();
+
+
+document
+.getElementById("financeForm")
+.onsubmit =
+async e=>{
+
+e.preventDefault();
+
+try{
+
+const c =
+await initSupabase();
+
+const d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+const m =
+db.membros.find(
+x=>String(x.id) ===
+String(d.membro_id)
+);
+
+
+d.membro_nome =
+m?.nome || "";
+
+d.membro_numero =
+m?.numero_membro || "";
+
+
+if(!d.valor){
+
+d.valor = 0;
+
+}
+
+
+const result =
+await c
+.from("financas")
+.insert([d]);
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+page("financas");
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+errorMessage(err)
+);
+
+}
+
+};
+
+}
+
+
+/* RELATÓRIOS */
+
+function relatorios(){
+
+content.innerHTML =
+
+T(
+"Relatórios",
+"Principais relatórios do clube"
+)
+
++
+
+`
+
+<div class="cards">
+
+<div class="card">
+
+<h3>
+Lista geral
+</h3>
+
+<p class="muted">
+Todos os membros.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('membros')"
+)}
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Membros por unidade
+</h3>
+
+<p class="muted">
+Quantidade por unidade.
+</p>
+
+${B(
+"Abrir",
+"light",
+"unitReport()"
+)}
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Atividades
+</h3>
+
+<p class="muted">
+Histórico das atividades.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('atividades')"
+)}
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Financeiro
+</h3>
+
+<p class="muted">
+Receitas e despesas.
+</p>
+
+${B(
+"Abrir",
+"light",
+"page('financas')"
+)}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+async function unitReport(){
+
+if(!await refresh()) return;
+
+content.innerHTML =
+
+T(
+"Membros por unidade",
+"Relatório geral",
+B(
+"← Voltar",
+"light",
+"page('relatorios')"
+)
+)
+
++
+
+`
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Unidade
+</th>
+
+<th>
+Membros
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${
+db.unidades.map(u=>`
+
+<tr>
+
+<td>
+${esc(u.nome)}
+</td>
+
+<td>
+
+${
+db.membros.filter(
+m=>String(m.unidade_id) ===
+String(u.id)
+).length
+}
+
+</td>
+
+</tr>
+
+`).join("")
+
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+/* DEFINIÇÕES */
+
+async function definicoes(){
+
+if(!await refresh()) return;
+
+content.innerHTML =
+
+T(
+"Definições gerais",
+"Configurações do clube e impressão"
+)
+
++
+
+`
+
+<form id="configForm">
+
+<div class="card">
+
+<h3>
+Dados do clube
+</h3>
+
+<div class="grid">
+
+${field(
+"nome_clube",
+"Nome do clube"
+)}
+
+${field(
+"diretor",
+"Diretor"
+)}
+
+${field(
+"telefone",
+"Telefone"
+)}
+
+${field(
+"email",
+"E-mail"
+)}
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Impressão
+</h3>
+
+<div class="grid">
+
+${select(
+"papel",
+"Papel térmico",
+[
+"58 mm",
+"80 mm"
+]
+)}
+
+${select(
+"ficha",
+"Ficha principal",
+[
+"A4"
+]
+)}
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Guardar definições
+
+</button>
+
+</div>
+
+</form>
+
+`;
+
+
+[
+"nome_clube",
+"diretor",
+"telefone",
+"email",
+"papel",
+"ficha"
+]
+.forEach(k=>{
+
+const el =
+document.querySelector(
+`[name="${k}"]`
+);
+
+if(el){
+
+el.value =
+db.config[k] || "";
+
+}
+
+});
+
+
+document
+.getElementById("configForm")
+.onsubmit =
+async e=>{
+
+e.preventDefault();
+
+try{
+
+const c =
+await initSupabase();
+
+const d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+let result;
+
+
+if(db.config.id){
+
+result =
+await c
+.from("configuracoes")
+.update(d)
+.eq(
+"id",
+db.config.id
+);
+
+}else{
+
+result =
+await c
+.from("configuracoes")
+.insert([d]);
+
+}
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+alert(
+"Definições guardadas com sucesso."
+);
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+errorMessage(err)
+);
+
+}
+
+};
+
+}
+
+
+/* MINHA CONTA */
+
+async function conta(){
+
+try{
+
+const c =
+await initSupabase();
+
+const result =
+await c.auth.getUser();
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+const email =
+result.data.user?.email || "";
+
+
+content.innerHTML =
+
+T(
+"Minha conta",
+"Credenciais da conta autorizada"
+)
+
++
+
+`
+
+<div class="card">
+
+<h3>
+Conta atual
+</h3>
+
+<p>
+
+<b>E-mail:</b>
+
+${esc(email)}
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Alterar palavra-passe
+</h3>
+
+<form id="passwordForm">
+
+${field(
+"novaSenha",
+"Nova palavra-passe",
+"password",
+true
+)}
+
+${field(
+"confirmarSenha",
+"Confirmar palavra-passe",
+"password",
+true
+)}
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Alterar palavra-passe
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Alterar e-mail
+</h3>
+
+<form id="emailForm">
+
+${field(
+"novoEmail",
+"Novo e-mail",
+"email",
+true
+)}
+
+<div class="actions">
+
+<button
+class="btn primary"
+type="submit"
+>
+
+Alterar e-mail
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+`;
+
+
+document
+.getElementById("passwordForm")
+.onsubmit =
+async e=>{
+
+e.preventDefault();
+
+const d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+if(
+d.novaSenha !==
+d.confirmarSenha
+){
+
+alert(
+"As palavras-passe não coincidem."
+);
+
+return;
+
+}
+
+
+if(
+d.novaSenha.length < 6
+){
+
+alert(
+"A palavra-passe deve ter pelo menos 6 caracteres."
+);
+
+return;
+
+}
+
+
+try{
+
+const result =
+await c.auth.updateUser({
+password:d.novaSenha
+});
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+alert(
+"Palavra-passe alterada com sucesso."
+);
+
+e.target.reset();
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+errorMessage(err)
+);
+
+}
+
+};
+
+
+document
+.getElementById("emailForm")
+.onsubmit =
+async e=>{
+
+e.preventDefault();
+
+const d =
+Object.fromEntries(
+new FormData(e.target)
+);
+
+
+try{
+
+const result =
+await c.auth.updateUser({
+email:d.novoEmail.trim()
+});
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+alert(
+"Pedido de alteração enviado. Verifique o novo e-mail."
+);
+
+e.target.reset();
+
+
+}catch(err){
+
+alert(
+"Erro:\n\n"+
+errorMessage(err)
+);
+
+}
+
+};
+
+
+}catch(err){
+
+alert(
+"Erro ao abrir a conta:\n\n"+
+errorMessage(err)
+);
+
+}
+
+}
+
+
+/* IMPRESSÃO A4 */
+
+async function printA4(id){
+
+if(!await refresh()) return;
+
+const m =
+db.membros.find(
+x=>String(x.id) === String(id)
+);
+
+
+if(!m) return;
+
+
+const w =
+window.open(
+"",
+"_blank"
+);
+
+
+if(!w){
+
+alert(
+"O navegador bloqueou a janela de impressão."
+);
+
+return;
+
+}
+
+
+w.document.write(`
+
+<html>
+
+<head>
+
+<title>
+Ficha A4 — ${esc(m.nome)}
+</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:20mm;
+}
+
+h1{
+text-align:center;
+}
+
+.header{
+display:flex;
+gap:20px;
+align-items:center;
+}
+
+.photo{
+width:110px;
+height:110px;
+object-fit:cover;
+}
+
+.row{
+padding:9px 0;
+border-bottom:1px solid #ddd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>
+FICHA DE CADASTRO
+</h1>
+
+<div class="header">
+
+${
+m.foto_url
+?
+`<img
+class="photo"
+src="${esc(m.foto_url)}"
+>`
+:
+""
+}
+
+<div>
+
+<h2>
+${esc(
+db.config.nome_clube ||
+"Clube de Desbravadores"
+)}
+</h2>
+
+<b>Nº:</b>
+${esc(m.numero_membro)}
+
+</div>
+
+</div>
+
+
+${
+[
+["Nome completo",m.nome],
+["Nascimento",m.nascimento],
+["Sexo",m.sexo],
+["Documento",m.documento],
+["Unidade",unitName(m.unidade_id)],
+["Função",m.funcao],
+["Classe",m.classe],
+["Estado",m.estado],
+["Telefone",m.telefone],
+["Endereço",m.endereco],
+["Encarregado",m.encarregado],
+["Contacto do encarregado",m.contacto_encarregado],
+["Pai",m.pai],
+["Mãe",m.mae],
+["Escola",m.escola],
+["Classe escolar",m.classe_escolar],
+["Data de cadastro",m.data_cadastro]
+]
+.map(x=>`
+
+<div class="row">
+
+<b>
+${esc(x[0])}:
+</b>
+
+${esc(x[1] || "—")}
+
+</div>
+
+`)
+.join("")
+}
+
+
+<script>
+
+setTimeout(
+()=>print(),
+300
+);
+
+<\/script>
+
+</body>
+
+</html>
+
+`);
+
+w.document.close();
+
+}
+
+
+/* IMPRESSÃO TÉRMICA */
+
+async function printThermal(id){
+
+if(!await refresh()) return;
+
+const m =
+db.membros.find(
+x=>String(x.id) === String(id)
+);
+
+
+if(!m) return;
+
+
+const w =
+window.open(
+"",
+"_blank",
+"width=420,height=650"
+);
+
+
+if(!w){
+
+alert(
+"O navegador bloqueou a impressão."
+);
+
+return;
+
+}
+
+
+w.document.write(`
+
+<html>
+
+<head>
+
+<style>
+
+@page{
+size:58mm auto;
+margin:0;
+}
+
+body{
+width:58mm;
+font:11px Arial;
+padding:4mm;
+}
+
+h2{
+text-align:center;
+font-size:14px;
+}
+
+.photo{
+width:42mm;
+height:42mm;
+object-fit:cover;
+}
+
+p{
+margin:6px 0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>
+
+SGD
+
+<br>
+
+FICHA DO MEMBRO
+
+</h2>
+
+
+${
+m.foto_url
+
+?
+
+`<img
+class="photo"
+src="${esc(m.foto_url)}"
+>`
+
+:
+
+""
+
+}
+
+
+<hr>
+
+
+<p>
+<b>Nome:</b>
+${esc(m.nome)}
+</p>
+
+<p>
+<b>Nº:</b>
+${esc(m.numero_membro)}
+</p>
+
+<p>
+<b>Utilizador:</b>
+${esc(m.utilizador || "—")}
+</p>
+
+<p>
+<b>Unidade:</b>
+${esc(unitName(m.unidade_id))}
+</p>
+
+<p>
+<b>Função:</b>
+${esc(m.funcao || "—")}
+</p>
+
+<p>
+<b>Classe:</b>
+${esc(m.classe || "—")}
+</p>
+
+<p>
+<b>Estado:</b>
+${esc(m.estado || "—")}
+</p>
+
+<p>
+<b>Cadastro:</b>
+${esc(m.data_cadastro || "—")}
+</p>
+
+<hr>
+
+
+<script>
+
+setTimeout(
+()=>print(),
+300
+);
+
+<\/script>
+
+</body>
+
+</html>
+
+`);
+
+w.document.close();
+
+}
+
+
+/* LOGOUT */
+
+async function logout(){
+
+try{
+
+const c =
+await initSupabase();
+
+await c.auth.signOut();
+
+}catch(e){
+
+console.error(e);
+
+}
+
+location.reload();
+
+}
+
+
+/* PÁGINAS */
+
+const pages = {
+
+dashboard,
+membros,
+membroForm,
+profile,
+editMember,
+unidades,
+unitForm,
+atividades,
+activityForm,
+financas,
+financeForm,
+relatorios,
+unitReport,
+definicoes,
+conta
+
+};
+
+
+/* NAVEGAÇÃO */
+
+document
+.querySelectorAll("nav button")
+.forEach(button=>{
+
+button.onclick =
+()=>page(
+button.dataset.page
+);
+
+});
+
+
+/* LOGIN */
+
+document
+.getElementById("loginForm")
+.onsubmit =
+async function(e){
+
+e.preventDefault();
+
+
+const loginButton =
+document.getElementById("loginBtn");
+
+const loginError =
+document.getElementById("loginError");
+
+
+loginError.classList.add(
+"hidden"
+);
+
+loginButton.disabled = true;
+
+loginButton.textContent =
+"A entrar...";
+
+
+try{
+
+const form =
+new FormData(e.target);
+
+const email =
+String(
+form.get("user") || ""
+)
+.trim();
+
+const password =
+String(
+form.get("pass") || ""
+);
+
+
+if(!email || !password){
+
+throw new Error(
+"Digite o e-mail e a palavra-passe."
+);
+
+}
+
+
+const c =
+await initSupabase();
+
+
+const result =
+await c.auth.signInWithPassword({
+
+email:email,
+
+password:password
+
+});
+
+
+if(result.error){
+
+throw result.error;
+
+}
+
+
+if(!result.data?.session){
+
+throw new Error(
+"O Supabase não devolveu uma sessão."
+);
+
+}
+
+
+/*
+IMPORTANTE:
+A sessão foi criada.
+Agora mostramos o sistema.
+*/
+
+document
+.getElementById("login")
+.classList.add("hidden");
+
+
+document
+.getElementById("app")
+.classList.remove("hidden");
+
+
+await page("dashboard");
+
 
 }catch(error){
 
-    mostrarErro(
-        "Erro ao carregar o Supabase:\n\n" +
-        error.message
-    );
-
-}
-
-
-/* =====================================================
-   ELEMENTOS
-===================================================== */
-
-const login =
-document.getElementById("login");
-
-const sistema =
-document.getElementById("sistema");
-
-const form =
-document.getElementById("loginForm");
-
-const emailInput =
-document.getElementById("email");
-
-const senhaInput =
-document.getElementById("senha");
-
-const botao =
-document.getElementById("btnEntrar");
-
-const mensagem =
-document.getElementById("mensagem");
-
-const usuarioLogado =
-document.getElementById("usuarioLogado");
-
-
-/* =====================================================
-   MENSAGENS
-===================================================== */
-
-function limparMensagem(){
-
-    mensagem.textContent = "";
-
-    mensagem.className =
-        "mensagem";
-
-}
-
-
-function mostrarErro(texto){
-
-    mensagem.textContent = texto;
-
-    mensagem.className =
-        "mensagem erro";
-
-}
-
-
-function mostrarSucesso(texto){
-
-    mensagem.textContent = texto;
-
-    mensagem.className =
-        "mensagem sucesso";
-
-}
-
-
-/* =====================================================
-   MOSTRAR SISTEMA
-===================================================== */
-
-function abrirSistema(usuario){
-
-    login.style.display = "none";
-
-    sistema.style.display = "block";
-
-    if(usuario){
-
-        usuarioLogado.textContent =
-            usuario.email || "";
-
-    }
-
-}
-
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
-form.addEventListener(
-    "submit",
-    async function(event){
-
-        event.preventDefault();
-
-        limparMensagem();
-
-        const email =
-            emailInput.value.trim();
-
-        const senha =
-            senhaInput.value;
-
-        if(!email){
-
-            mostrarErro(
-                "Digite o e-mail."
-            );
-
-            return;
-
-        }
-
-        if(!senha){
-
-            mostrarErro(
-                "Digite a palavra-passe."
-            );
-
-            return;
-
-        }
-
-        botao.disabled = true;
-
-        botao.textContent =
-            "A entrar...";
-
-        try{
-
-            console.log(
-                "Tentando iniciar sessão:",
-                email
-            );
-
-            const resultado =
-                await supabaseClient.auth.signInWithPassword({
-
-                    email:email,
-
-                    password:senha
-
-                });
-
-            console.log(
-                "Resposta Supabase:",
-                resultado
-            );
-
-            const {data,error} =
-                resultado;
-
-
-            /* ==========================================
-               ERRO
-            ========================================== */
-
-            if(error){
-
-                console.error(
-                    "Erro Supabase:",
-                    error
-                );
-
-                mostrarErro(
-                    "ERRO DO SUPABASE\n\n" +
-                    "Mensagem: " +
-                    (error.message || "Sem mensagem") +
-                    "\n\nCódigo: " +
-                    (error.code || "Sem código") +
-                    "\n\nStatus: " +
-                    (error.status || "Sem status")
-                );
-
-                return;
-
-            }
-
-
-            /* ==========================================
-               SEM SESSÃO
-            ========================================== */
-
-            if(!data || !data.session){
-
-                mostrarErro(
-                    "O Supabase não devolveu uma sessão.\n\n" +
-                    "Verifique se a conta está autorizada a iniciar sessão."
-                );
-
-                return;
-
-            }
-
-
-            /* ==========================================
-               SUCESSO
-            ========================================== */
-
-            console.log(
-                "LOGIN REALIZADO:",
-                data.user
-            );
-
-            mostrarSucesso(
-                "Sessão iniciada com sucesso."
-            );
-
-            setTimeout(function(){
-
-                abrirSistema(data.user);
-
-            },500);
-
-
-        }catch(error){
-
-            console.error(
-                "Erro inesperado:",
-                error
-            );
-
-            mostrarErro(
-                "ERRO INESPERADO\n\n" +
-                error.message
-            );
-
-        }finally{
-
-            botao.disabled = false;
-
-            botao.textContent =
-                "Entrar";
-
-        }
-
-    }
+console.error(
+"ERRO LOGIN:",
+error
 );
 
 
-/* =====================================================
-   VERIFICAR SESSÃO EXISTENTE
-===================================================== */
-
-async function verificarSessao(){
-
-    try{
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient.auth.getSession();
+loginError.textContent =
+"Não foi possível iniciar sessão: " +
+errorMessage(error);
 
 
-        if(error){
-
-            console.error(
-                "Erro ao verificar sessão:",
-                error
-            );
-
-            return;
-
-        }
-
-
-        if(data && data.session){
-
-            console.log(
-                "Sessão existente:",
-                data.session.user
-            );
-
-            abrirSistema(
-                data.session.user
-            );
-
-        }
-
-    }catch(error){
-
-        console.error(
-            "Erro sessão:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   OBSERVAR ALTERAÇÕES DA SESSÃO
-===================================================== */
-
-supabaseClient.auth.onAuthStateChange(
-    function(event,session){
-
-        console.log(
-            "Auth event:",
-            event
-        );
-
-        if(event === "SIGNED_IN" && session){
-
-            abrirSistema(
-                session.user
-            );
-
-        }
-
-    }
+loginError.classList.remove(
+"hidden"
 );
 
 
-/* =====================================================
-   SAIR
-===================================================== */
+}finally{
 
-async function sair(){
+loginButton.disabled = false;
 
-    try{
-
-        await supabaseClient.auth.signOut();
-
-    }catch(error){
-
-        console.error(error);
-
-    }
-
-    sistema.style.display =
-        "none";
-
-    login.style.display =
-        "block";
-
-    senhaInput.value = "";
+loginButton.textContent =
+"Entrar";
 
 }
 
+};
 
-/* =====================================================
-   INICIALIZAR
-===================================================== */
 
-verificarSessao();
+/* SESSÃO AUTOMÁTICA */
+
+(async function(){
+
+try{
+
+const c =
+await initSupabase();
+
+
+const result =
+await c.auth.getSession();
+
+
+if(result.data?.session){
+
+document
+.getElementById("login")
+.classList.add("hidden");
+
+
+document
+.getElementById("app")
+.classList.remove("hidden");
+
+
+await page("dashboard");
+
+}
+
+}catch(error){
+
+console.error(
+"Erro ao verificar sessão:",
+error
+);
+
+}
+
+})();
 
 </script>
 
