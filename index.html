@@ -1,422 +1,425 @@
 <!doctype html>
 <html lang="pt">
 <head>
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>SGD — Sistema de Gestão do Clube</title>
 
 <style>
-
 :root{
---blue:#1769e0;
---bg:#f4f7fb;
---text:#172033;
---muted:#6d788a;
---line:#e4e9f1;
---green:#16794a;
---red:#b42318;
+  --blue:#1769e0;
+  --blue2:#0d4da8;
+  --bg:#f4f7fb;
+  --text:#172033;
+  --muted:#6d788a;
+  --line:#e4e9f1;
+  --green:#16794a;
+  --red:#b42318;
+  --white:#fff;
 }
 
 *{
-box-sizing:border-box;
+  box-sizing:border-box;
 }
 
 body{
-margin:0;
-font-family:Arial,sans-serif;
-background:var(--bg);
-color:var(--text);
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
 
 button,input,select,textarea{
-font:inherit;
+  font:inherit;
 }
 
 .hidden{
-display:none!important;
+  display:none!important;
 }
 
 .btn{
-border:0;
-border-radius:9px;
-padding:10px 15px;
-font-weight:700;
-cursor:pointer;
-}
-
-.btn:disabled{
-opacity:.6;
-cursor:not-allowed;
+  border:0;
+  border-radius:9px;
+  padding:10px 15px;
+  font-weight:700;
+  cursor:pointer;
 }
 
 .primary{
-background:var(--blue);
-color:white;
+  background:var(--blue);
+  color:#fff;
 }
 
 .light{
-background:#eef4ff;
-color:var(--blue);
+  background:#eef4ff;
+  color:var(--blue);
 }
 
 .danger{
-background:#fff0f0;
-color:var(--red);
+  background:#fff0f0;
+  color:var(--red);
 }
 
 .full{
-width:100%;
+  width:100%;
 }
 
 .login{
-min-height:100vh;
-display:grid;
-place-items:center;
-padding:20px;
-background:linear-gradient(135deg,#1769e0,#0d4da8);
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:linear-gradient(135deg,#1769e0,#0d4da8);
 }
 
 .login-card{
-width:min(430px,100%);
-background:white;
-border-radius:20px;
-padding:32px;
-box-shadow:0 18px 50px #001b4433;
-text-align:center;
+  width:min(430px,100%);
+  background:#fff;
+  border-radius:20px;
+  padding:32px;
+  box-shadow:0 18px 50px #001b4433;
+  text-align:center;
 }
 
 .club-logo,
 .mini-logo{
-background:var(--blue);
-color:white;
-display:grid;
-place-items:center;
-font-weight:900;
+  background:var(--blue);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-weight:900;
 }
 
 .club-logo{
-width:92px;
-height:92px;
-border-radius:20px;
-margin:0 auto 18px;
-font-size:25px;
+  width:92px;
+  height:92px;
+  border-radius:20px;
+  margin:0 auto 18px;
+  font-size:25px;
 }
 
 .mini-logo{
-width:42px;
-height:42px;
-border-radius:10px;
-font-size:11px;
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  font-size:11px;
 }
 
 .login-card h1{
-margin:0 0 5px;
+  margin:0 0 5px;
 }
 
 .login-card p,
 .muted{
-color:var(--muted);
+  color:var(--muted);
 }
 
 .field{
-display:flex;
-flex-direction:column;
-gap:7px;
-text-align:left;
-margin-bottom:14px;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  text-align:left;
+  margin-bottom:14px;
 }
 
 .field label{
-font-size:13px;
-font-weight:700;
+  font-size:13px;
+  font-weight:700;
 }
 
 .field input,
 .field select,
 .field textarea{
-padding:11px;
-border:1px solid #d5ddea;
-border-radius:9px;
-background:white;
-width:100%;
+  padding:11px;
+  border:1px solid #d5ddea;
+  border-radius:9px;
+  background:#fff;
 }
 
 .field textarea{
-min-height:90px;
-resize:vertical;
+  min-height:90px;
 }
 
 .notice{
-padding:11px;
-border-radius:9px;
-margin-bottom:14px;
-background:#eaf8ef;
-color:var(--green);
+  padding:11px;
+  border-radius:9px;
+  margin-bottom:14px;
+  background:#eaf8ef;
+  color:var(--green);
 }
 
 .error{
-background:#fff0f0;
-color:var(--red);
+  background:#fff0f0;
+  color:var(--red);
 }
 
 header{
-min-height:68px;
-background:white;
-border-bottom:1px solid var(--line);
-display:flex;
-align-items:center;
-padding:0 22px;
-gap:12px;
+  min-height:68px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  padding:10px 22px;
+  gap:12px;
 }
 
 .brand b{
-display:block;
-font-size:18px;
+  display:block;
+  font-size:18px;
 }
 
 .brand small{
-color:var(--muted);
+  color:var(--muted);
 }
 
 .layout{
-display:flex;
-min-height:calc(100vh - 68px);
+  display:flex;
+  min-height:calc(100vh - 68px);
 }
 
 aside{
-width:240px;
-background:var(--blue);
-color:white;
-padding:18px 12px;
-flex-shrink:0;
+  width:240px;
+  background:var(--blue);
+  color:#fff;
+  padding:18px 12px;
+  flex-shrink:0;
 }
 
 .section{
-font-size:11px;
-opacity:.7;
-margin:10px 12px 7px;
-font-weight:700;
+  font-size:11px;
+  opacity:.7;
+  margin:10px 12px 7px;
+  font-weight:700;
 }
 
 nav button{
-width:100%;
-border:0;
-background:transparent;
-color:white;
-text-align:left;
-padding:11px 12px;
-border-radius:8px;
-margin:2px 0;
-cursor:pointer;
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#fff;
+  text-align:left;
+  padding:11px 12px;
+  border-radius:8px;
+  margin:2px 0;
+  cursor:pointer;
 }
 
 nav button:hover,
 nav button.active{
-background:#ffffff24;
+  background:#ffffff24;
 }
 
 main{
-flex:1;
-padding:28px;
-max-width:1450px;
+  flex:1;
+  padding:28px;
+  max-width:1450px;
 }
 
 .top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:15px;
-margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:20px;
 }
 
 .top h1{
-margin:0;
-font-size:26px;
+  margin:0;
+  font-size:26px;
 }
 
 .cards{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:14px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
 }
 
 .card{
-background:white;
-border:1px solid var(--line);
-border-radius:14px;
-padding:19px;
-margin-bottom:16px;
-box-shadow:0 5px 18px #17203308;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:19px;
+  margin-bottom:16px;
+  box-shadow:0 5px 18px #17203308;
 }
 
 .stat strong{
-display:block;
-font-size:27px;
-margin-top:8px;
+  display:block;
+  font-size:27px;
+  margin-top:8px;
 }
 
 .grid{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:15px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
 }
 
 .actions{
-display:flex;
-gap:9px;
-justify-content:flex-end;
-flex-wrap:wrap;
-margin-top:14px;
+  display:flex;
+  gap:9px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  margin-top:14px;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
+  width:100%;
+  border-collapse:collapse;
 }
 
-th,
-td{
-padding:10px;
-border-bottom:1px solid #edf0f4;
-text-align:left;
-font-size:13px;
-vertical-align:middle;
+th,td{
+  padding:10px;
+  border-bottom:1px solid #edf0f4;
+  text-align:left;
+  font-size:13px;
+  vertical-align:top;
 }
 
 th{
-font-size:12px;
-color:var(--muted);
+  font-size:12px;
+  color:var(--muted);
 }
 
 .badge{
-display:inline-block;
-padding:5px 8px;
-border-radius:99px;
-background:#eaf8ef;
-color:#176b36;
-font-size:11px;
-font-weight:700;
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:99px;
+  background:#eaf8ef;
+  color:#176b36;
+  font-size:11px;
+  font-weight:700;
 }
 
 .toolbar{
-display:flex;
-gap:9px;
-flex-wrap:wrap;
-margin-bottom:14px;
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
 }
 
 .toolbar input{
-padding:10px;
-border:1px solid #d5ddea;
-border-radius:9px;
-min-width:240px;
+  padding:10px;
+  border:1px solid #d5ddea;
+  border-radius:9px;
+  min-width:240px;
 }
 
-.member-photo{
-width:52px;
-height:52px;
-border-radius:10px;
-object-fit:cover;
-background:#eef2f7;
+.photo-preview{
+  width:150px;
+  height:150px;
+  object-fit:cover;
+  border-radius:14px;
+  border:1px solid var(--line);
+  display:none;
+  margin-top:10px;
 }
 
-.photo-large{
-width:130px;
-height:130px;
-border-radius:14px;
-object-fit:cover;
-background:#eef2f7;
+.profile-photo{
+  width:180px;
+  height:180px;
+  object-fit:cover;
+  border-radius:15px;
+  border:1px solid var(--line);
 }
 
-.profile-head{
-display:flex;
-gap:18px;
-align-items:center;
-flex-wrap:wrap;
+.photo-placeholder{
+  width:180px;
+  height:180px;
+  border-radius:15px;
+  background:#eef4ff;
+  color:var(--blue);
+  display:grid;
+  place-items:center;
+  font-size:50px;
+  font-weight:900;
 }
 
-.credential{
-background:#eef4ff;
-border:1px solid #cfe0ff;
-padding:15px;
-border-radius:10px;
-margin-top:15px;
+.profile-header{
+  display:flex;
+  gap:25px;
+  align-items:flex-start;
+  flex-wrap:wrap;
 }
 
-.credential strong{
-font-size:18px;
+.loading{
+  padding:30px;
+  text-align:center;
+  color:var(--muted);
 }
 
 @media(max-width:850px){
 
-aside{
-width:72px;
-}
+  aside{
+    width:72px;
+  }
 
-.section{
-display:none;
-}
+  .section{
+    display:none;
+  }
 
-nav button{
-font-size:0;
-text-align:center;
-}
+  nav button{
+    font-size:0;
+    text-align:center;
+  }
 
-nav button::first-letter{
-font-size:20px;
-}
+  nav button::first-letter{
+    font-size:20px;
+  }
 
-.cards{
-grid-template-columns:1fr 1fr;
-}
+  .cards{
+    grid-template-columns:1fr 1fr;
+  }
 
-.grid{
-grid-template-columns:1fr;
-}
+  .grid{
+    grid-template-columns:1fr;
+  }
 
-main{
-padding:16px;
-}
+  main{
+    padding:16px;
+  }
 
-.top{
-align-items:flex-start;
-flex-direction:column;
-}
+  .top{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 
+  header{
+    padding:10px 12px;
+  }
+
+  .brand b{
+    font-size:15px;
+  }
 }
 
 @media print{
 
-aside,
-header,
-.actions,
-.no-print{
-display:none!important;
-}
+  aside,
+  header,
+  .actions,
+  .no-print{
+    display:none!important;
+  }
 
-main{
-padding:0;
-}
+  main{
+    padding:0;
+  }
 
-.card{
-box-shadow:none;
-border:0;
+  .card{
+    box-shadow:none;
+    border:0;
+  }
 }
-
-}
-
 </style>
 
 <script>
-
 window.SGD_SUPABASE_URL =
 "https://edttbjysaqdounpghsdn.supabase.co";
 
 window.SGD_SUPABASE_ANON_KEY =
 "sb_publishable_-pb2KXvmOPN8FbZLdCgeFg_5Me7Y0V2";
-
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -425,7 +428,9 @@ window.SGD_SUPABASE_ANON_KEY =
 
 <body>
 
-<!-- LOGIN -->
+<!-- =========================
+     LOGIN
+========================= -->
 
 <div id="login" class="login">
 
@@ -437,11 +442,11 @@ SGD
 
 <h1>SGD</h1>
 
-<p>
-Sistema de Gestão do Clube
-</p>
+<p>Sistema de Gestão do Clube</p>
 
-<div id="loginError" class="notice error hidden"></div>
+<div id="loginError" class="notice error hidden">
+E-mail ou palavra-passe incorretos.
+</div>
 
 <form id="loginForm">
 
@@ -452,7 +457,7 @@ Sistema de Gestão do Clube
 <input
 name="user"
 type="email"
-autocomplete="username"
+autocomplete="email"
 required
 >
 
@@ -475,39 +480,33 @@ required
 style="display:flex;gap:8px;align-items:center;text-align:left;font-size:13px;margin-bottom:14px"
 >
 
-<input
-name="remember"
-type="checkbox"
->
+<input name="remember" type="checkbox">
 
 Lembrar sessão
 
 </label>
 
 <button
-id="loginBtn"
-class="btn primary full"
 type="submit"
+class="btn primary full"
+id="loginButton"
 >
-
 Entrar
-
 </button>
 
 </form>
 
 <p style="font-size:12px" class="muted">
-
-Use o e-mail e a palavra-passe da conta autorizada no Supabase.
-
+Use o e-mail e a palavra-passe da conta administrativa do SGD.
 </p>
 
 </div>
-
 </div>
 
 
-<!-- SISTEMA -->
+<!-- =========================
+     APLICAÇÃO
+========================= -->
 
 <div id="app" class="hidden">
 
@@ -519,13 +518,9 @@ SGD
 
 <div class="brand">
 
-<b>
-Sistema de Gestão do Clube
-</b>
+<b>Sistema de Gestão do Clube</b>
 
-<small>
-Secretaria / Direção
-</small>
+<small>Secretaria / Direção</small>
 
 </div>
 
@@ -613,7 +608,13 @@ ADMINISTRAÇÃO
 </aside>
 
 
-<main id="content"></main>
+<main id="content">
+
+<div class="loading">
+A carregar...
+</div>
+
+</main>
 
 </div>
 
@@ -622,3914 +623,4172 @@ ADMINISTRAÇÃO
 
 <script>
 
+/* =====================================================
+   CONFIGURAÇÃO
+===================================================== */
+
 let client = null;
 
 let db = {
-membros:[],
-unidades:[],
-atividades:[],
-financas:[],
-config:{}
+  membros:[],
+  unidades:[],
+  atividades:[],
+  financas:[],
+  config:{}
 };
 
 const $ = s => document.querySelector(s);
 
-const content = document.getElementById("content");
+const content = $("#content");
 
 
-/* SUPABASE */
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 async function initSupabase(){
 
-if(!window.supabase){
+  if(!window.supabase){
 
-throw new Error(
-"Supabase não carregou. Verifique a ligação à internet."
-);
+    throw new Error(
+      "Biblioteca Supabase não carregou."
+    );
+
+  }
+
+  if(!client){
+
+    client =
+      window.supabase.createClient(
+        window.SGD_SUPABASE_URL,
+        window.SGD_SUPABASE_ANON_KEY
+      );
+
+  }
+
+  return client;
+}
+
+
+/* =====================================================
+   CARREGAR BANCO
+===================================================== */
+
+async function loadDB(){
+
+  const c = await initSupabase();
+
+  const [
+    membros,
+    unidades,
+    atividades,
+    financas,
+    configuracoes
+  ] = await Promise.all([
+
+    c
+      .from("membros")
+      .select("*")
+      .order("created_at",{ascending:true}),
+
+    c
+      .from("unidades")
+      .select("*")
+      .order("nome"),
+
+    c
+      .from("atividades")
+      .select("*")
+      .order("data",{ascending:false}),
+
+    c
+      .from("financas")
+      .select("*")
+      .order("data",{ascending:false}),
+
+    c
+      .from("configuracoes")
+      .select("*")
+      .limit(1)
+
+  ]);
+
+
+  if(membros.error)
+    throw membros.error;
+
+  if(unidades.error)
+    throw unidades.error;
+
+  if(atividades.error)
+    throw atividades.error;
+
+  if(financas.error)
+    throw financas.error;
+
+  if(configuracoes.error)
+    throw configuracoes.error;
+
+
+  db.membros = membros.data || [];
+
+  db.unidades = unidades.data || [];
+
+  db.atividades = atividades.data || [];
+
+  db.financas = financas.data || [];
+
+  db.config =
+    configuracoes.data?.[0] || {
+
+      nome_clube:
+        "Clube de Desbravadores",
+
+      papel:"58 mm",
+
+      ficha:"A4"
+
+    };
+
+
+  return db;
+}
+
+
+/* =====================================================
+   REFRESH
+===================================================== */
+
+async function refresh(){
+
+  try{
+
+    await loadDB();
+
+    return true;
+
+  }catch(e){
+
+    console.error(e);
+
+    alert(
+      "Não foi possível carregar os dados do Supabase.\n\n"+
+      e.message
+    );
+
+    return false;
+
+  }
 
 }
 
-if(!client){
 
-client =
-window.supabase.createClient(
-window.SGD_SUPABASE_URL,
-window.SGD_SUPABASE_ANON_KEY
-);
-
-}
-
-return client;
-
-}
-
-
-/* UTILITÁRIOS */
+/* =====================================================
+   UTILITÁRIOS
+===================================================== */
 
 function esc(x){
 
-return String(x ?? "")
-.replace(/[&<>"']/g,m=>({
+  return String(x ?? "")
+    .replace(/[&<>"']/g,m => ({
 
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#39;"
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
 
-}[m]));
+    }[m]));
 
 }
 
 
 function money(v){
 
-return Number(v || 0).toLocaleString(
-"pt-AO",
-{
-minimumFractionDigits:2,
-maximumFractionDigits:2
-}
-);
+  return Number(v || 0)
+    .toLocaleString(
+      "pt-AO",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
 
 }
 
 
 function today(){
 
-return new Date()
-.toISOString()
-.slice(0,10);
+  return new Date()
+    .toISOString()
+    .slice(0,10);
 
 }
 
 
-function B(text,cls="primary",fn=""){
-
-return `
-<button
-class="btn ${cls}"
-onclick="${fn}"
->
-${text}
-</button>
-`;
-
-}
-
-
-function T(title,subtitle,button=""){
-
-return `
-<div class="top">
-
-<div>
-
-<h1>
-${title}
-</h1>
-
-<p class="muted">
-${subtitle}
-</p>
-
-</div>
-
-${button}
-
-</div>
-`;
-
-}
-
-
-function field(name,label,type="text",required=false){
-
-return `
-<div class="field">
-
-<label>
-${label}
-</label>
-
-<input
-name="${name}"
-type="${type}"
-${required?"required":""}
->
-
-</div>
-`;
-
-}
-
-
-function select(name,label,options,required=false){
-
-return `
-<div class="field">
-
-<label>
-${label}
-</label>
-
-<select
-name="${name}"
-${required?"required":""}
->
-
-<option value="">
-Selecionar
-</option>
-
-${options.map(x=>{
-
-let value =
-typeof x === "object"
-? x.value
-: x;
-
-let label =
-typeof x === "object"
-? x.label
-: x;
-
-return `
-<option value="${esc(value)}">
-${esc(label)}
-</option>
-`;
-
-}).join("")}
-
-</select>
-
-</div>
-`;
-
-}
-
-
-function errorMessage(e){
-
-return e?.message ||
-e?.error_description ||
-"Ocorreu um erro desconhecido.";
-
-}
-
-
-/* CARREGAR BANCO */
-
-async function loadDB(){
-
-const c =
-await initSupabase();
-
-const [
-m,
-u,
-a,
-f,
-conf
-] =
-await Promise.all([
-
-c
-.from("membros")
-.select("*")
-.order("created_at",{ascending:true}),
-
-c
-.from("unidades")
-.select("*")
-.order("nome"),
-
-c
-.from("atividades")
-.select("*")
-.order("data",{ascending:false}),
-
-c
-.from("financas")
-.select("*")
-.order("data",{ascending:false}),
-
-c
-.from("configuracoes")
-.select("*")
-.limit(1)
-
-]);
-
-
-if(m.error) throw m.error;
-if(u.error) throw u.error;
-if(a.error) throw a.error;
-if(f.error) throw f.error;
-if(conf.error) throw conf.error;
-
-
-db.membros = m.data || [];
-
-db.unidades = u.data || [];
-
-db.atividades = a.data || [];
-
-db.financas = f.data || [];
-
-db.config =
-conf.data?.[0] || {
-
-nome_clube:"Clube de Desbravadores",
-papel:"58 mm",
-ficha:"A4"
-
-};
-
-return db;
-
-}
-
-
-async function refresh(){
-
-try{
-
-return await loadDB();
-
-}catch(e){
-
-console.error(e);
-
-alert(
-"Erro ao carregar os dados:\n\n"+
-errorMessage(e)
-);
-
-return null;
-
-}
-
-}
-
-
-/* NAVEGAÇÃO */
-
-function page(p){
-
-document
-.querySelectorAll("nav button")
-.forEach(b=>{
-
-b.classList.toggle(
-"active",
-b.dataset.page === p
-);
-
-});
-
-if(pages[p]){
-
-pages[p]();
-
-}
-
-}
-
-
-/* UNIDADE */
-
-function unitName(id){
-
-const u =
-db.unidades.find(
-x=>String(x.id) === String(id)
-);
-
-return u?.nome || "—";
-
-}
-
-
-/* Nº AUTOMÁTICO */
+/* =====================================================
+   NÚMERO AUTOMÁTICO
+===================================================== */
 
 function nextNumber(){
 
-const year =
-new Date().getFullYear();
+  const year =
+    new Date().getFullYear();
 
-let max = 0;
+  let maior = 0;
 
-db.membros.forEach(m=>{
+  db.membros.forEach(m => {
 
-const number =
-String(m.numero_membro || "");
+    const n =
+      String(m.numero_membro || "");
 
-const match =
-number.match(/-(\d{4})$/);
+    const match =
+      n.match(/(\d+)$/);
 
-if(match){
+    if(match){
 
-max =
-Math.max(max,Number(match[1]));
+      const numero =
+        parseInt(match[1]);
 
-}
+      if(numero > maior)
+        maior = numero;
 
-});
+    }
 
-return `
-DBV-${year}-${String(max+1).padStart(4,"0")}
-`;
+  });
 
-}
-
-
-/* UTILIZADOR AUTOMÁTICO */
-
-function nextUser(){
-
-let n = 1;
-
-while(
-db.membros.some(
-m =>
-m.utilizador ===
-`m${String(n).padStart(4,"0")}`
-)
-){
-
-n++;
-
-}
-
-return `m${String(n).padStart(4,"0")}`;
+  return (
+    "DBV-" +
+    year +
+    "-" +
+    String(maior + 1).padStart(4,"0")
+  );
 
 }
 
 
-/* PALAVRA-PASSE */
+/* =====================================================
+   UTILIZADOR AUTOMÁTICO
+===================================================== */
+
+function nextUtilizador(){
+
+  let maior = 0;
+
+  db.membros.forEach(m => {
+
+    const u =
+      String(m.utilizador || "");
+
+    const match =
+      u.match(/m(\d+)/i);
+
+    if(match){
+
+      const numero =
+        parseInt(match[1]);
+
+      if(numero > maior)
+        maior = numero;
+
+    }
+
+  });
+
+  return (
+    "m" +
+    String(maior + 1).padStart(4,"0")
+  );
+
+}
+
+
+/* =====================================================
+   PASSWORD TEMPORÁRIA
+===================================================== */
 
 function generatePassword(){
 
-const chars =
-"ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+  const chars =
+    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
 
-let result = "";
+  let password = "";
 
-const array =
-new Uint32Array(10);
+  for(let i=0;i<8;i++){
 
-crypto.getRandomValues(array);
+    password +=
+      chars.charAt(
+        Math.floor(
+          Math.random()*chars.length
+        )
+      );
 
-array.forEach(n=>{
+  }
 
-result +=
-chars[n % chars.length];
-
-});
-
-return result;
+  return password;
 
 }
 
 
-/* DASHBOARD */
+/* =====================================================
+   BOTÃO
+===================================================== */
+
+function B(
+  text,
+  color="primary",
+  fn=""
+){
+
+  return `
+    <button
+      type="button"
+      class="btn ${color}"
+      onclick="${fn}"
+    >
+      ${text}
+    </button>
+  `;
+
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+function T(
+  h,
+  s,
+  b=""
+){
+
+  return `
+    <div class="top">
+
+      <div>
+
+        <h1>${h}</h1>
+
+        <p class="muted">
+          ${s}
+        </p>
+
+      </div>
+
+      ${b}
+
+    </div>
+  `;
+
+}
+
+
+/* =====================================================
+   FIELD
+===================================================== */
+
+function field(
+  n,
+  l,
+  t="text",
+  req=false
+){
+
+  return `
+    <div class="field">
+
+      <label>
+        ${l}
+      </label>
+
+      <input
+        name="${n}"
+        type="${t}"
+        ${req ? "required" : ""}
+      >
+
+    </div>
+  `;
+
+}
+
+
+/* =====================================================
+   SELECT
+===================================================== */
+
+function select(
+  n,
+  l,
+  arr,
+  req=false
+){
+
+  return `
+    <div class="field">
+
+      <label>
+        ${l}
+      </label>
+
+      <select
+        name="${n}"
+        ${req ? "required" : ""}
+      >
+
+        <option value="">
+          Selecionar
+        </option>
+
+        ${arr.map(x => `
+          <option value="${esc(x)}">
+            ${esc(x)}
+          </option>
+        `).join("")}
+
+      </select>
+
+    </div>
+  `;
+
+}
+
+
+/* =====================================================
+   NAVEGAÇÃO
+===================================================== */
+
+function page(p){
+
+  document
+    .querySelectorAll("nav button")
+    .forEach(b => {
+
+      b.classList.toggle(
+        "active",
+        b.dataset.page === p
+      );
+
+    });
+
+  if(pages[p])
+    pages[p]();
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
 
 async function dashboard(){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-const receitas =
-db.financas
-.filter(x=>x.tipo==="Receita")
-.reduce(
-(a,x)=>a+Number(x.valor||0),
-0
-);
+  const receitas =
+    db.financas
+      .filter(x => x.tipo === "Receita")
+      .reduce(
+        (a,x) =>
+          a + Number(x.valor || 0),
+        0
+      );
 
-const despesas =
-db.financas
-.filter(x=>x.tipo==="Despesa")
-.reduce(
-(a,x)=>a+Number(x.valor||0),
-0
-);
+  const despesas =
+    db.financas
+      .filter(x => x.tipo === "Despesa")
+      .reduce(
+        (a,x) =>
+          a + Number(x.valor || 0),
+        0
+      );
 
-content.innerHTML =
+  content.innerHTML =
 
-T(
-"Dashboard",
-"Visão geral do clube",
-B(
-"+ Cadastrar membro",
-"primary",
-"page('membroForm')"
-)
-)
+    T(
+      "Dashboard",
+      "Visão geral do clube",
+      B(
+        "+ Cadastrar membro",
+        "primary",
+        "page('membroForm')"
+      )
+    )
 
-+
+    +
 
-`
+    `
+    <div class="cards">
 
-<div class="cards">
+      <div class="card stat">
+        👥 Membros
+        <strong>
+          ${db.membros.length}
+        </strong>
+      </div>
 
-<div class="card stat">
+      <div class="card stat">
+        🏕️ Unidades
+        <strong>
+          ${
+            db.unidades.filter(
+              x => x.estado === "Ativa"
+            ).length
+          }
+        </strong>
+      </div>
 
-👥 Membros
+      <div class="card stat">
+        📅 Atividades
+        <strong>
+          ${db.atividades.length}
+        </strong>
+      </div>
 
-<strong>
-${db.membros.length}
-</strong>
+      <div class="card stat">
+        💰 Saldo
+        <strong>
+          ${money(receitas-despesas)} Kz
+        </strong>
+      </div>
 
-</div>
+    </div>
 
+    <div class="card">
 
-<div class="card stat">
+      <h3>Acesso rápido</h3>
 
-🏕️ Unidades
+      <div
+        class="actions"
+        style="justify-content:flex-start"
+      >
 
-<strong>
-${db.unidades.filter(
-x=>x.estado==="Ativa"
-).length}
-</strong>
+        ${B(
+          "Lista geral",
+          "light",
+          "page('membros')"
+        )}
 
-</div>
+        ${B(
+          "Unidades",
+          "light",
+          "page('unidades')"
+        )}
 
+        ${B(
+          "Atividades",
+          "light",
+          "page('atividades')"
+        )}
 
-<div class="card stat">
+        ${B(
+          "Finanças",
+          "light",
+          "page('financas')"
+        )}
 
-📅 Atividades
+        ${B(
+          "Relatórios",
+          "light",
+          "page('relatorios')"
+        )}
 
-<strong>
-${db.atividades.length}
-</strong>
+      </div>
 
-</div>
-
-
-<div class="card stat">
-
-💰 Saldo
-
-<strong>
-${money(receitas-despesas)} Kz
-</strong>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Acesso rápido
-</h3>
-
-<div class="actions"
-style="justify-content:flex-start">
-
-${B(
-"Lista de membros",
-"light",
-"page('membros')"
-)}
-
-${B(
-"Unidades",
-"light",
-"page('unidades')"
-)}
-
-${B(
-"Atividades",
-"light",
-"page('atividades')"
-)}
-
-${B(
-"Finanças",
-"light",
-"page('financas')"
-)}
-
-${B(
-"Relatórios",
-"light",
-"page('relatorios')"
-)}
-
-</div>
-
-</div>
-
-`;
+    </div>
+    `;
 
 }
 
 
-/* MEMBROS */
+/* =====================================================
+   MEMBROS
+===================================================== */
 
 async function membros(){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-content.innerHTML =
+  content.innerHTML =
 
-T(
-"Lista geral dos membros",
-"Pesquisar e consultar os cadastros",
-B(
-"+ Cadastrar membro",
-"primary",
-"page('membroForm')"
-)
-)
+    T(
+      "Lista geral dos membros",
+      "Pesquisar e consultar os membros cadastrados",
+      B(
+        "+ Cadastrar membro",
+        "primary",
+        "page('membroForm')"
+      )
+    )
 
-+
+    +
 
-`
+    `
+    <div class="card">
 
-<div class="card">
+      <div class="toolbar">
 
-<div class="toolbar">
+        <input
+          id="search"
+          placeholder="Pesquisar por nome, Nº ou utilizador..."
+          oninput="renderMemberTable()"
+        >
 
-<input
-id="search"
-placeholder="Pesquisar por nome, Nº ou utilizador..."
-oninput="renderMembers()"
->
+      </div>
 
-</div>
+      <div style="overflow:auto">
 
+        <table>
 
-<div style="overflow:auto">
+          <thead>
 
-<table>
+            <tr>
 
-<thead>
+              <th>Foto</th>
+              <th>Nº</th>
+              <th>Nome</th>
+              <th>Unidade</th>
+              <th>Função</th>
+              <th>Classe</th>
+              <th>Telefone</th>
+              <th>Estado</th>
+              <th>Ação</th>
 
-<tr>
+            </tr>
 
-<th>Foto</th>
-<th>Nº</th>
-<th>Nome</th>
-<th>Unidade</th>
-<th>Função</th>
-<th>Classe</th>
-<th>Telefone</th>
-<th>Estado</th>
-<th>Ação</th>
+          </thead>
 
-</tr>
+          <tbody id="memberRows"></tbody>
 
-</thead>
+        </table>
 
-<tbody id="memberRows">
-</tbody>
+      </div>
 
-</table>
+    </div>
+    `;
 
-</div>
-
-</div>
-
-`;
-
-renderMembers();
+  renderMemberTable();
 
 }
 
 
-function renderMembers(){
+function renderMemberTable(){
 
-const q =
-(
-document.getElementById("search")?.value ||
-""
-).toLowerCase();
+  const q =
+    ($("#search")?.value || "")
+      .toLowerCase();
 
+  const arr =
+    db.membros.filter(m => {
 
-const list =
-db.membros.filter(m=>{
+      const texto = (
 
-const text = `
+        (m.nome || "") +
+        " " +
+        (m.numero_membro || "") +
+        " " +
+        (m.utilizador || "")
 
-${m.nome || ""}
+      ).toLowerCase();
 
-${m.numero_membro || ""}
+      return texto.includes(q);
 
-${m.utilizador || ""}
-
-`.toLowerCase();
-
-return text.includes(q);
-
-});
+    });
 
 
-const rows =
-document.getElementById("memberRows");
+  const rows =
+    arr.map(m => {
+
+      const foto =
+        m.foto_url
+          ? `
+            <img
+              src="${esc(m.foto_url)}"
+              style="
+                width:45px;
+                height:45px;
+                object-fit:cover;
+                border-radius:8px;
+              "
+            >
+          `
+          :
+          `
+            <div
+              style="
+                width:45px;
+                height:45px;
+                border-radius:8px;
+                background:#eef4ff;
+                display:grid;
+                place-items:center;
+              "
+            >
+              👤
+            </div>
+          `;
+
+      return `
+
+        <tr>
+
+          <td>
+            ${foto}
+          </td>
+
+          <td>
+            <b>
+              ${esc(m.numero_membro)}
+            </b>
+          </td>
+
+          <td>
+            ${esc(m.nome)}
+          </td>
+
+          <td>
+            ${esc(getUnitName(m.unidade_id))}
+          </td>
+
+          <td>
+            ${esc(m.funcao || "—")}
+          </td>
+
+          <td>
+            ${esc(m.classe || "—")}
+          </td>
+
+          <td>
+            ${esc(m.telefone || "—")}
+          </td>
+
+          <td>
+            <span class="badge">
+              ${esc(m.estado || "Ativo")}
+            </span>
+          </td>
+
+          <td>
+            ${B(
+              "Abrir",
+              "light",
+              `profile('${m.id}')`
+            )}
+          </td>
+
+        </tr>
+
+      `;
+
+    }).join("");
 
 
-rows.innerHTML =
+  $("#memberRows").innerHTML =
+    rows ||
 
-list.map(m=>`
-
-<tr>
-
-<td>
-
-${
-m.foto_url
-
-?
-
-`<img
-class="member-photo"
-src="${esc(m.foto_url)}"
-alt="Foto"
->`
-
-:
-
-"—"
-
-}
-
-</td>
-
-<td>
-<b>
-${esc(m.numero_membro)}
-</b>
-</td>
-
-<td>
-${esc(m.nome)}
-</td>
-
-<td>
-${esc(unitName(m.unidade_id))}
-</td>
-
-<td>
-${esc(m.funcao || "—")}
-</td>
-
-<td>
-${esc(m.classe || "—")}
-</td>
-
-<td>
-${esc(m.telefone || "—")}
-</td>
-
-<td>
-
-<span class="badge">
-${esc(m.estado || "Ativo")}
-</span>
-
-</td>
-
-<td>
-
-${B(
-"Abrir",
-"light",
-`profile('${m.id}')`
-)}
-
-</td>
-
-</tr>
-
-`).join("")
-
-||
-
-`
-
-<tr>
-
-<td
-colspan="9"
-class="muted"
->
-
-Nenhum membro encontrado.
-
-</td>
-
-</tr>
-
-`;
+    `
+      <tr>
+        <td colspan="9" class="muted">
+          Nenhum membro encontrado.
+        </td>
+      </tr>
+    `;
 
 }
 
 
-/* UPLOAD FOTO */
+/* =====================================================
+   UNIDADE POR ID
+===================================================== */
 
-async function uploadPhoto(file,id){
+function getUnitName(id){
 
-if(!file || !file.name){
+  if(!id)
+    return "—";
 
-return null;
+  const u =
+    db.unidades.find(
+      x => String(x.id) === String(id)
+    );
 
-}
-
-const c =
-await initSupabase();
-
-
-const ext =
-(
-file.name
-.split(".")
-.pop() ||
-"jpg"
-)
-.toLowerCase();
-
-
-const path =
-`membros/${id}-${Date.now()}.${ext}`;
-
-
-const {error} =
-await c.storage
-.from("fotos_membros")
-.upload(
-path,
-file,
-{
-upsert:true,
-contentType:
-file.type || "image/jpeg"
-}
-);
-
-
-if(error){
-
-throw error;
+  return u?.nome || "—";
 
 }
 
 
-const {data} =
-c.storage
-.from("fotos_membros")
-.getPublicUrl(path);
-
-
-return data.publicUrl;
-
-}
-
-
-/* FORMULÁRIO MEMBRO */
+/* =====================================================
+   FORMULÁRIO DE MEMBRO
+===================================================== */
 
 async function membroForm(){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-const units =
-db.unidades
-.filter(u=>u.estado==="Ativa")
-.map(u=>({
+  const numero =
+    nextNumber();
 
-value:u.id,
-label:u.nome
-
-}));
-
-
-content.innerHTML =
-
-T(
-"Cadastrar membro",
-"O Nº e o utilizador serão gerados automaticamente",
-B(
-"← Lista geral",
-"light",
-"page('membros')"
-)
-)
-
-+
-
-`
-
-<form id="memberForm">
-
-<div class="card">
-
-<h3>
-Dados pessoais
-</h3>
-
-<div class="grid">
-
-${field(
-"nome",
-"Nome completo *",
-"text",
-true
-)}
-
-${field(
-"nascimento",
-"Data de nascimento",
-"date"
-)}
-
-${select(
-"sexo",
-"Sexo",
-[
-"Masculino",
-"Feminino",
-"Outro"
-]
-)}
-
-${field(
-"documento",
-"Nº do documento"
-)}
-
-${field(
-"telefone",
-"Telefone"
-)}
-
-${field(
-"endereco",
-"Endereço"
-)}
-
-${field(
-"data_cadastro",
-"Data de cadastro",
-"date",
-true
-)}
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Dados do clube
-</h3>
-
-<div class="grid">
-
-${select(
-"unidade_id",
-"Unidade",
-units
-)}
-
-${select(
-"funcao",
-"Função/Cargo",
-[
-"Desbravador",
-"Conselheiro",
-"Vice-conselheiro",
-"Diretor",
-"Secretário",
-"Tesoureiro",
-"Capelão"
-]
-)}
-
-${select(
-"classe",
-"Classe",
-[
-"Amigo",
-"Companheiro",
-"Pesquisador",
-"Pioneiro",
-"Excursionista",
-"Guia"
-]
-)}
+  const utilizador =
+    nextUtilizador();
 
-${select(
-"estado",
-"Estado",
-[
-"Ativo",
-"Inativo",
-"Suspenso"
-]
-)}
+  const senha =
+    generatePassword();
 
-</div>
 
-</div>
+  content.innerHTML =
 
+    T(
+      "Cadastrar membro",
+      "Preencha os dados do novo membro",
+      B(
+        "← Lista geral",
+        "light",
+        "page('membros')"
+      )
+    )
 
-<div class="card">
+    +
 
-<h3>
-Família e escola
-</h3>
+    `
+    <form id="mf">
+
+      <div class="card">
 
-<div class="grid">
+        <h3>
+          Credenciais do membro
+        </h3>
 
-${field(
-"encarregado",
-"Nome do encarregado"
-)}
+        <div class="grid">
 
-${field(
-"contacto_encarregado",
-"Contacto do encarregado"
-)}
+          ${field(
+            "numero_membro",
+            "Nº de membro",
+            "text",
+            true
+          )}
 
-${field(
-"pai",
-"Nome do pai"
-)}
+          ${field(
+            "utilizador",
+            "Utilizador",
+            "text",
+            true
+          )}
 
-${field(
-"mae",
-"Nome da mãe"
-)}
+          ${field(
+            "senha_temporaria",
+            "Palavra-passe inicial",
+            "text",
+            true
+          )}
 
-${field(
-"escola",
-"Escola"
-)}
+        </div>
 
-${field(
-"classe_escolar",
-"Classe escolar"
-)}
+        <div class="notice">
 
-</div>
+          Estas credenciais são geradas
+          automaticamente pelo SGD.
 
-</div>
+          <br><br>
 
+          <b>
+            Guarde-as para entregar ao membro.
+          </b>
 
-<div class="card">
+        </div>
 
-<h3>
-Fotografia
-</h3>
+      </div>
 
-<div class="field">
 
-<label>
-Foto do membro
-</label>
+      <div class="card">
 
-<input
-name="foto"
-type="file"
-accept="image/*"
->
+        <h3>
+          Dados pessoais
+        </h3>
 
-</div>
+        <div class="grid">
 
-</div>
+          ${field(
+            "nome",
+            "Nome completo *",
+            "text",
+            true
+          )}
 
+          ${field(
+            "nascimento",
+            "Data de nascimento",
+            "date"
+          )}
 
-<div class="card">
+          ${select(
+            "sexo",
+            "Sexo",
+            [
+              "Masculino",
+              "Feminino",
+              "Outro"
+            ]
+          )}
+
+          ${field(
+            "documento",
+            "Nº do documento"
+          )}
+
+          ${field(
+            "telefone",
+            "Telefone"
+          )}
+
+          ${field(
+            "endereco",
+            "Endereço"
+          )}
 
-<h3>
-Credenciais
-</h3>
+          ${field(
+            "data_cadastro",
+            "Data de cadastro",
+            "date",
+            true
+          )}
 
-<p class="muted">
+        </div>
 
-O sistema gera automaticamente o Nº de membro,
-o utilizador e uma palavra-passe inicial.
+      </div>
+
 
-</p>
+      <div class="card">
 
-</div>
+        <h3>
+          Dados do clube
+        </h3>
 
+        <div class="grid">
+
+          <div class="field">
 
-<div class="actions">
+            <label>
+              Unidade
+            </label>
+
+            <select name="unidade_id">
+
+              <option value="">
+                Selecionar unidade
+              </option>
+
+              ${db.unidades
+                .filter(
+                  u => u.estado === "Ativa"
+                )
+                .map(u => `
 
-<button
-id="saveMember"
-class="btn primary"
-type="submit"
->
+                  <option value="${esc(u.id)}">
+                    ${esc(u.nome)}
+                  </option>
 
-Cadastrar membro
+                `).join("")}
 
-</button>
+            </select>
 
-</div>
+          </div>
 
-</form>
 
-`;
+          ${select(
+            "funcao",
+            "Função/Cargo",
+            [
+              "Desbravador",
+              "Conselheiro",
+              "Vice-conselheiro",
+              "Diretor",
+              "Secretário",
+              "Tesoureiro",
+              "Capelão"
+            ]
+          )}
 
 
-document
-.querySelector('[name="data_cadastro"]')
-.value =
-today();
+          ${select(
+            "classe",
+            "Classe",
+            [
+              "Amigo",
+              "Companheiro",
+              "Pesquisador",
+              "Pioneiro",
+              "Excursionista",
+              "Guia"
+            ]
+          )}
 
 
-document
-.querySelector('[name="estado"]')
-.value =
-"Ativo";
+          ${select(
+            "estado",
+            "Estado",
+            [
+              "Ativo",
+              "Inativo",
+              "Suspenso"
+            ]
+          )}
 
+        </div>
 
-document
-.getElementById("memberForm")
-.onsubmit =
-saveMember;
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Família e escola
+        </h3>
+
+        <div class="grid">
+
+          ${field(
+            "encarregado",
+            "Nome do encarregado"
+          )}
+
+          ${field(
+            "contacto_encarregado",
+            "Contacto do encarregado"
+          )}
+
+          ${field(
+            "pai",
+            "Nome do pai"
+          )}
+
+          ${field(
+            "mae",
+            "Nome da mãe"
+          )}
+
+          ${field(
+            "escola",
+            "Escola"
+          )}
+
+          ${field(
+            "classe_escolar",
+            "Classe escolar"
+          )}
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Fotografia do membro
+        </h3>
+
+        <p class="muted">
+          Pode tirar uma fotografia agora
+          ou escolher uma fotografia da galeria.
+        </p>
+
+        <div class="field">
+
+          <label>
+            Fotografia
+          </label>
+
+          <input
+            id="fotoInput"
+            name="foto"
+            type="file"
+            accept="image/*"
+            capture="environment"
+          >
+
+          <img
+            id="photoPreview"
+            class="photo-preview"
+            alt="Pré-visualização"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          type="button"
+          class="btn light"
+          onclick="page('membros')"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary"
+          id="saveMemberButton"
+        >
+          Cadastrar membro
+        </button>
+
+      </div>
+
+    </form>
+    `;
+
+
+  $("[name=numero_membro]").value =
+    numero;
+
+  $("[name=utilizador]").value =
+    utilizador;
+
+  $("[name=senha_temporaria]").value =
+    senha;
+
+  $("[name=data_cadastro]").value =
+    today();
+
+  $("[name=estado]").value =
+    "Ativo";
+
+
+  /* PREVIEW DA FOTO */
+
+  $("#fotoInput").addEventListener(
+    "change",
+    function(){
+
+      const file =
+        this.files?.[0];
+
+      if(!file)
+        return;
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        function(e){
+
+          const img =
+            $("#photoPreview");
+
+          img.src =
+            e.target.result;
+
+          img.style.display =
+            "block";
+
+        };
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+
+  /* SUBMIT */
+
+  $("#mf").onsubmit =
+    async function(e){
+
+      e.preventDefault();
+
+      const button =
+        $("#saveMemberButton");
+
+      button.disabled = true;
+
+      button.textContent =
+        "A cadastrar...";
+
+
+      try{
+
+        const form =
+          new FormData(e.target);
+
+        const foto =
+          form.get("foto");
+
+
+        /* =========================
+           DADOS
+        ========================= */
+
+        const d = {
+
+          numero_membro:
+            form.get("numero_membro"),
+
+          nome:
+            form.get("nome"),
+
+          nascimento:
+            form.get("nascimento") || null,
+
+          sexo:
+            form.get("sexo") || null,
+
+          documento:
+            form.get("documento") || null,
+
+          telefone:
+            form.get("telefone") || null,
+
+          endereco:
+            form.get("endereco") || null,
+
+          unidade_id:
+            form.get("unidade_id") || null,
+
+          funcao:
+            form.get("funcao") || null,
+
+          classe:
+            form.get("classe") || null,
+
+          estado:
+            form.get("estado") || "Ativo",
+
+          pai:
+            form.get("pai") || null,
+
+          contacto_encarregado:
+            form.get("contacto_encarregado") || null,
+
+          encarregado:
+            form.get("encarregado") || null,
+
+          classe_escolar:
+            form.get("classe_escolar") || null,
+
+          escola:
+            form.get("escola") || null,
+
+          mae:
+            form.get("mae") || null,
+
+          utilizador:
+            form.get("utilizador"),
+
+          data_cadastro:
+            form.get("data_cadastro")
+
+        };
+
+
+        /* =========================
+           FOTO
+        ========================= */
+
+        if(
+          foto &&
+          foto instanceof File &&
+          foto.size > 0
+        ){
+
+          button.textContent =
+            "A enviar fotografia...";
+
+
+          const c =
+            await initSupabase();
+
+
+          const ext =
+            foto.name
+              .split(".")
+              .pop()
+              .toLowerCase() || "jpg";
+
+
+          const nomeArquivo =
+            `${crypto.randomUUID()}.${ext}`;
+
+
+          const caminho =
+            `membros/${nomeArquivo}`;
+
+
+          const upload =
+            await c.storage
+              .from("fotos_membros")
+              .upload(
+                caminho,
+                foto,
+                {
+                  cacheControl:"3600",
+                  upsert:false,
+                  contentType:
+                    foto.type || "image/jpeg"
+                }
+              );
+
+
+          if(upload.error)
+            throw upload.error;
+
+
+          const publicUrl =
+            c.storage
+              .from("fotos_membros")
+              .getPublicUrl(caminho);
+
+
+          d.foto_url =
+            publicUrl.data.publicUrl;
+
+        }
+
+
+        /* =========================
+           INSERIR MEMBRO
+        ========================= */
+
+        button.textContent =
+          "A guardar membro...";
+
+
+        const c =
+          await initSupabase();
+
+
+        const result =
+          await c
+            .from("membros")
+            .insert([d])
+            .select()
+            .single();
+
+
+        if(result.error)
+          throw result.error;
+
+
+        alert(
+          "Membro cadastrado com sucesso!\n\n"+
+          "Nº: " +
+          d.numero_membro +
+          "\n"+
+          "Utilizador: " +
+          d.utilizador +
+          "\n"+
+          "Palavra-passe inicial: " +
+          form.get("senha_temporaria")
+        );
+
+
+        await profile(
+          result.data.id,
+          true
+        );
+
+
+      }catch(err){
+
+        console.error(err);
+
+        alert(
+          "Erro ao cadastrar membro:\n\n"+
+          err.message
+        );
+
+        button.disabled = false;
+
+        button.textContent =
+          "Cadastrar membro";
+
+      }
+
+    };
 
 }
 
 
-/* GUARDAR MEMBRO */
+/* =====================================================
+   PERFIL
+===================================================== */
 
-async function saveMember(e){
-
-e.preventDefault();
-
-const btn =
-document.getElementById("saveMember");
-
-btn.disabled = true;
-
-btn.textContent =
-"A cadastrar...";
-
-
-try{
-
-const c =
-await initSupabase();
-
-const form =
-new FormData(e.target);
-
-const d = {};
-
-
-const fields = [
-
-"nome",
-"nascimento",
-"sexo",
-"documento",
-"telefone",
-"endereco",
-"unidade_id",
-"funcao",
-"classe",
-"estado",
-"pai",
-"contacto_encarregado",
-"encarregado",
-"classe_escolar",
-"escola",
-"mae",
-"data_cadastro"
-
-];
-
-
-fields.forEach(k=>{
-
-const value =
-form.get(k);
-
-if(value !== null && value !== ""){
-
-d[k] = value;
-
-}
-
-});
-
-
-d.numero_membro =
-nextNumber();
-
-d.utilizador =
-nextUser();
-
-
-const password =
-generatePassword();
-
-
-const result =
-await c
-.from("membros")
-.insert([d])
-.select()
-.single();
-
-
-if(result.error){
-
-throw result.error;
-
-}
-
-
-let member =
-result.data;
-
-
-const photo =
-form.get("foto");
-
-
-if(
-photo &&
-photo.size > 0
+async function profile(
+  id,
+  created=false
 ){
 
-const url =
-await uploadPhoto(
-photo,
-member.id
-);
+  if(!await refresh())
+    return;
+
+  const m =
+    db.membros.find(
+      x => String(x.id) === String(id)
+    );
 
 
-const update =
-await c
-.from("membros")
-.update({
-foto_url:url
-})
-.eq(
-"id",
-member.id
-);
+  if(!m){
+
+    alert(
+      "Membro não encontrado."
+    );
+
+    return;
+
+  }
 
 
-if(update.error){
+  const foto =
+    m.foto_url
 
-throw update.error;
+      ?
+
+      `
+      <img
+        src="${esc(m.foto_url)}"
+        class="profile-photo"
+        alt="Foto do membro"
+      >
+      `
+
+      :
+
+      `
+      <div class="photo-placeholder">
+        👤
+      </div>
+      `;
+
+
+  content.innerHTML =
+
+    T(
+      "Perfil do membro",
+      created
+        ? "Membro cadastrado com sucesso."
+        : "Ficha individual",
+      B(
+        "← Lista geral",
+        "light",
+        "page('membros')"
+      )
+    )
+
+    +
+
+    `
+    <div class="card">
+
+      <div class="profile-header">
+
+        <div>
+          ${foto}
+        </div>
+
+        <div>
+
+          <h2>
+            ${esc(m.nome)}
+          </h2>
+
+          <p>
+            <b>Nº de membro:</b>
+            ${esc(m.numero_membro || "—")}
+          </p>
+
+          <p>
+            <b>Utilizador:</b>
+            ${esc(m.utilizador || "—")}
+          </p>
+
+          <p>
+            <b>Unidade:</b>
+            ${esc(getUnitName(m.unidade_id))}
+          </p>
+
+          <p>
+            <b>Função:</b>
+            ${esc(m.funcao || "—")}
+          </p>
+
+          <p>
+            <b>Classe:</b>
+            ${esc(m.classe || "—")}
+          </p>
+
+          <p>
+            <b>Estado:</b>
+            <span class="badge">
+              ${esc(m.estado || "Ativo")}
+            </span>
+          </p>
+
+        </div>
+
+      </div>
+
+      <hr>
+
+      <p>
+        <b>Nascimento:</b>
+        ${esc(m.nascimento || "—")}
+      </p>
+
+      <p>
+        <b>Sexo:</b>
+        ${esc(m.sexo || "—")}
+      </p>
+
+      <p>
+        <b>Documento:</b>
+        ${esc(m.documento || "—")}
+      </p>
+
+      <p>
+        <b>Telefone:</b>
+        ${esc(m.telefone || "—")}
+      </p>
+
+      <p>
+        <b>Endereço:</b>
+        ${esc(m.endereco || "—")}
+      </p>
+
+      <p>
+        <b>Encarregado:</b>
+        ${esc(m.encarregado || "—")}
+      </p>
+
+      <p>
+        <b>Contacto do encarregado:</b>
+        ${esc(m.contacto_encarregado || "—")}
+      </p>
+
+      <p>
+        <b>Pai:</b>
+        ${esc(m.pai || "—")}
+      </p>
+
+      <p>
+        <b>Mãe:</b>
+        ${esc(m.mae || "—")}
+      </p>
+
+      <p>
+        <b>Escola:</b>
+        ${esc(m.escola || "—")}
+      </p>
+
+      <p>
+        <b>Classe escolar:</b>
+        ${esc(m.classe_escolar || "—")}
+      </p>
+
+      <p>
+        <b>Data de cadastro:</b>
+        ${esc(m.data_cadastro || "—")}
+      </p>
+
+    </div>
+
+
+    <div class="actions">
+
+      ${B(
+        "✏️ Editar",
+        "light",
+        `editMember('${m.id}')`
+      )}
+
+      ${B(
+        "📄 Ficha A4",
+        "light",
+        `printA4('${m.id}')`
+      )}
+
+      ${B(
+        "🖨️ Cartão térmico",
+        "light",
+        `printThermal('${m.id}')`
+      )}
+
+    </div>
+    `;
 
 }
 
 
-member.foto_url =
-url;
-
-}
-
-
-db.membros.push(member);
-
-
-alert(
-
-"Membro cadastrado com sucesso!\n\n"+
-
-"Nº: "+
-member.numero_membro+
-
-"\nUtilizador: "+
-member.utilizador+
-
-"\nPalavra-passe inicial: "+
-password+
-
-"\n\nAnote estas credenciais."
-
-);
-
-
-await profile(
-member.id,
-true
-);
-
-
-}catch(err){
-
-console.error(err);
-
-alert(
-"Erro ao cadastrar membro:\n\n"+
-errorMessage(err)
-);
-
-}finally{
-
-btn.disabled = false;
-
-btn.textContent =
-"Cadastrar membro";
-
-}
-
-}
-
-
-/* PERFIL */
-
-async function profile(id,created=false){
-
-if(!await refresh()) return;
-
-const m =
-db.membros.find(
-x=>String(x.id) === String(id)
-);
-
-
-if(!m){
-
-alert(
-"Membro não encontrado."
-);
-
-return;
-
-}
-
-
-content.innerHTML =
-
-T(
-"Perfil do membro",
-created
-?"Membro cadastrado com sucesso."
-:"Ficha individual",
-B(
-"← Lista geral",
-"light",
-"page('membros')"
-)
-)
-
-+
-
-`
-
-<div class="card">
-
-<div class="profile-head">
-
-${
-m.foto_url
-
-?
-
-`<img
-class="photo-large"
-src="${esc(m.foto_url)}"
-alt="Foto do membro"
->`
-
-:
-
-`<div
-class="photo-large"
-style="display:grid;place-items:center"
->
-Sem foto
-</div>`
-
-}
-
-
-<div>
-
-<h2>
-${esc(m.nome)}
-</h2>
-
-<p>
-
-<b>Nº:</b>
-${esc(m.numero_membro)}
-
-<br>
-
-<b>Utilizador:</b>
-${esc(m.utilizador || "—")}
-
-</p>
-
-<p>
-
-<b>Unidade:</b>
-${esc(unitName(m.unidade_id))}
-
-<br>
-
-<b>Função:</b>
-${esc(m.funcao || "—")}
-
-<br>
-
-<b>Classe:</b>
-${esc(m.classe || "—")}
-
-</p>
-
-</div>
-
-</div>
-
-<hr>
-
-<p>
-
-<b>Nascimento:</b>
-${esc(m.nascimento || "—")}
-
-&nbsp;
-
-<b>Sexo:</b>
-${esc(m.sexo || "—")}
-
-</p>
-
-<p>
-
-<b>Documento:</b>
-${esc(m.documento || "—")}
-
-&nbsp;
-
-<b>Telefone:</b>
-${esc(m.telefone || "—")}
-
-</p>
-
-<p>
-
-<b>Estado:</b>
-${esc(m.estado || "—")}
-
-</p>
-
-<p>
-
-<b>Endereço:</b>
-${esc(m.endereco || "—")}
-
-</p>
-
-<p>
-
-<b>Encarregado:</b>
-${esc(m.encarregado || "—")}
-
-<br>
-
-<b>Contacto:</b>
-${esc(m.contacto_encarregado || "—")}
-
-</p>
-
-<p>
-
-<b>Pai:</b>
-${esc(m.pai || "—")}
-
-&nbsp;
-
-<b>Mãe:</b>
-${esc(m.mae || "—")}
-
-</p>
-
-<p>
-
-<b>Escola:</b>
-${esc(m.escola || "—")}
-
-&nbsp;
-
-<b>Classe escolar:</b>
-${esc(m.classe_escolar || "—")}
-
-</p>
-
-<p>
-
-<b>Data de cadastro:</b>
-${esc(m.data_cadastro || "—")}
-
-</p>
-
-</div>
-
-
-<div class="actions">
-
-${B(
-"✏️ Editar",
-"light",
-`editMember('${m.id}')`
-)}
-
-${B(
-"📄 Ficha A4",
-"light",
-`printA4('${m.id}')`
-)}
-
-${B(
-"🖨️ Cartão térmico",
-"light",
-`printThermal('${m.id}')`
-)}
-
-</div>
-
-`;
-
-}
-
-
-/* EDITAR */
+/* =====================================================
+   EDITAR MEMBRO
+===================================================== */
 
 async function editMember(id){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-const m =
-db.membros.find(
-x=>String(x.id) === String(id)
-);
+  const m =
+    db.membros.find(
+      x => String(x.id) === String(id)
+    );
 
 
-if(!m){
+  if(!m){
 
-return;
+    alert(
+      "Membro não encontrado."
+    );
+
+    return;
+
+  }
+
+
+  content.innerHTML =
+
+    T(
+      "Editar membro",
+      "Alterar os dados do cadastro",
+      B(
+        "← Voltar",
+        "light",
+        `profile('${id}')`
+      )
+    )
+
+    +
+
+    `
+    <form id="ef">
+
+      <div class="card">
+
+        <h3>
+          Dados do membro
+        </h3>
+
+        <div class="grid">
+
+          ${field(
+            "numero_membro",
+            "Nº de membro",
+            "text",
+            true
+          )}
+
+          ${field(
+            "nome",
+            "Nome completo",
+            "text",
+            true
+          )}
+
+          ${field(
+            "nascimento",
+            "Nascimento",
+            "date"
+          )}
+
+          ${field(
+            "sexo",
+            "Sexo"
+          )}
+
+          ${field(
+            "documento",
+            "Documento"
+          )}
+
+          ${field(
+            "telefone",
+            "Telefone"
+          )}
+
+          ${field(
+            "endereco",
+            "Endereço"
+          )}
+
+
+          <div class="field">
+
+            <label>
+              Unidade
+            </label>
+
+            <select name="unidade_id">
+
+              <option value="">
+                Sem unidade
+              </option>
+
+              ${db.unidades.map(u => `
+
+                <option value="${esc(u.id)}">
+                  ${esc(u.nome)}
+                </option>
+
+              `).join("")}
+
+            </select>
+
+          </div>
+
+
+          ${select(
+            "funcao",
+            "Função",
+            [
+              "Desbravador",
+              "Conselheiro",
+              "Vice-conselheiro",
+              "Diretor",
+              "Secretário",
+              "Tesoureiro",
+              "Capelão"
+            ]
+          )}
+
+
+          ${select(
+            "classe",
+            "Classe",
+            [
+              "Amigo",
+              "Companheiro",
+              "Pesquisador",
+              "Pioneiro",
+              "Excursionista",
+              "Guia"
+            ]
+          )}
+
+
+          ${select(
+            "estado",
+            "Estado",
+            [
+              "Ativo",
+              "Inativo",
+              "Suspenso"
+            ]
+          )}
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Família e escola
+        </h3>
+
+        <div class="grid">
+
+          ${field(
+            "pai",
+            "Nome do pai"
+          )}
+
+          ${field(
+            "mae",
+            "Nome da mãe"
+          )}
+
+          ${field(
+            "encarregado",
+            "Encarregado"
+          )}
+
+          ${field(
+            "contacto_encarregado",
+            "Contacto do encarregado"
+          )}
+
+          ${field(
+            "escola",
+            "Escola"
+          )}
+
+          ${field(
+            "classe_escolar",
+            "Classe escolar"
+          )}
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Alterar fotografia
+        </h3>
+
+        ${
+          m.foto_url
+          ?
+          `
+          <img
+            src="${esc(m.foto_url)}"
+            class="profile-photo"
+          >
+          `
+          :
+          ""
+        }
+
+        <div class="field">
+
+          <label>
+            Nova fotografia
+          </label>
+
+          <input
+            id="editFoto"
+            type="file"
+            accept="image/*"
+            capture="environment"
+          >
+
+          <img
+            id="editPhotoPreview"
+            class="photo-preview"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          type="button"
+          class="btn light"
+          onclick="profile('${id}')"
+        >
+          Cancelar
+        </button>
+
+        <button
+          class="btn primary"
+          id="editButton"
+        >
+          Guardar alterações
+        </button>
+
+      </div>
+
+    </form>
+    `;
+
+
+  const values = [
+    "numero_membro",
+    "nome",
+    "nascimento",
+    "sexo",
+    "documento",
+    "telefone",
+    "endereco",
+    "unidade_id",
+    "funcao",
+    "classe",
+    "estado",
+    "pai",
+    "mae",
+    "encarregado",
+    "contacto_encarregado",
+    "escola",
+    "classe_escolar"
+  ];
+
+
+  values.forEach(k => {
+
+    const el =
+      $(`[name="${k}"]`);
+
+    if(el)
+      el.value =
+        m[k] || "";
+
+  });
+
+
+  $("#editFoto").addEventListener(
+    "change",
+    function(){
+
+      const file =
+        this.files?.[0];
+
+      if(!file)
+        return;
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        e => {
+
+          const img =
+            $("#editPhotoPreview");
+
+          img.src =
+            e.target.result;
+
+          img.style.display =
+            "block";
+
+        };
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+
+  $("#ef").onsubmit =
+    async function(e){
+
+      e.preventDefault();
+
+      const button =
+        $("#editButton");
+
+      button.disabled = true;
+
+      button.textContent =
+        "A guardar...";
+
+
+      try{
+
+        const form =
+          new FormData(e.target);
+
+
+        const d = {
+
+          numero_membro:
+            form.get("numero_membro"),
+
+          nome:
+            form.get("nome"),
+
+          nascimento:
+            form.get("nascimento") || null,
+
+          sexo:
+            form.get("sexo") || null,
+
+          documento:
+            form.get("documento") || null,
+
+          telefone:
+            form.get("telefone") || null,
+
+          endereco:
+            form.get("endereco") || null,
+
+          unidade_id:
+            form.get("unidade_id") || null,
+
+          funcao:
+            form.get("funcao") || null,
+
+          classe:
+            form.get("classe") || null,
+
+          estado:
+            form.get("estado") || null,
+
+          pai:
+            form.get("pai") || null,
+
+          mae:
+            form.get("mae") || null,
+
+          encarregado:
+            form.get("encarregado") || null,
+
+          contacto_encarregado:
+            form.get("contacto_encarregado") || null,
+
+          escola:
+            form.get("escola") || null,
+
+          classe_escolar:
+            form.get("classe_escolar") || null
+
+        };
+
+
+        const foto =
+          $("#editFoto").files?.[0];
+
+
+        if(foto){
+
+          button.textContent =
+            "A enviar foto...";
+
+
+          const c =
+            await initSupabase();
+
+
+          const ext =
+            foto.name
+              .split(".")
+              .pop()
+              .toLowerCase() || "jpg";
+
+
+          const caminho =
+            `membros/${crypto.randomUUID()}.${ext}`;
+
+
+          const upload =
+            await c.storage
+              .from("fotos_membros")
+              .upload(
+                caminho,
+                foto,
+                {
+                  cacheControl:"3600",
+                  upsert:false,
+                  contentType:
+                    foto.type || "image/jpeg"
+                }
+              );
+
+
+          if(upload.error)
+            throw upload.error;
+
+
+          const publicUrl =
+            c.storage
+              .from("fotos_membros")
+              .getPublicUrl(caminho);
+
+
+          d.foto_url =
+            publicUrl.data.publicUrl;
+
+        }
+
+
+        button.textContent =
+          "A guardar...";
+
+
+        const c =
+          await initSupabase();
+
+
+        const result =
+          await c
+            .from("membros")
+            .update(d)
+            .eq("id",id);
+
+
+        if(result.error)
+          throw result.error;
+
+
+        alert(
+          "Membro atualizado com sucesso."
+        );
+
+
+        await profile(id);
+
+
+      }catch(err){
+
+        console.error(err);
+
+        alert(
+          "Erro ao guardar:\n\n"+
+          err.message
+        );
+
+        button.disabled = false;
+
+        button.textContent =
+          "Guardar alterações";
+
+      }
+
+    };
 
 }
 
 
-const units =
-db.unidades.map(u=>({
-
-value:u.id,
-label:u.nome
-
-}));
-
-
-content.innerHTML =
-
-T(
-"Editar membro",
-"Alterar os dados do cadastro",
-B(
-"← Voltar",
-"light",
-`profile('${id}')`
-)
-)
-
-+
-
-`
-
-<form id="editForm">
-
-<div class="card">
-
-<div class="grid">
-
-${field(
-"numero_membro",
-"Nº de membro",
-"text",
-true
-)}
-
-${field(
-"nome",
-"Nome completo",
-"text",
-true
-)}
-
-${field(
-"nascimento",
-"Nascimento",
-"date"
-)}
-
-${select(
-"sexo",
-"Sexo",
-[
-"Masculino",
-"Feminino",
-"Outro"
-]
-)}
-
-${field(
-"documento",
-"Nº do documento"
-)}
-
-${field(
-"telefone",
-"Telefone"
-)}
-
-${field(
-"endereco",
-"Endereço"
-)}
-
-${select(
-"unidade_id",
-"Unidade",
-units
-)}
-
-${select(
-"funcao",
-"Função",
-[
-"Desbravador",
-"Conselheiro",
-"Vice-conselheiro",
-"Diretor",
-"Secretário",
-"Tesoureiro",
-"Capelão"
-]
-)}
-
-${select(
-"classe",
-"Classe",
-[
-"Amigo",
-"Companheiro",
-"Pesquisador",
-"Pioneiro",
-"Excursionista",
-"Guia"
-]
-)}
-
-${select(
-"estado",
-"Estado",
-[
-"Ativo",
-"Inativo",
-"Suspenso"
-]
-)}
-
-${field(
-"encarregado",
-"Encarregado"
-)}
-
-${field(
-"contacto_encarregado",
-"Contacto do encarregado"
-)}
-
-${field(
-"pai",
-"Pai"
-)}
-
-${field(
-"mae",
-"Mãe"
-)}
-
-${field(
-"escola",
-"Escola"
-)}
-
-${field(
-"classe_escolar",
-"Classe escolar"
-)}
-
-${field(
-"data_cadastro",
-"Data de cadastro",
-"date"
-)}
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="field">
-
-<label>
-Nova fotografia
-</label>
-
-<input
-name="foto"
-type="file"
-accept="image/*"
->
-
-</div>
-
-</div>
-
-
-<div class="actions">
-
-<button
-id="editSave"
-class="btn primary"
-type="submit"
->
-
-Guardar alterações
-
-</button>
-
-</div>
-
-</form>
-
-`;
-
-
-const fields = [
-
-"numero_membro",
-"nome",
-"nascimento",
-"sexo",
-"documento",
-"telefone",
-"endereco",
-"unidade_id",
-"funcao",
-"classe",
-"estado",
-"encarregado",
-"contacto_encarregado",
-"pai",
-"mae",
-"escola",
-"classe_escolar",
-"data_cadastro"
-
-];
-
-
-fields.forEach(k=>{
-
-const el =
-document.querySelector(
-`[name="${k}"]`
-);
-
-if(el){
-
-el.value =
-m[k] ?? "";
-
-}
-
-});
-
-
-document
-.getElementById("editForm")
-.onsubmit =
-async function(e){
-
-e.preventDefault();
-
-const btn =
-document.getElementById("editSave");
-
-btn.disabled = true;
-
-try{
-
-const c =
-await initSupabase();
-
-const form =
-new FormData(e.target);
-
-const d = {};
-
-
-fields.forEach(k=>{
-
-d[k] =
-form.get(k) ?? "";
-
-});
-
-
-const photo =
-form.get("foto");
-
-
-if(
-photo &&
-photo.size > 0
-){
-
-d.foto_url =
-await uploadPhoto(
-photo,
-id
-);
-
-}
-
-
-const result =
-await c
-.from("membros")
-.update(d)
-.eq("id",id);
-
-
-if(result.error){
-
-throw result.error;
-
-}
-
-
-await profile(id);
-
-
-}catch(err){
-
-alert(
-"Erro ao guardar:\n\n"+
-errorMessage(err)
-);
-
-}finally{
-
-btn.disabled = false;
-
-}
-
-};
-
-}
-
-
-/* UNIDADES */
+/* =====================================================
+   UNIDADES
+===================================================== */
 
 async function unidades(){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-content.innerHTML =
+  content.innerHTML =
 
-T(
-"Unidades",
-"Criar e administrar unidades",
-B(
-"+ Nova unidade",
-"primary",
-"unitForm()"
-)
-)
+    T(
+      "Unidades",
+      "Criar, editar e administrar unidades",
+      B(
+        "+ Nova unidade",
+        "primary",
+        "unitForm()"
+      )
+    )
 
-+
+    +
 
-`
+    `
+    <div class="card">
 
-<div class="card">
+      <div style="overflow:auto">
 
-<table>
+        <table>
 
-<thead>
+          <thead>
 
-<tr>
+            <tr>
+              <th>Unidade</th>
+              <th>Responsável</th>
+              <th>Membros</th>
+              <th>Estado</th>
+              <th>Ação</th>
+            </tr>
 
-<th>Unidade</th>
-<th>Responsável</th>
-<th>Membros</th>
-<th>Estado</th>
-<th>Ação</th>
+          </thead>
 
-</tr>
+          <tbody>
 
-</thead>
+            ${db.unidades.map(u => `
 
-<tbody>
+              <tr>
 
-${
-db.unidades.map(u=>`
+                <td>
+                  <b>${esc(u.nome)}</b>
+                </td>
 
-<tr>
+                <td>
+                  ${esc(u.responsavel || "—")}
+                </td>
 
-<td>
-<b>
-${esc(u.nome)}
-</b>
-</td>
+                <td>
+                  ${
+                    db.membros.filter(
+                      m =>
+                        String(m.unidade_id) ===
+                        String(u.id)
+                    ).length
+                  }
+                </td>
 
-<td>
-${esc(u.responsavel || "—")}
-</td>
+                <td>
+                  ${esc(u.estado || "—")}
+                </td>
 
-<td>
-${
-db.membros.filter(
-m=>String(m.unidade_id) === String(u.id)
-).length
-}
-</td>
+                <td>
+                  ${B(
+                    "Editar",
+                    "light",
+                    `unitForm('${u.id}')`
+                  )}
+                </td>
 
-<td>
-${esc(u.estado || "—")}
-</td>
+              </tr>
 
-<td>
+            `).join("")}
 
-${B(
-"Editar",
-"light",
-`unitForm('${u.id}')`
-)}
+          </tbody>
 
-</td>
+        </table>
 
-</tr>
+      </div>
 
-`).join("")
-
-||
-
-`<tr>
-<td colspan="5">
-Nenhuma unidade registada.
-</td>
-</tr>`
-
-}
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
+    </div>
+    `;
 
 }
 
 
 async function unitForm(id=null){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-let u =
-id
-
-?
-
-db.unidades.find(
-x=>String(x.id) === String(id)
-)
-
-:
-
-{
-nome:"",
-responsavel:"",
-estado:"Ativa"
-};
+  let u =
+    id
+      ?
+      db.unidades.find(
+        x => String(x.id) === String(id)
+      )
+      :
+      {
+        nome:"",
+        responsavel:"",
+        estado:"Ativa"
+      };
 
 
-content.innerHTML =
+  content.innerHTML =
 
-T(
-id
-?"Editar unidade"
-:"Nova unidade",
-"Formulário de unidade",
-B(
-"← Voltar",
-"light",
-"page('unidades')"
-)
-)
+    T(
+      id
+        ? "Editar unidade"
+        : "Nova unidade",
+      "Formulário de unidade",
+      B(
+        "← Voltar",
+        "light",
+        "page('unidades')"
+      )
+    )
 
-+
+    +
 
-`
+    `
+    <form id="uf">
 
-<form id="unitForm">
+      <div class="card">
 
-<div class="card">
+        <div class="grid">
 
-<div class="grid">
+          ${field(
+            "nome",
+            "Nome *",
+            "text",
+            true
+          )}
 
-${field(
-"nome",
-"Nome *",
-"text",
-true
-)}
+          ${field(
+            "responsavel",
+            "Responsável"
+          )}
 
-${field(
-"responsavel",
-"Responsável"
-)}
+          ${select(
+            "estado",
+            "Estado",
+            [
+              "Ativa",
+              "Inativa"
+            ]
+          )}
 
-${select(
-"estado",
-"Estado",
-[
-"Ativa",
-"Inativa"
-]
-)}
+        </div>
 
-</div>
+      </div>
 
-</div>
+      <div class="actions">
 
-<div class="actions">
+        <button class="btn primary">
+          Guardar
+        </button>
 
-<button
-class="btn primary"
-type="submit"
->
+      </div>
 
-Guardar
-
-</button>
-
-</div>
-
-</form>
-
-`;
+    </form>
+    `;
 
 
-["nome","responsavel","estado"]
-.forEach(k=>{
+  ["nome","responsavel","estado"]
+    .forEach(k => {
 
-const el =
-document.querySelector(
-`[name="${k}"]`
-);
+      const el =
+        $(`[name="${k}"]`);
 
-if(el){
+      if(el)
+        el.value =
+          u[k] || "";
 
-el.value =
-u[k] || "";
-
-}
-
-});
+    });
 
 
-document
-.getElementById("unitForm")
-.onsubmit =
-async e=>{
+  $("#uf").onsubmit =
+    async e => {
 
-e.preventDefault();
+      e.preventDefault();
 
-try{
+      try{
 
-const c =
-await initSupabase();
-
-const d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-let result;
-
-if(id){
-
-result =
-await c
-.from("unidades")
-.update(d)
-.eq("id",id);
-
-}else{
-
-result =
-await c
-.from("unidades")
-.insert([d]);
-
-}
+        const d =
+          Object.fromEntries(
+            new FormData(e.target)
+          );
 
 
-if(result.error){
-
-throw result.error;
-
-}
+        const c =
+          await initSupabase();
 
 
-page("unidades");
+        let result;
 
 
-}catch(err){
+        if(id){
 
-alert(
-"Erro:\n\n"+
-errorMessage(err)
-);
+          result =
+            await c
+              .from("unidades")
+              .update(d)
+              .eq("id",id);
 
-}
+        }else{
 
-};
+          result =
+            await c
+              .from("unidades")
+              .insert([d]);
+
+        }
+
+
+        if(result.error)
+          throw result.error;
+
+
+        page("unidades");
+
+
+      }catch(err){
+
+        alert(
+          "Erro: " +
+          err.message
+        );
+
+      }
+
+    };
 
 }
 
 
-/* ATIVIDADES */
+/* =====================================================
+   ATIVIDADES
+===================================================== */
 
 async function atividades(){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-content.innerHTML =
+  content.innerHTML =
 
-T(
-"Atividades",
-"Registo e gestão das atividades",
-B(
-"+ Nova atividade",
-"primary",
-"activityForm()"
-)
-)
+    T(
+      "Atividades",
+      "Registo e gestão das atividades",
+      B(
+        "+ Nova atividade",
+        "primary",
+        "activityForm()"
+      )
+    )
 
-+
+    +
 
-`
+    `
+    <div class="card">
 
-<div class="card">
+      <div style="overflow:auto">
 
-<table>
+        <table>
 
-<thead>
+          <thead>
 
-<tr>
+            <tr>
 
-<th>Atividade</th>
-<th>Data</th>
-<th>Hora</th>
-<th>Local</th>
-<th>Responsável</th>
-<th>Custo</th>
+              <th>Atividade</th>
+              <th>Data</th>
+              <th>Hora</th>
+              <th>Local</th>
+              <th>Responsável</th>
+              <th>Custo</th>
 
-</tr>
+            </tr>
 
-</thead>
+          </thead>
 
-<tbody>
+          <tbody>
 
-${
-db.atividades.map(a=>`
+            ${
+              db.atividades.map(a => `
 
-<tr>
+                <tr>
 
-<td>
-${esc(a.nome)}
-</td>
+                  <td>
+                    ${esc(a.nome)}
+                  </td>
 
-<td>
-${esc(a.data || "")}
-</td>
+                  <td>
+                    ${esc(a.data || "")}
+                  </td>
 
-<td>
-${esc(a.hora || "")}
-</td>
+                  <td>
+                    ${esc(a.hora || "")}
+                  </td>
 
-<td>
-${esc(a.local || "")}
-</td>
+                  <td>
+                    ${esc(a.local || "")}
+                  </td>
 
-<td>
-${esc(a.responsavel || "")}
-</td>
+                  <td>
+                    ${esc(a.responsavel || "")}
+                  </td>
 
-<td>
-${money(a.custo)} Kz
-</td>
+                  <td>
+                    ${money(a.custo)} Kz
+                  </td>
 
-</tr>
+                </tr>
 
-`).join("")
+              `).join("")
+              ||
+              `
+                <tr>
+                  <td
+                    colspan="6"
+                    class="muted"
+                  >
+                    Nenhuma atividade registada.
+                  </td>
+                </tr>
+              `
+            }
 
-||
+          </tbody>
 
-`<tr>
-<td colspan="6">
-Nenhuma atividade registada.
-</td>
-</tr>`
+        </table>
 
-}
+      </div>
 
-</tbody>
-
-</table>
-
-</div>
-
-`;
+    </div>
+    `;
 
 }
 
 
 async function activityForm(){
 
-content.innerHTML =
+  content.innerHTML =
 
-T(
-"Registar atividade",
-"Nova atividade",
-B(
-"← Voltar",
-"light",
-"page('atividades')"
-)
-)
+    T(
+      "Registar atividade",
+      "Formulário completo",
+      B(
+        "← Voltar",
+        "light",
+        "page('atividades')"
+      )
+    )
 
-+
+    +
 
-`
+    `
+    <form id="af">
 
-<form id="activityForm">
+      <div class="card">
 
-<div class="card">
+        <div class="grid">
 
-<div class="grid">
+          ${field(
+            "nome",
+            "Nome da atividade *",
+            "text",
+            true
+          )}
 
-${field(
-"nome",
-"Nome da atividade *",
-"text",
-true
-)}
+          ${field(
+            "data",
+            "Data *",
+            "date",
+            true
+          )}
 
-${field(
-"data",
-"Data *",
-"date",
-true
-)}
+          ${field(
+            "hora",
+            "Hora",
+            "time"
+          )}
 
-${field(
-"hora",
-"Hora",
-"time"
-)}
+          ${field(
+            "local",
+            "Local"
+          )}
 
-${field(
-"local",
-"Local"
-)}
+          ${field(
+            "responsavel",
+            "Responsável"
+          )}
 
-${field(
-"responsavel",
-"Responsável"
-)}
+          ${field(
+            "custo",
+            "Custo (Kz)",
+            "number"
+          )}
 
-${field(
-"custo",
-"Custo (Kz)",
-"number"
-)}
+        </div>
 
-</div>
+        ${field(
+          "descricao",
+          "Descrição"
+        )}
 
-${field(
-"descricao",
-"Descrição"
-)}
+      </div>
 
-</div>
+      <div class="actions">
 
-<div class="actions">
+        <button class="btn primary">
+          Guardar atividade
+        </button>
 
-<button
-class="btn primary"
-type="submit"
->
+      </div>
 
-Guardar atividade
-
-</button>
-
-</div>
-
-</form>
-
-`;
+    </form>
+    `;
 
 
-document
-.querySelector('[name="data"]')
-.value =
-today();
+  $("#af").onsubmit =
+    async e => {
+
+      e.preventDefault();
+
+      try{
+
+        const d =
+          Object.fromEntries(
+            new FormData(e.target)
+          );
 
 
-document
-.getElementById("activityForm")
-.onsubmit =
-async e=>{
-
-e.preventDefault();
-
-try{
-
-const c =
-await initSupabase();
-
-const d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-if(!d.custo){
-
-d.custo = 0;
-
-}
-
-const result =
-await c
-.from("atividades")
-.insert([d]);
+        const c =
+          await initSupabase();
 
 
-if(result.error){
+        const result =
+          await c
+            .from("atividades")
+            .insert([d]);
 
-throw result.error;
+
+        if(result.error)
+          throw result.error;
+
+
+        page("atividades");
+
+
+      }catch(err){
+
+        alert(
+          "Erro ao guardar atividade:\n\n"+
+          err.message
+        );
+
+      }
+
+    };
 
 }
 
 
-page("atividades");
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-errorMessage(err)
-);
-
-}
-
-};
-
-}
-
-
-/* FINANÇAS */
+/* =====================================================
+   FINANÇAS
+===================================================== */
 
 async function financas(){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-const receitas =
-db.financas
-.filter(x=>x.tipo==="Receita")
-.reduce(
-(a,x)=>a+Number(x.valor||0),
-0
-);
-
-const despesas =
-db.financas
-.filter(x=>x.tipo==="Despesa")
-.reduce(
-(a,x)=>a+Number(x.valor||0),
-0
-);
+  const rec =
+    db.financas
+      .filter(x => x.tipo === "Receita")
+      .reduce(
+        (a,x) =>
+          a + Number(x.valor || 0),
+        0
+      );
 
 
-content.innerHTML =
-
-T(
-"Finanças",
-"Receitas, despesas e pagamentos",
-B(
-"+ Novo movimento",
-"primary",
-"financeForm()"
-)
-)
-
-+
-
-`
-
-<div class="cards">
-
-<div class="card">
-
-Receitas
-
-<strong>
-${money(receitas)} Kz
-</strong>
-
-</div>
+  const desp =
+    db.financas
+      .filter(x => x.tipo === "Despesa")
+      .reduce(
+        (a,x) =>
+          a + Number(x.valor || 0),
+        0
+      );
 
 
-<div class="card">
+  content.innerHTML =
 
-Despesas
+    T(
+      "Finanças",
+      "Registar pagamentos, receitas e despesas",
+      B(
+        "+ Novo movimento",
+        "primary",
+        "financeForm()"
+      )
+    )
 
-<strong>
-${money(despesas)} Kz
-</strong>
+    +
 
-</div>
+    `
+    <div class="cards">
+
+      <div class="card">
+
+        Receitas
+
+        <strong>
+          ${money(rec)} Kz
+        </strong>
+
+      </div>
+
+      <div class="card">
+
+        Despesas
+
+        <strong>
+          ${money(desp)} Kz
+        </strong>
+
+      </div>
+
+      <div class="card">
+
+        Saldo
+
+        <strong>
+          ${money(rec-desp)} Kz
+        </strong>
+
+      </div>
+
+      <div class="card">
+
+        Movimentos
+
+        <strong>
+          ${db.financas.length}
+        </strong>
+
+      </div>
+
+    </div>
 
 
-<div class="card">
+    <div class="card">
 
-Saldo
+      <h3>
+        Histórico financeiro
+      </h3>
 
-<strong>
-${money(receitas-despesas)} Kz
-</strong>
+      <div style="overflow:auto">
 
-</div>
+        <table>
 
+          <thead>
 
-<div class="card">
+            <tr>
 
-Movimentos
+              <th>Data</th>
+              <th>Tipo</th>
+              <th>Membro</th>
+              <th>Nº membro</th>
+              <th>Categoria</th>
+              <th>Descrição</th>
+              <th>Valor</th>
 
-<strong>
-${db.financas.length}
-</strong>
+            </tr>
 
-</div>
+          </thead>
 
-</div>
+          <tbody>
 
+            ${
+              db.financas.map(x => `
 
-<div class="card">
+                <tr>
 
-<div style="overflow:auto">
+                  <td>
+                    ${esc(x.data || "")}
+                  </td>
 
-<table>
+                  <td>
+                    ${esc(x.tipo || "")}
+                  </td>
 
-<thead>
+                  <td>
+                    <b>
+                      ${esc(
+                        x.membro_nome || "—"
+                      )}
+                    </b>
+                  </td>
 
-<tr>
+                  <td>
+                    ${esc(
+                      x.membro_numero || "—"
+                    )}
+                  </td>
 
-<th>Data</th>
-<th>Tipo</th>
-<th>Membro</th>
-<th>Nº</th>
-<th>Categoria</th>
-<th>Descrição</th>
-<th>Valor</th>
+                  <td>
+                    ${esc(
+                      x.categoria || ""
+                    )}
+                  </td>
 
-</tr>
+                  <td>
+                    ${esc(
+                      x.descricao || ""
+                    )}
+                  </td>
 
-</thead>
+                  <td>
+                    ${money(x.valor)} Kz
+                  </td>
 
-<tbody>
+                </tr>
 
-${
-db.financas.map(x=>`
+              `).join("")
+              ||
+              `
+                <tr>
+                  <td
+                    colspan="7"
+                    class="muted"
+                  >
+                    Nenhum movimento registado.
+                  </td>
+                </tr>
+              `
+            }
 
-<tr>
+          </tbody>
 
-<td>
-${esc(x.data || "")}
-</td>
+        </table>
 
-<td>
-${esc(x.tipo || "")}
-</td>
+      </div>
 
-<td>
-${esc(x.membro_nome || "—")}
-</td>
-
-<td>
-${esc(x.membro_numero || "—")}
-</td>
-
-<td>
-${esc(x.categoria || "")}
-</td>
-
-<td>
-${esc(x.descricao || "")}
-</td>
-
-<td>
-${money(x.valor)} Kz
-</td>
-
-</tr>
-
-`).join("")
-
-||
-
-`<tr>
-<td colspan="7">
-Nenhum movimento registado.
-</td>
-</tr>`
-
-}
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-`;
+    </div>
+    `;
 
 }
 
 
 async function financeForm(){
 
-if(!await refresh()) return;
-
-content.innerHTML =
-
-T(
-"Novo movimento financeiro",
-"Registar receita ou despesa",
-B(
-"← Voltar",
-"light",
-"page('financas')"
-)
-)
-
-+
-
-`
-
-<form id="financeForm">
-
-<div class="card">
-
-<div class="grid">
-
-${select(
-"tipo",
-"Tipo",
-[
-"Receita",
-"Despesa"
-],
-true
-)}
+  await refresh();
 
 
-<div class="field">
+  content.innerHTML =
 
-<label>
-Membro
-</label>
+    T(
+      "Novo movimento financeiro",
+      "Registar receita ou despesa",
+      B(
+        "← Voltar",
+        "light",
+        "page('financas')"
+      )
+    )
 
-<select name="membro_id">
+    +
 
-<option value="">
-Nenhum / não aplicável
-</option>
+    `
+    <form id="ff">
 
-${
-db.membros.map(m=>`
+      <div class="card">
 
-<option value="${esc(m.id)}">
+        <div class="grid">
 
-${esc(m.nome)}
-—
-${esc(m.numero_membro)}
-
-</option>
-
-`).join("")
-}
-
-</select>
-
-</div>
-
-
-${field(
-"categoria",
-"Categoria *",
-"text",
-true
-)}
-
-${field(
-"valor",
-"Valor (Kz) *",
-"number",
-true
-)}
-
-${field(
-"data",
-"Data *",
-"date",
-true
-)}
-
-${field(
-"descricao",
-"Descrição"
-)}
-
-${select(
-"forma",
-"Forma de pagamento",
-[
-"Dinheiro",
-"Transferência",
-"Depósito",
-"Multicaixa Express",
-"Outro"
-]
-)}
-
-</div>
-
-</div>
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Guardar movimento
-
-</button>
-
-</div>
-
-</form>
-
-`;
+          ${select(
+            "tipo",
+            "Tipo",
+            [
+              "Receita",
+              "Despesa"
+            ],
+            true
+          )}
 
 
-document
-.querySelector('[name="data"]')
-.value =
-today();
+          <div class="field">
+
+            <label>
+              Membro
+            </label>
+
+            <select name="membro_id">
+
+              <option value="">
+                Nenhum / não aplicável
+              </option>
+
+              ${db.membros.map(m => `
+
+                <option
+                  value="${esc(m.id)}"
+                >
+                  ${esc(m.nome)}
+                  —
+                  ${esc(m.numero_membro)}
+                </option>
+
+              `).join("")}
+
+            </select>
+
+          </div>
 
 
-document
-.getElementById("financeForm")
-.onsubmit =
-async e=>{
+          ${field(
+            "categoria",
+            "Categoria *",
+            "text",
+            true
+          )}
 
-e.preventDefault();
+          ${field(
+            "valor",
+            "Valor (Kz) *",
+            "number",
+            true
+          )}
 
-try{
+          ${field(
+            "data",
+            "Data *",
+            "date",
+            true
+          )}
 
-const c =
-await initSupabase();
-
-const d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-
-const m =
-db.membros.find(
-x=>String(x.id) ===
-String(d.membro_id)
-);
-
-
-d.membro_nome =
-m?.nome || "";
-
-d.membro_numero =
-m?.numero_membro || "";
+          ${field(
+            "descricao",
+            "Descrição"
+          )}
 
 
-if(!d.valor){
+          ${select(
+            "forma",
+            "Forma de pagamento",
+            [
+              "Dinheiro",
+              "Transferência",
+              "Depósito",
+              "Multicaixa Express",
+              "Outro"
+            ]
+          )}
 
-d.valor = 0;
+        </div>
 
-}
-
-
-const result =
-await c
-.from("financas")
-.insert([d]);
-
-
-if(result.error){
-
-throw result.error;
-
-}
+      </div>
 
 
-page("financas");
+      <div class="actions">
+
+        <button class="btn primary">
+          Guardar movimento
+        </button>
+
+      </div>
+
+    </form>
+    `;
 
 
-}catch(err){
+  $('[name="data"]').value =
+    today();
 
-alert(
-"Erro:\n\n"+
-errorMessage(err)
-);
+
+  $("#ff").onsubmit =
+    async e => {
+
+      e.preventDefault();
+
+      try{
+
+        const d =
+          Object.fromEntries(
+            new FormData(e.target)
+          );
+
+
+        const m =
+          db.membros.find(
+            x =>
+              String(x.id) ===
+              String(d.membro_id)
+          );
+
+
+        d.membro_nome =
+          m?.nome || "";
+
+        d.membro_numero =
+          m?.numero_membro || "";
+
+
+        const c =
+          await initSupabase();
+
+
+        const result =
+          await c
+            .from("financas")
+            .insert([d]);
+
+
+        if(result.error)
+          throw result.error;
+
+
+        page("financas");
+
+
+      }catch(err){
+
+        alert(
+          "Erro ao guardar:\n\n"+
+          err.message
+        );
+
+      }
+
+    };
 
 }
 
-};
 
-}
-
-
-/* RELATÓRIOS */
+/* =====================================================
+   RELATÓRIOS
+===================================================== */
 
 function relatorios(){
 
-content.innerHTML =
+  content.innerHTML =
 
-T(
-"Relatórios",
-"Principais relatórios do clube"
-)
+    T(
+      "Relatórios",
+      "Acesso aos principais relatórios do clube"
+    )
 
-+
+    +
 
-`
+    `
+    <div class="cards">
 
-<div class="cards">
+      <div class="card">
 
-<div class="card">
+        <h3>
+          Lista geral dos membros
+        </h3>
 
-<h3>
-Lista geral
-</h3>
+        <p class="muted">
+          Todos os membros cadastrados.
+        </p>
 
-<p class="muted">
-Todos os membros.
-</p>
+        ${B(
+          "Abrir",
+          "light",
+          "page('membros')"
+        )}
 
-${B(
-"Abrir",
-"light",
-"page('membros')"
-)}
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Membros por unidade
-</h3>
-
-<p class="muted">
-Quantidade por unidade.
-</p>
-
-${B(
-"Abrir",
-"light",
-"unitReport()"
-)}
-
-</div>
+      </div>
 
 
-<div class="card">
+      <div class="card">
 
-<h3>
-Atividades
-</h3>
+        <h3>
+          Membros por unidade
+        </h3>
 
-<p class="muted">
-Histórico das atividades.
-</p>
+        <p class="muted">
+          Quantidade de membros por unidade.
+        </p>
 
-${B(
-"Abrir",
-"light",
-"page('atividades')"
-)}
+        ${B(
+          "Abrir",
+          "light",
+          "unitReport()"
+        )}
 
-</div>
+      </div>
 
 
-<div class="card">
+      <div class="card">
 
-<h3>
-Financeiro
-</h3>
+        <h3>
+          Atividades
+        </h3>
 
-<p class="muted">
-Receitas e despesas.
-</p>
+        <p class="muted">
+          Histórico das atividades.
+        </p>
 
-${B(
-"Abrir",
-"light",
-"page('financas')"
-)}
+        ${B(
+          "Abrir",
+          "light",
+          "page('atividades')"
+        )}
 
-</div>
+      </div>
 
-</div>
 
-`;
+      <div class="card">
+
+        <h3>
+          Financeiro
+        </h3>
+
+        <p class="muted">
+          Receitas, despesas e saldo.
+        </p>
+
+        ${B(
+          "Abrir",
+          "light",
+          "page('financas')"
+        )}
+
+      </div>
+
+    </div>
+    `;
 
 }
 
 
 async function unitReport(){
 
-if(!await refresh()) return;
+  if(!await refresh())
+    return;
 
-content.innerHTML =
 
-T(
-"Membros por unidade",
-"Relatório geral",
-B(
-"← Voltar",
-"light",
-"page('relatorios')"
-)
-)
+  content.innerHTML =
 
-+
+    T(
+      "Membros por unidade",
+      "Relatório geral",
+      B(
+        "← Voltar",
+        "light",
+        "page('relatorios')"
+      )
+    )
 
-`
+    +
 
-<div class="card">
+    `
+    <div class="card">
 
-<table>
+      <table>
 
-<thead>
+        <thead>
 
-<tr>
+          <tr>
 
-<th>
-Unidade
-</th>
+            <th>
+              Unidade
+            </th>
 
-<th>
-Membros
-</th>
+            <th>
+              Membros
+            </th>
 
-</tr>
+          </tr>
 
-</thead>
+        </thead>
 
-<tbody>
+        <tbody>
 
-${
-db.unidades.map(u=>`
+          ${db.unidades.map(u => `
 
-<tr>
+            <tr>
 
-<td>
-${esc(u.nome)}
-</td>
+              <td>
+                ${esc(u.nome)}
+              </td>
 
-<td>
+              <td>
 
-${
-db.membros.filter(
-m=>String(m.unidade_id) ===
-String(u.id)
-).length
-}
+                ${
+                  db.membros.filter(
+                    m =>
+                      String(m.unidade_id) ===
+                      String(u.id)
+                  ).length
+                }
 
-</td>
+              </td>
 
-</tr>
+            </tr>
 
-`).join("")
+          `).join("")}
 
-}
+        </tbody>
 
-</tbody>
+      </table>
 
-</table>
-
-</div>
-
-`;
+    </div>
+    `;
 
 }
 
 
-/* DEFINIÇÕES */
+/* =====================================================
+   DEFINIÇÕES
+===================================================== */
 
 async function definicoes(){
 
-if(!await refresh()) return;
-
-content.innerHTML =
-
-T(
-"Definições gerais",
-"Configurações do clube e impressão"
-)
-
-+
-
-`
-
-<form id="configForm">
-
-<div class="card">
-
-<h3>
-Dados do clube
-</h3>
-
-<div class="grid">
-
-${field(
-"nome_clube",
-"Nome do clube"
-)}
-
-${field(
-"diretor",
-"Diretor"
-)}
-
-${field(
-"telefone",
-"Telefone"
-)}
-
-${field(
-"email",
-"E-mail"
-)}
-
-</div>
-
-</div>
+  if(!await refresh())
+    return;
 
 
-<div class="card">
+  content.innerHTML =
 
-<h3>
-Impressão
-</h3>
+    T(
+      "Definições gerais",
+      "Configurações do clube e impressão"
+    )
 
-<div class="grid">
+    +
 
-${select(
-"papel",
-"Papel térmico",
-[
-"58 mm",
-"80 mm"
-]
-)}
+    `
+    <form id="cf">
 
-${select(
-"ficha",
-"Ficha principal",
-[
-"A4"
-]
-)}
+      <div class="card">
 
-</div>
+        <h3>
+          Dados do clube
+        </h3>
 
-</div>
+        <div class="grid">
 
+          ${field(
+            "nome_clube",
+            "Nome do clube"
+          )}
 
-<div class="actions">
+          ${field(
+            "diretor",
+            "Diretor"
+          )}
 
-<button
-class="btn primary"
-type="submit"
->
+          ${field(
+            "telefone",
+            "Telefone"
+          )}
 
-Guardar definições
+          ${field(
+            "email",
+            "E-mail"
+          )}
 
-</button>
+        </div>
 
-</div>
-
-</form>
-
-`;
+      </div>
 
 
-[
-"nome_clube",
-"diretor",
-"telefone",
-"email",
-"papel",
-"ficha"
-]
-.forEach(k=>{
+      <div class="card">
 
-const el =
-document.querySelector(
-`[name="${k}"]`
-);
+        <h3>
+          Impressão
+        </h3>
 
-if(el){
+        <div class="grid">
 
-el.value =
-db.config[k] || "";
+          ${select(
+            "papel",
+            "Papel térmico",
+            [
+              "58 mm",
+              "80 mm"
+            ]
+          )}
 
-}
+          ${select(
+            "ficha",
+            "Ficha principal",
+            [
+              "A4"
+            ]
+          )}
 
-});
+        </div>
 
-
-document
-.getElementById("configForm")
-.onsubmit =
-async e=>{
-
-e.preventDefault();
-
-try{
-
-const c =
-await initSupabase();
-
-const d =
-Object.fromEntries(
-new FormData(e.target)
-);
+      </div>
 
 
-let result;
+      <div class="actions">
+
+        <button class="btn primary">
+          Guardar definições
+        </button>
+
+      </div>
+
+    </form>
+    `;
 
 
-if(db.config.id){
+  [
+    "nome_clube",
+    "diretor",
+    "telefone",
+    "email",
+    "papel",
+    "ficha"
+  ].forEach(k => {
 
-result =
-await c
-.from("configuracoes")
-.update(d)
-.eq(
-"id",
-db.config.id
-);
+    const el =
+      $(`[name="${k}"]`);
 
-}else{
+    if(el)
+      el.value =
+        db.config[k] || "";
 
-result =
-await c
-.from("configuracoes")
-.insert([d]);
-
-}
+  });
 
 
-if(result.error){
+  $("#cf").onsubmit =
+    async e => {
 
-throw result.error;
+      e.preventDefault();
 
-}
+      try{
+
+        const d =
+          Object.fromEntries(
+            new FormData(e.target)
+          );
 
 
-alert(
-"Definições guardadas com sucesso."
-);
+        const c =
+          await initSupabase();
 
 
-}catch(err){
+        let result;
 
-alert(
-"Erro:\n\n"+
-errorMessage(err)
-);
 
-}
+        if(db.config.id){
 
-};
+          result =
+            await c
+              .from("configuracoes")
+              .update(d)
+              .eq("id",db.config.id);
+
+        }else{
+
+          result =
+            await c
+              .from("configuracoes")
+              .insert([d]);
+
+        }
+
+
+        if(result.error)
+          throw result.error;
+
+
+        alert(
+          "Definições guardadas."
+        );
+
+
+        await refresh();
+
+
+      }catch(err){
+
+        alert(
+          "Erro:\n\n"+
+          err.message
+        );
+
+      }
+
+    };
 
 }
 
 
-/* MINHA CONTA */
+/* =====================================================
+   MINHA CONTA
+===================================================== */
 
 async function conta(){
 
-try{
+  try{
 
-const c =
-await initSupabase();
-
-const result =
-await c.auth.getUser();
+    const c =
+      await initSupabase();
 
 
-if(result.error){
+    const {data,error} =
+      await c.auth.getUser();
 
-throw result.error;
+
+    if(error)
+      throw error;
+
+
+    const email =
+      data.user?.email || "";
+
+
+    content.innerHTML =
+
+      T(
+        "Minha conta",
+        "Gerencie as suas credenciais"
+      )
+
+      +
+
+      `
+      <div class="card">
+
+        <h3>
+          Conta atual
+        </h3>
+
+        <p>
+          <b>E-mail:</b>
+          ${esc(email)}
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Alterar palavra-passe
+        </h3>
+
+        <form id="passwordForm">
+
+          ${field(
+            "novaSenha",
+            "Nova palavra-passe",
+            "password",
+            true
+          )}
+
+          ${field(
+            "confirmarSenha",
+            "Confirmar palavra-passe",
+            "password",
+            true
+          )}
+
+          <div class="actions">
+
+            <button class="btn primary">
+              Alterar palavra-passe
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Alterar e-mail
+        </h3>
+
+        <p class="muted">
+          O Supabase poderá pedir confirmação
+          do novo e-mail.
+        </p>
+
+        <form id="emailForm">
+
+          ${field(
+            "novoEmail",
+            "Novo e-mail",
+            "email",
+            true
+          )}
+
+          <div class="actions">
+
+            <button class="btn primary">
+              Alterar e-mail
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+      `;
+
+
+    $("#passwordForm").onsubmit =
+      async e => {
+
+        e.preventDefault();
+
+
+        const d =
+          Object.fromEntries(
+            new FormData(e.target)
+          );
+
+
+        if(
+          d.novaSenha !==
+          d.confirmarSenha
+        ){
+
+          alert(
+            "As palavras-passe não coincidem."
+          );
+
+          return;
+
+        }
+
+
+        if(d.novaSenha.length < 6){
+
+          alert(
+            "A palavra-passe deve ter pelo menos 6 caracteres."
+          );
+
+          return;
+
+        }
+
+
+        try{
+
+          const {error} =
+            await c.auth.updateUser({
+
+              password:
+                d.novaSenha
+
+            });
+
+
+          if(error)
+            throw error;
+
+
+          alert(
+            "Palavra-passe alterada com sucesso."
+          );
+
+
+          e.target.reset();
+
+
+        }catch(err){
+
+          alert(
+            "Erro:\n\n"+
+            err.message
+          );
+
+        }
+
+      };
+
+
+    $("#emailForm").onsubmit =
+      async e => {
+
+        e.preventDefault();
+
+
+        const d =
+          Object.fromEntries(
+            new FormData(e.target)
+          );
+
+
+        try{
+
+          const {error} =
+            await c.auth.updateUser({
+
+              email:
+                d.novoEmail
+
+            });
+
+
+          if(error)
+            throw error;
+
+
+          alert(
+            "Pedido de alteração enviado.\n\n"+
+            "Verifique o novo endereço de e-mail."
+          );
+
+
+          e.target.reset();
+
+
+        }catch(err){
+
+          alert(
+            "Erro:\n\n"+
+            err.message
+          );
+
+        }
+
+      };
+
+
+  }catch(err){
+
+    alert(
+      "Não foi possível carregar a conta:\n\n"+
+      err.message
+    );
+
+  }
 
 }
 
 
-const email =
-result.data.user?.email || "";
-
-
-content.innerHTML =
-
-T(
-"Minha conta",
-"Credenciais da conta autorizada"
-)
-
-+
-
-`
-
-<div class="card">
-
-<h3>
-Conta atual
-</h3>
-
-<p>
-
-<b>E-mail:</b>
-
-${esc(email)}
-
-</p>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Alterar palavra-passe
-</h3>
-
-<form id="passwordForm">
-
-${field(
-"novaSenha",
-"Nova palavra-passe",
-"password",
-true
-)}
-
-${field(
-"confirmarSenha",
-"Confirmar palavra-passe",
-"password",
-true
-)}
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Alterar palavra-passe
-
-</button>
-
-</div>
-
-</form>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Alterar e-mail
-</h3>
-
-<form id="emailForm">
-
-${field(
-"novoEmail",
-"Novo e-mail",
-"email",
-true
-)}
-
-<div class="actions">
-
-<button
-class="btn primary"
-type="submit"
->
-
-Alterar e-mail
-
-</button>
-
-</div>
-
-</form>
-
-</div>
-
-`;
-
-
-document
-.getElementById("passwordForm")
-.onsubmit =
-async e=>{
-
-e.preventDefault();
-
-const d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-
-if(
-d.novaSenha !==
-d.confirmarSenha
-){
-
-alert(
-"As palavras-passe não coincidem."
-);
-
-return;
-
-}
-
-
-if(
-d.novaSenha.length < 6
-){
-
-alert(
-"A palavra-passe deve ter pelo menos 6 caracteres."
-);
-
-return;
-
-}
-
-
-try{
-
-const result =
-await c.auth.updateUser({
-password:d.novaSenha
-});
-
-
-if(result.error){
-
-throw result.error;
-
-}
-
-
-alert(
-"Palavra-passe alterada com sucesso."
-);
-
-e.target.reset();
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-errorMessage(err)
-);
-
-}
-
-};
-
-
-document
-.getElementById("emailForm")
-.onsubmit =
-async e=>{
-
-e.preventDefault();
-
-const d =
-Object.fromEntries(
-new FormData(e.target)
-);
-
-
-try{
-
-const result =
-await c.auth.updateUser({
-email:d.novoEmail.trim()
-});
-
-
-if(result.error){
-
-throw result.error;
-
-}
-
-
-alert(
-"Pedido de alteração enviado. Verifique o novo e-mail."
-);
-
-e.target.reset();
-
-
-}catch(err){
-
-alert(
-"Erro:\n\n"+
-errorMessage(err)
-);
-
-}
-
-};
-
-
-}catch(err){
-
-alert(
-"Erro ao abrir a conta:\n\n"+
-errorMessage(err)
-);
-
-}
-
-}
-
-
-/* IMPRESSÃO A4 */
+/* =====================================================
+   IMPRESSÃO A4
+===================================================== */
 
 async function printA4(id){
 
-if(!await refresh()) return;
-
-const m =
-db.membros.find(
-x=>String(x.id) === String(id)
-);
+  if(!await refresh())
+    return;
 
 
-if(!m) return;
+  const m =
+    db.membros.find(
+      x =>
+        String(x.id) ===
+        String(id)
+    );
 
 
-const w =
-window.open(
-"",
-"_blank"
-);
+  if(!m)
+    return;
 
 
-if(!w){
-
-alert(
-"O navegador bloqueou a janela de impressão."
-);
-
-return;
-
-}
+  const w =
+    window.open(
+      "",
+      "_blank"
+    );
 
 
-w.document.write(`
-
-<html>
-
-<head>
-
-<title>
-Ficha A4 — ${esc(m.nome)}
-</title>
-
-<style>
-
-body{
-font-family:Arial;
-margin:20mm;
-}
-
-h1{
-text-align:center;
-}
-
-.header{
-display:flex;
-gap:20px;
-align-items:center;
-}
-
-.photo{
-width:110px;
-height:110px;
-object-fit:cover;
-}
-
-.row{
-padding:9px 0;
-border-bottom:1px solid #ddd;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<h1>
-FICHA DE CADASTRO
-</h1>
-
-<div class="header">
-
-${
-m.foto_url
-?
-`<img
-class="photo"
-src="${esc(m.foto_url)}"
->`
-:
-""
-}
-
-<div>
-
-<h2>
-${esc(
-db.config.nome_clube ||
-"Clube de Desbravadores"
-)}
-</h2>
-
-<b>Nº:</b>
-${esc(m.numero_membro)}
-
-</div>
-
-</div>
+  const foto =
+    m.foto_url
+      ?
+      `
+      <img
+        src="${esc(m.foto_url)}"
+        style="
+          width:120px;
+          height:120px;
+          object-fit:cover;
+          border-radius:8px;
+        "
+      >
+      `
+      :
+      "";
 
 
-${
-[
-["Nome completo",m.nome],
-["Nascimento",m.nascimento],
-["Sexo",m.sexo],
-["Documento",m.documento],
-["Unidade",unitName(m.unidade_id)],
-["Função",m.funcao],
-["Classe",m.classe],
-["Estado",m.estado],
-["Telefone",m.telefone],
-["Endereço",m.endereco],
-["Encarregado",m.encarregado],
-["Contacto do encarregado",m.contacto_encarregado],
-["Pai",m.pai],
-["Mãe",m.mae],
-["Escola",m.escola],
-["Classe escolar",m.classe_escolar],
-["Data de cadastro",m.data_cadastro]
-]
-.map(x=>`
+  w.document.write(`
 
-<div class="row">
+    <html>
 
-<b>
-${esc(x[0])}:
-</b>
+    <head>
 
-${esc(x[1] || "—")}
+      <title>
+        Ficha A4 — ${esc(m.nome)}
+      </title>
 
-</div>
+      <style>
 
-`)
-.join("")
-}
+        body{
+          font-family:Arial;
+          margin:20mm;
+        }
+
+        h1{
+          text-align:center;
+        }
+
+        .topo{
+          text-align:center;
+          margin-bottom:20px;
+        }
+
+        .foto{
+          text-align:center;
+          margin:20px;
+        }
+
+        .row{
+          padding:9px 0;
+          border-bottom:1px solid #ddd;
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <div class="topo">
+
+        <h1>
+          FICHA DE CADASTRO
+        </h1>
+
+        <h2>
+          ${esc(
+            db.config.nome_clube ||
+            "Clube de Desbravadores"
+          )}
+        </h2>
+
+      </div>
 
 
-<script>
+      <div class="foto">
+        ${foto}
+      </div>
 
-setTimeout(
-()=>print(),
-300
-);
 
-<\/script>
+      ${[
+        ["Número",m.numero_membro],
+        ["Utilizador",m.utilizador],
+        ["Nome completo",m.nome],
+        ["Nascimento",m.nascimento],
+        ["Sexo",m.sexo],
+        ["Documento",m.documento],
+        ["Unidade",getUnitName(m.unidade_id)],
+        ["Função",m.funcao],
+        ["Classe",m.classe],
+        ["Estado",m.estado],
+        ["Telefone",m.telefone],
+        ["Endereço",m.endereco],
+        ["Encarregado",m.encarregado],
+        ["Contacto do encarregado",m.contacto_encarregado],
+        ["Pai",m.pai],
+        ["Mãe",m.mae],
+        ["Escola",m.escola],
+        ["Classe escolar",m.classe_escolar],
+        ["Data de cadastro",m.data_cadastro]
+      ].map(x => `
 
-</body>
+        <div class="row">
 
-</html>
+          <b>
+            ${esc(x[0])}:
+          </b>
 
-`);
+          ${esc(x[1] || "—")}
 
-w.document.close();
+        </div>
+
+      `).join("")}
+
+
+      <script>
+
+        setTimeout(
+          () => print(),
+          500
+        );
+
+      <\/script>
+
+    </body>
+
+    </html>
+
+  `);
+
+
+  w.document.close();
 
 }
 
 
-/* IMPRESSÃO TÉRMICA */
+/* =====================================================
+   IMPRESSÃO TÉRMICA
+===================================================== */
 
 async function printThermal(id){
 
-if(!await refresh()) return;
-
-const m =
-db.membros.find(
-x=>String(x.id) === String(id)
-);
+  if(!await refresh())
+    return;
 
 
-if(!m) return;
+  const m =
+    db.membros.find(
+      x =>
+        String(x.id) ===
+        String(id)
+    );
 
 
-const w =
-window.open(
-"",
-"_blank",
-"width=420,height=650"
-);
+  if(!m)
+    return;
 
 
-if(!w){
-
-alert(
-"O navegador bloqueou a impressão."
-);
-
-return;
-
-}
+  const w =
+    window.open(
+      "",
+      "_blank",
+      "width=420,height=650"
+    );
 
 
-w.document.write(`
+  w.document.write(`
 
-<html>
+    <html>
 
-<head>
+    <head>
 
-<style>
+      <style>
 
-@page{
-size:58mm auto;
-margin:0;
-}
+        @page{
+          size:58mm auto;
+          margin:0;
+        }
 
-body{
-width:58mm;
-font:11px Arial;
-padding:4mm;
-}
+        body{
+          width:58mm;
+          font:11px Arial;
+          padding:4mm;
+        }
 
-h2{
-text-align:center;
-font-size:14px;
-}
+        h2{
+          font-size:14px;
+          text-align:center;
+        }
 
-.photo{
-width:42mm;
-height:42mm;
-object-fit:cover;
-}
+        .foto{
+          text-align:center;
+        }
 
-p{
-margin:6px 0;
-}
+        .foto img{
+          width:35mm;
+          height:35mm;
+          object-fit:cover;
+          border-radius:5px;
+        }
 
-</style>
+        p{
+          margin:6px 0;
+        }
 
-</head>
+      </style>
 
-<body>
+    </head>
 
-<h2>
+    <body>
 
-SGD
+      <h2>
 
-<br>
+        SGD<br>
 
-FICHA DO MEMBRO
+        FICHA DO MEMBRO
 
-</h2>
+      </h2>
+
+      ${
+        m.foto_url
+        ?
+        `
+        <div class="foto">
+
+          <img
+            src="${esc(m.foto_url)}"
+          >
+
+        </div>
+        `
+        :
+        ""
+      }
+
+      <hr>
+
+      <p>
+        <b>Nome:</b>
+        ${esc(m.nome)}
+      </p>
+
+      <p>
+        <b>Nº:</b>
+        ${esc(m.numero_membro)}
+      </p>
+
+      <p>
+        <b>Utilizador:</b>
+        ${esc(m.utilizador || "—")}
+      </p>
+
+      <p>
+        <b>Unidade:</b>
+        ${esc(getUnitName(m.unidade_id))}
+      </p>
+
+      <p>
+        <b>Função:</b>
+        ${esc(m.funcao || "—")}
+      </p>
+
+      <p>
+        <b>Classe:</b>
+        ${esc(m.classe || "—")}
+      </p>
+
+      <p>
+        <b>Estado:</b>
+        ${esc(m.estado || "—")}
+      </p>
+
+      <p>
+        <b>Cadastro:</b>
+        ${esc(m.data_cadastro || "—")}
+      </p>
+
+      <hr>
+
+      <script>
+
+        setTimeout(
+          () => print(),
+          500
+        );
+
+      <\/script>
+
+    </body>
+
+    </html>
+
+  `);
 
 
-${
-m.foto_url
-
-?
-
-`<img
-class="photo"
-src="${esc(m.foto_url)}"
->`
-
-:
-
-""
-
-}
-
-
-<hr>
-
-
-<p>
-<b>Nome:</b>
-${esc(m.nome)}
-</p>
-
-<p>
-<b>Nº:</b>
-${esc(m.numero_membro)}
-</p>
-
-<p>
-<b>Utilizador:</b>
-${esc(m.utilizador || "—")}
-</p>
-
-<p>
-<b>Unidade:</b>
-${esc(unitName(m.unidade_id))}
-</p>
-
-<p>
-<b>Função:</b>
-${esc(m.funcao || "—")}
-</p>
-
-<p>
-<b>Classe:</b>
-${esc(m.classe || "—")}
-</p>
-
-<p>
-<b>Estado:</b>
-${esc(m.estado || "—")}
-</p>
-
-<p>
-<b>Cadastro:</b>
-${esc(m.data_cadastro || "—")}
-</p>
-
-<hr>
-
-
-<script>
-
-setTimeout(
-()=>print(),
-300
-);
-
-<\/script>
-
-</body>
-
-</html>
-
-`);
-
-w.document.close();
+  w.document.close();
 
 }
 
 
-/* LOGOUT */
+/* =====================================================
+   LOGOUT
+===================================================== */
 
 async function logout(){
 
-try{
+  try{
 
-const c =
-await initSupabase();
+    const c =
+      await initSupabase();
 
-await c.auth.signOut();
+    await c.auth.signOut();
 
-}catch(e){
+  }catch(e){
 
-console.error(e);
+    console.error(e);
+
+  }
+
+  localStorage.removeItem(
+    "sgd_remember"
+  );
+
+  sessionStorage.clear();
+
+  location.reload();
 
 }
 
-location.reload();
 
-}
-
-
-/* PÁGINAS */
+/* =====================================================
+   PÁGINAS
+===================================================== */
 
 const pages = {
 
-dashboard,
-membros,
-membroForm,
-profile,
-editMember,
-unidades,
-unitForm,
-atividades,
-activityForm,
-financas,
-financeForm,
-relatorios,
-unitReport,
-definicoes,
-conta
+  dashboard,
+  membros,
+  membroForm,
+  profile,
+  editMember,
+  unidades,
+  unitForm,
+  atividades,
+  activityForm,
+  financas,
+  financeForm,
+  relatorios,
+  unitReport,
+  definicoes,
+  conta
 
 };
 
 
-/* NAVEGAÇÃO */
+/* =====================================================
+   NAVEGAÇÃO DOS MENUS
+===================================================== */
 
 document
-.querySelectorAll("nav button")
-.forEach(button=>{
+  .querySelectorAll("nav button")
+  .forEach(b => {
 
-button.onclick =
-()=>page(
-button.dataset.page
-);
+    b.onclick = () =>
+      page(b.dataset.page);
 
-});
+  });
 
 
-/* LOGIN */
+/* =====================================================
+   LOGIN
+===================================================== */
 
-document
-.getElementById("loginForm")
-.onsubmit =
-async function(e){
+$("#loginForm").onsubmit =
+  async e => {
 
-e.preventDefault();
-
-
-const loginButton =
-document.getElementById("loginBtn");
-
-const loginError =
-document.getElementById("loginError");
+    e.preventDefault();
 
 
-loginError.classList.add(
-"hidden"
-);
+    const button =
+      $("#loginButton");
 
-loginButton.disabled = true;
-
-loginButton.textContent =
-"A entrar...";
-
-
-try{
-
-const form =
-new FormData(e.target);
-
-const email =
-String(
-form.get("user") || ""
-)
-.trim();
-
-const password =
-String(
-form.get("pass") || ""
-);
+    const d =
+      Object.fromEntries(
+        new FormData(e.target)
+      );
 
 
-if(!email || !password){
-
-throw new Error(
-"Digite o e-mail e a palavra-passe."
-);
-
-}
+    $("#loginError")
+      .classList
+      .add("hidden");
 
 
-const c =
-await initSupabase();
+    button.disabled = true;
+
+    button.textContent =
+      "A entrar...";
 
 
-const result =
-await c.auth.signInWithPassword({
+    try{
 
-email:email,
-
-password:password
-
-});
+      const c =
+        await initSupabase();
 
 
-if(result.error){
+      const {
+        data,
+        error
+      } =
+        await c.auth.signInWithPassword({
 
-throw result.error;
+          email:
+            d.user.trim(),
 
-}
+          password:
+            d.pass
 
-
-if(!result.data?.session){
-
-throw new Error(
-"O Supabase não devolveu uma sessão."
-);
-
-}
-
-
-/*
-IMPORTANTE:
-A sessão foi criada.
-Agora mostramos o sistema.
-*/
-
-document
-.getElementById("login")
-.classList.add("hidden");
+        });
 
 
-document
-.getElementById("app")
-.classList.remove("hidden");
+      if(error)
+        throw error;
 
 
-await page("dashboard");
+      if(!data.session){
+
+        throw new Error(
+          "A sessão não foi criada."
+        );
+
+      }
 
 
-}catch(error){
+      if(d.remember){
 
-console.error(
-"ERRO LOGIN:",
-error
-);
+        localStorage.setItem(
+          "sgd_remember",
+          "1"
+        );
 
+      }else{
 
-loginError.textContent =
-"Não foi possível iniciar sessão: " +
-errorMessage(error);
+        localStorage.removeItem(
+          "sgd_remember"
+        );
 
-
-loginError.classList.remove(
-"hidden"
-);
+      }
 
 
-}finally{
-
-loginButton.disabled = false;
-
-loginButton.textContent =
-"Entrar";
-
-}
-
-};
+      $("#login")
+        .classList
+        .add("hidden");
 
 
-/* SESSÃO AUTOMÁTICA */
+      $("#app")
+        .classList
+        .remove("hidden");
+
+
+      await dashboard();
+
+
+    }catch(err){
+
+      console.error(
+        "ERRO LOGIN:",
+        err
+      );
+
+
+      $("#loginError")
+        .textContent =
+          "Não foi possível iniciar sessão: " +
+          err.message;
+
+
+      $("#loginError")
+        .classList
+        .remove("hidden");
+
+
+      button.disabled = false;
+
+      button.textContent =
+        "Entrar";
+
+    }
+
+  };
+
+
+/* =====================================================
+   INICIALIZAÇÃO DA SESSÃO
+===================================================== */
 
 (async function(){
 
-try{
+  try{
 
-const c =
-await initSupabase();
-
-
-const result =
-await c.auth.getSession();
+    const c =
+      await initSupabase();
 
 
-if(result.data?.session){
-
-document
-.getElementById("login")
-.classList.add("hidden");
-
-
-document
-.getElementById("app")
-.classList.remove("hidden");
+    const {
+      data,
+      error
+    } =
+      await c.auth.getSession();
 
 
-await page("dashboard");
+    if(error)
+      throw error;
 
-}
 
-}catch(error){
+    if(data.session){
 
-console.error(
-"Erro ao verificar sessão:",
-error
-);
+      $("#login")
+        .classList
+        .add("hidden");
 
-}
+
+      $("#app")
+        .classList
+        .remove("hidden");
+
+
+      await dashboard();
+
+    }
+
+  }catch(e){
+
+    console.error(
+      "Erro ao verificar sessão:",
+      e
+    );
+
+  }
+
+})();
+
+
+/* =====================================================
+   MONITORAR ALTERAÇÕES DA SESSÃO
+===================================================== */
+
+(async function(){
+
+  try{
+
+    const c =
+      await initSupabase();
+
+
+    c.auth.onAuthStateChange(
+      (event,session) => {
+
+        console.log(
+          "Auth:",
+          event
+        );
+
+      }
+    );
+
+  }catch(e){
+
+    console.error(e);
+
+  }
 
 })();
 
